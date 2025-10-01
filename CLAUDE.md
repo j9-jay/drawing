@@ -39,11 +39,26 @@ Dev server: http://localhost:3000
 
 ## Technical Stack
 
-- Next.js 15.5.4 (Turbopack enabled)
-- React 19.1.0
-- TypeScript 5 (strict mode)
-- Tailwind CSS 4 with PostCSS
-- ESLint (next/core-web-vitals, next/typescript)
+### Core Framework
+- **Next.js 15.5.4**: App Router, Server Components, Turbopack
+  - Use App Router for all pages (`src/app/`)
+  - Server Components by default, use `'use client'` only when needed
+  - File-based routing with `page.tsx`, `layout.tsx`
+- **React 19.1.0**: Latest features including improved hooks
+- **TypeScript 5**: Strict mode enabled, all code must be typed
+
+### Styling
+- **Tailwind CSS 4**: Utility-first CSS framework
+  - Use Tailwind utility classes for styling
+  - PostCSS integration enabled
+  - Custom theme configuration available
+- **shadcn/ui**: Component library (when needed)
+  - Can be used alongside custom components in `src/components/`
+  - Follow shadcn/ui installation and usage patterns
+
+### Code Quality
+- **ESLint**: next/core-web-vitals, next/typescript
+- **Path Alias**: `@/*` → `./src/*`
 
 ## Development Rules
 
@@ -76,3 +91,33 @@ Dev server: http://localhost:3000
    - No existing component fits the use case
    - Combination of existing components doesn't work
    - Document in CLAUDE.md after creation
+
+### Styling Rules
+
+1. **Prefer existing custom components** from `src/components/` with theme integration
+2. **Use Tailwind CSS** for utility styling when appropriate
+3. **Use shadcn/ui** for additional UI components when custom components don't fit
+4. **Theme system** available at `@/styles/theme` for consistent design values
+   - Colors: `theme.colors.*`
+   - Spacing: `theme.spacing.*`
+   - Typography: `theme.typography.*`
+   - Border radius: `theme.borderRadius.*`
+   - Transitions: `theme.transitions.*`
+
+### Next.js Best Practices
+
+1. **Server vs Client Components**:
+   - Default to Server Components
+   - Use `'use client'` only for: hooks, event handlers, browser APIs, state management
+
+2. **File naming**:
+   - Pages: `page.tsx`
+   - Layouts: `layout.tsx`
+   - Loading states: `loading.tsx`
+   - Error boundaries: `error.tsx`
+
+3. **Routing**: Use Next.js Link component for navigation
+   ```tsx
+   import Link from 'next/link';
+   // Use custom Link component: import { Link } from '@/components/ui';
+   ```
