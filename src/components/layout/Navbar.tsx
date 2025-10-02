@@ -1,78 +1,45 @@
-import React from 'react';
-import { Link, Button } from '@/components/ui';
-import { theme } from '@/styles/theme';
+'use client';
 
-interface NavItem {
-  label: string;
-  href: string;
-}
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Button } from '@/components/ui';
+import { MobileNav } from './MobileNav';
+import { cn } from '@/lib/utils';
 
-interface NavbarProps {
-  logo?: string;
-  navItems?: NavItem[];
-  ctaText?: string;
-  ctaHref?: string;
-  fixed?: boolean;
-}
+const navItems = [
+  { href: '/about', label: '소개' },
+  { href: '/posts', label: '게시판' },
+  { href: '/pinball', label: '핀볼게임' },
+];
 
-export const Navbar: React.FC<NavbarProps> = ({
-  logo = 'Logo',
-  navItems = [
-    { label: 'Features', href: '#features' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'About', href: '#about' },
-    { label: 'Blog', href: '/blog' },
-  ],
-  ctaText = 'Get Started',
-  ctaHref = '#',
-  fixed = true,
-}) => {
+export function Navbar() {
+  const pathname = usePathname();
+
   return (
-    <nav
-      style={{
-        position: fixed ? 'fixed' : 'relative',
-        top: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: theme.colors.background.header,
-        backdropFilter: 'blur(10px)',
-        borderBottom: `1px solid ${theme.colors.border.primary}`,
-        zIndex: 1000,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: `${theme.spacing.lg} ${theme.spacing.xl}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        {/* Logo */}
-        <Link href="/" variant="default" style={{ fontWeight: theme.typography.fontWeight.medium }}>
-          {logo}
+    <header className="sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60" style={{ borderBottomColor: 'var(--border)', backgroundColor: 'var(--header-bg)' }}>
+      <div className="container flex h-16 items-center justify-between">
+        <Link href="/" className="flex items-center space-x-2">
+          <span className="font-bold text-xl">My Blog</span>
         </Link>
 
-        {/* Nav Items */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: theme.spacing.sm,
-          }}
-        >
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-2">
           {navItems.map((item) => (
-            <Link key={item.label} href={item.href} variant="default">
-              {item.label}
-            </Link>
+            <Button
+              key={item.href}
+              variant={pathname.startsWith(item.href) ? 'primary' : 'secondary'}
+              className={cn('transition-colors')}
+            >
+              <Link href={item.href}>{item.label}</Link>
+            </Button>
           ))}
-        </div>
+        </nav>
 
-        {/* CTA */}
-        <Button variant="primary">{ctaText}</Button>
+        {/* Mobile Navigation */}
+        <div className="md:hidden">
+          <MobileNav items={navItems} />
+        </div>
       </div>
-    </nav>
+    </header>
   );
-};
+}

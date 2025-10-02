@@ -10,7 +10,7 @@ export default function ComponentsDemo() {
   const [inputValue, setInputValue] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const showToast = useToast();
+  const { showToast } = useToast();
 
   return (
     <div
@@ -188,11 +188,11 @@ export default function ComponentsDemo() {
         {/* Navbar Section */}
         <DemoSection title="Navbar">
           <div style={{ position: 'relative', height: '400px', overflow: 'hidden' }}>
-            <Navbar fixed={false} />
+            <Navbar />
             <div style={{ padding: theme.spacing.xl, marginTop: '80px' }}>
-              <Text variant="secondary">Fixed navbar with blur effect, logo, navigation items, and CTA button.</Text>
+              <Text variant="secondary">Fixed navbar with blur effect, logo, navigation items.</Text>
               <Text variant="secondary" style={{ marginTop: theme.spacing.md }}>
-                Props: logo, navItems, ctaText, ctaHref, fixed
+                Navigation items configured in Navbar component
               </Text>
             </div>
           </div>
