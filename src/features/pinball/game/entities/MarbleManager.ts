@@ -4,8 +4,8 @@
  */
 
 import { World, Vec2, Circle } from 'planck';
-import { Marble, Participant } from '../../../shared/types';
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { Marble, Participant } from '../../shared/types';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import { generateColor } from '../utils/ColorUtils';
 import {
   MARBLE_PREVIEW_SIZE,

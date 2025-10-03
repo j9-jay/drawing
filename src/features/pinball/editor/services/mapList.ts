@@ -1,4 +1,4 @@
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { EditorMapJson } from '../../shared/types/editorMap';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 

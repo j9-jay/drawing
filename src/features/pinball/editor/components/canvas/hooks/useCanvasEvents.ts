@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Vec2, EditorMapObject } from '../../../../../shared/types/editorMap';
+import { Vec2, EditorMapObject } from '../../../../shared/types/editorMap';
 import { useEditorStore } from '../../../state/editorState';
 
 export const useCanvasEvents = () => {

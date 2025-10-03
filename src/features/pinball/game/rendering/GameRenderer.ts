@@ -10,8 +10,8 @@
  */
 
 import { Fixture } from 'planck';
-import { Marble } from '../../../shared/types';
-import { GameWorld } from '../../../shared/types/gameObjects';
+import { Marble } from '../../shared/types';
+import { GameWorld } from '../../shared/types/gameObjects';
 import { drawGlowingLine } from './RenderHelpers';
 import { updateRotatingBars } from '../entities/ObstacleUpdater';
 import { PIXELS_PER_METER } from '../constants/physics';
@@ -31,7 +31,7 @@ import {
   renderBubble,
   renderRotatingBar,
   renderFinishLine as renderFinishLineShared
-} from '../../../shared/rendering';
+} from '../../shared/rendering';
 
 export interface RenderContext {
   ctx: CanvasRenderingContext2D;

@@ -1,4 +1,4 @@
-import { EditorMapJson, DEFAULT_EDITOR_MAP_META } from '../../../shared/types/editorMap';
+import { EditorMapJson, DEFAULT_EDITOR_MAP_META } from '../../shared/types/editorMap';
 
 // Create a file input for loading maps
 export function createFileLoadDialog(): Promise<EditorMapJson | null> {

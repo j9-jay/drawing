@@ -1,6 +1,6 @@
-import { Vec2, EditorMapObject } from '../../../../../shared/types/editorMap';
+import { Vec2, EditorMapObject } from '../../../../shared/types/editorMap';
 import { Grid } from '../../../../platform/Grid';
-import { getNextRotatingBarSpeedPreset } from '../../../../../shared/utils/rotatingBarSpeed';
+import { getNextRotatingBarSpeedPreset } from '../../../../shared/utils/rotatingBarSpeed';
 
 export class ObjectManipulator {
   static moveObject(

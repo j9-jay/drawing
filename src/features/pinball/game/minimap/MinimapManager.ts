@@ -4,9 +4,9 @@
  */
 
 import { Fixture } from 'planck';
-import { Marble } from '../../../shared/types';
-import { GameWorld } from '../../../shared/types/gameObjects';
-import { MinimapRenderers } from '../../../shared/rendering';
+import { Marble } from '../../shared/types';
+import { GameWorld } from '../../shared/types/gameObjects';
+import { MinimapRenderers } from '../../shared/rendering';
 import { PIXELS_PER_METER } from '../constants/physics';
 import { CAMERA_VIEWPORT_CENTER_RATIO } from '../constants/camera';
 import { FINISH_LINE_BUFFER } from '../constants/map';

@@ -1,7 +1,7 @@
 import { World } from 'planck';
-import { Participant, Marble, GameState } from '../../../shared/types';
-import { GameWorld } from '../../../shared/types/gameObjects';
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { Participant, Marble, GameState } from '../../shared/types';
+import { GameWorld } from '../../shared/types/gameObjects';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import { clearMarbles } from '../physics/PhysicsHelpers';
 import { setupMapFromEditor, calculateCameraBounds } from './MapSetup';
 import { createDefaultMap } from './MapLoader';

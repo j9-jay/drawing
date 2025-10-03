@@ -3,8 +3,8 @@
  */
 
 import { World } from 'planck';
-import { Marble, GameState } from '../../../shared/types';
-import { GameWorld } from '../../../shared/types/gameObjects';
+import { Marble, GameState } from '../../shared/types';
+import { GameWorld } from '../../shared/types/gameObjects';
 import {
   updateMarblePositions,
   checkFinishLine

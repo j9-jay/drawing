@@ -4,7 +4,7 @@
  */
 
 import { Vec2, Body } from 'planck';
-import { Marble } from '../../../shared/types';
+import { Marble } from '../../shared/types';
 import { PIXELS_PER_METER, SENSOR_TRIGGER_DISTANCE, MAX_VELOCITY, MAX_VELOCITY_X, MAX_VELOCITY_Y } from '../constants/physics';
 
 // eslint-disable-next-line no-unused-vars

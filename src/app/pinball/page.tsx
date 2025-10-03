@@ -1,46 +1,134 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Heading, Text, Container, Section } from '@/components/ui';
 
-// This will be implemented later
-// import { mountPinball } from '@/game/pinball';
-
-export default function PinballPage() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export default function PinballGamePage() {
+  const initialized = useRef(false);
 
   useEffect(() => {
-    if (canvasRef.current) {
-      // TODO: Implement pinball game mount
-      // mountPinball(canvasRef.current);
-      console.log('Pinball game will be mounted here');
-    }
+    // Prevent double initialization in development
+    if (initialized.current) return;
+    initialized.current = true;
+
+    // Dynamic import to ensure client-side only execution
+    import('@/features/pinball/game/core/GameInitializer').then(({
+      initializeSettings,
+      initializePhysicsWorld,
+      setupCanvas,
+      initializeParticipantsAndMarbles
+    }) => {
+      import('@/features/pinball/game/core/GameLoop').then(({ GameLoop }) => {
+        import('@/features/pinball/game/map/MapLoader').then(async ({ loadMapFromServer }) => {
+          try {
+            // Initialize game
+            const settings = initializeSettings();
+            const world = initializePhysicsWorld();
+            const canvases = setupCanvas();
+
+            // Load map
+            const currentMap = await loadMapFromServer(settings.mapType);
+
+            // Initialize participants and marbles
+            const { participants, marbles } = initializeParticipantsAndMarbles(
+              canvases.canvas,
+              currentMap
+            );
+
+            // Start game loop
+            const gameLoop = new GameLoop(
+              world,
+              canvases.canvas,
+              canvases.ctx,
+              canvases.minimapCanvas,
+              canvases.minimapCtx,
+              marbles,
+              participants,
+              currentMap,
+              settings
+            );
+
+            gameLoop.start();
+          } catch (error) {
+            console.error('Failed to initialize game:', error);
+          }
+        });
+      });
+    });
   }, []);
 
   return (
-    <Section spacing="xl" background="transparent">
-      <Container size="lg">
-        <div className="space-y-8">
-          <div>
-            <Heading level="h1" style={{ marginBottom: '0.5rem' }}>
-              핀볼게임
-            </Heading>
-            <Text variant="secondary">인터랙티브 핀볼 게임을 즐겨보세요.</Text>
-          </div>
+    <div className="game-container">
+      <canvas id="game-canvas"></canvas>
+      <canvas id="minimap-canvas"></canvas>
+      <div id="leaderboard"></div>
+      <div id="controls"></div>
+      <div id="fps-display"></div>
 
-          <div className="flex justify-center">
-            <div className="w-full max-w-4xl bg-card rounded-lg p-4 shadow-lg">
-              <canvas
-                ref={canvasRef}
-                className="w-full h-[600px] border border-border rounded"
-              />
-              <div className="mt-4 text-center">
-                <Text variant="secondary">게임 구현 예정</Text>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Container>
-    </Section>
+      <style jsx>{`
+        .game-container {
+          position: relative;
+          width: 100vw;
+          height: 100vh;
+          overflow: hidden;
+          background: #1a1a1a;
+        }
+
+        #game-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        #minimap-canvas {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          width: 200px;
+          height: 200px;
+          border: 2px solid #333;
+          background: rgba(0, 0, 0, 0.5);
+        }
+
+        #leaderboard {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          min-width: 250px;
+          background: rgba(0, 0, 0, 0.8);
+          border: 2px solid #333;
+          border-radius: 8px;
+          padding: 15px;
+          color: white;
+          font-family: monospace;
+        }
+
+        #controls {
+          position: absolute;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0, 0, 0, 0.8);
+          border: 2px solid #333;
+          border-radius: 8px;
+          padding: 15px;
+          color: white;
+        }
+
+        #fps-display {
+          position: absolute;
+          bottom: 20px;
+          right: 20px;
+          background: rgba(0, 0, 0, 0.8);
+          border: 2px solid #333;
+          border-radius: 8px;
+          padding: 10px 15px;
+          color: #0f0;
+          font-family: monospace;
+          font-size: 14px;
+        }
+      `}</style>
+    </div>
   );
 }

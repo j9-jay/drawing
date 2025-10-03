@@ -3,7 +3,7 @@
  * Handles parsing and managing game participants
  */
 
-import { Participant, GameSettings } from '../../../shared/types';
+import { Participant, GameSettings } from '../../shared/types';
 import { showToast } from '../ui/ToastManager';
 import { MAX_PARTICIPANT_NAME_LENGTH } from '../constants/ui';
 

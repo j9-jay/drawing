@@ -4,9 +4,9 @@
  */
 
 import { Fixture } from 'planck';
-import { Marble } from '../../../shared/types';
-import { GameWorld, Wall } from '../../../shared/types/gameObjects';
-import { MinimapRenderers, ObjectStyles } from '../../../shared/rendering';
+import { Marble } from '../../shared/types';
+import { GameWorld, Wall } from '../../shared/types/gameObjects';
+import { MinimapRenderers, ObjectStyles } from '../../shared/rendering';
 import { PIXELS_PER_METER } from '../constants/physics';
 
 interface MinimapContext {

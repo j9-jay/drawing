@@ -3,7 +3,7 @@
  * Handles leaderboard rendering and updates
  */
 
-import { Marble, Participant, LeaderboardItem, GameState } from '../../../shared/types';
+import { Marble, Participant, LeaderboardItem, GameState } from '../../shared/types';
 import { showToast } from './ToastManager';
 
 interface LeaderboardContext {

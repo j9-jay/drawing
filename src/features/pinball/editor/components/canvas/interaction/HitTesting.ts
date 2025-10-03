@@ -1,4 +1,4 @@
-import { Vec2, EditorMapObject } from '../../../../../shared/types/editorMap';
+import { Vec2, EditorMapObject } from '../../../../shared/types/editorMap';
 
 export class HitTesting {
   static hitTestObject(obj: EditorMapObject, point: Vec2, tolerance: number): boolean {

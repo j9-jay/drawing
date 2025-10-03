@@ -1,5 +1,5 @@
 // Integration layer between editor and existing game
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import { MapSpecConfig } from '../../maps/JsonMapTypes';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';

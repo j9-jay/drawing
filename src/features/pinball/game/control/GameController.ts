@@ -3,8 +3,8 @@
  * Manages game state transitions and control flow
  */
 
-import { GameState, GameSettings, Marble } from '../../../shared/types';
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { GameState, GameSettings, Marble } from '../../shared/types';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import { showToast } from '../ui/ToastManager';
 import { showWinner, showTopNWinners } from '../ui/WinnerDisplay';
 import { enableSettingsPopupOnClick } from '../ui/SettingsUI';

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { EditorMapObject } from '../../../../shared/types/editorMap';
+import { EditorMapObject } from '../../../shared/types/editorMap';
 import { undoRedoManager } from '../undoRedo';
 
 export interface ObjectActions {

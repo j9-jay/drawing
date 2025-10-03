@@ -1,9 +1,9 @@
-import { SessionStorageUtil, STORAGE_KEYS } from '../../../shared/utils/sessionStorage';
-import { GameSettings } from '../../../shared/types';
+import { SessionStorageUtil, STORAGE_KEYS } from '../../shared/utils/sessionStorage';
+import { GameSettings } from '../../shared/types';
 import { initializeParticipants, refreshPreviewMarbles } from '../services/ParticipantPreviewService';
 import { clearMarbles } from '../physics/PhysicsHelpers';
 import { World } from 'planck';
-import { Marble } from '../../../shared/types';
+import { Marble } from '../../shared/types';
 import { TIME_SCALE_MIN, TIME_SCALE_MAX } from '../constants/ui';
 
 interface LoadResult {

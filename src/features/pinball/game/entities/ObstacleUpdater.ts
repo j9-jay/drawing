@@ -4,7 +4,7 @@
  */
 
 import { World } from 'planck';
-import { Bubble, RotatingBar, BounceCircle } from '../../../shared/types/gameObjects';
+import { Bubble, RotatingBar, BounceCircle } from '../../shared/types/gameObjects';
 import {
   BUBBLE_POP_INCREMENT,
   BUBBLE_POP_COMPLETION,

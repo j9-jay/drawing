@@ -3,8 +3,8 @@
  */
 
 import { World } from 'planck';
-import { GameSettings, GameState, Marble } from '../../../shared/types';
-import { GameWorld } from '../../../shared/types/gameObjects';
+import { GameSettings, GameState, Marble } from '../../shared/types';
+import { GameWorld } from '../../shared/types/gameObjects';
 import { RenderContext, render } from '../rendering/GameRenderer';
 import { CameraConfig } from '../camera/CameraManager';
 import { GameControlState } from '../control/GameController';

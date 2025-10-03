@@ -3,7 +3,7 @@
  */
 
 import { World, Vec2 } from 'planck';
-import { BounceCircle, Bubble } from '../../../shared/types';
+import { BounceCircle, Bubble } from '../../shared/types';
 
 /**
  * Handle bounce circle collision

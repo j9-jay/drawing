@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useEditorStore } from '../state/editorState';
-import { EditorMapObject, Edge, Bubble, RotatingBar, JumpPad, FinishLine, BounceCircle } from '../../../shared/types/editorMap';
+import { EditorMapObject, Edge, Bubble, RotatingBar, JumpPad, FinishLine, BounceCircle } from '../../shared/types/editorMap';
 
 const Inspector: React.FC = () => {
   const { map, selectedIds, updateObject } = useEditorStore();

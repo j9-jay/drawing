@@ -3,8 +3,8 @@
  * Handles camera tracking, zoom, and smooth transitions
  */
 
-import { Marble, GameState } from '../../../shared/types';
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { Marble, GameState } from '../../shared/types';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import {
   FINISH_SLOWMO_DISTANCE,
   FINISH_TIME_SCALE_MULTIPLIER,

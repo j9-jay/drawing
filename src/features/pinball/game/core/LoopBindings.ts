@@ -1,6 +1,6 @@
 import { World } from 'planck';
-import { GameSettings, GameState, Marble } from '../../../shared/types';
-import { GameWorld } from '../../../shared/types/gameObjects';
+import { GameSettings, GameState, Marble } from '../../shared/types';
+import { GameWorld } from '../../shared/types/gameObjects';
 import { GameControlState } from '../control/GameController';
 import { CameraConfig } from '../camera/CameraManager';
 import { GameLoopCallbacks, GameLoopContext } from './GameLoop';

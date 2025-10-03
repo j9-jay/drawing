@@ -8,7 +8,7 @@ import Toolbox from './Toolbox';
 // import Inspector from './Inspector'; // Removed properties panel
 import { saveMap } from '../services/save';
 import { createFileLoadDialog } from '../services/load';
-import { validateEditorMapJson } from '../../../shared/types/editorMap';
+import { validateEditorMapJson } from '../../shared/types/editorMap';
 import { toast } from '../utils/toast';
 import { GameIntegration } from '../services/GameIntegration';
 import Minimap from './Minimap';

@@ -1,4 +1,4 @@
-import { EditorMapObject, EditorMapMeta, Vec2 } from '../../../../../shared/types/editorMap';
+import { EditorMapObject, EditorMapMeta, Vec2 } from '../../../../shared/types/editorMap';
 import { EditorCamera } from '../../../state/slices/cameraSlice';
 import { Grid } from '../../../../platform/Grid';
 import { ObjectRenderer } from './ObjectRenderer';

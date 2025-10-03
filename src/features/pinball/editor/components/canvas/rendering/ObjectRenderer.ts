@@ -1,4 +1,4 @@
-import { EditorMapObject } from '../../../../../shared/types/editorMap';
+import { EditorMapObject } from '../../../../shared/types/editorMap';
 import { EditorCamera } from '../../../state/slices/cameraSlice';
 import {
   renderBounceCircle as renderBounceCircleShared,
@@ -7,7 +7,7 @@ import {
   renderRotatingBar as renderRotatingBarShared,
   ObjectStyles,
   drawStar
-} from '../../../../../shared/rendering';
+} from '../../../../shared/rendering';
 
 export class ObjectRenderer {
   private ctx: CanvasRenderingContext2D;

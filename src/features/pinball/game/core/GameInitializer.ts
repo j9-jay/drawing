@@ -3,8 +3,8 @@
  */
 
 import { World, Vec2 } from 'planck';
-import { GameSettings, Participant, Marble } from '../../../shared/types';
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { GameSettings, Participant, Marble } from '../../shared/types';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import { loadFromStorage } from '../storage/GameStorage';
 import { parseParticipants } from '../entities/ParticipantManager';
 import { createPreviewMarbles, createTestMarbles } from '../entities/MarbleManager';

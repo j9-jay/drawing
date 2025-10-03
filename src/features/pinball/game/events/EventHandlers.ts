@@ -3,8 +3,8 @@
  * Manages all user input and DOM events
  */
 
-import { GameState, GameSettings, Marble, Participant, WinnerMode } from '../../../shared/types';
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { GameState, GameSettings, Marble, Participant, WinnerMode } from '../../shared/types';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import { World } from 'planck';
 import { showToast } from '../ui/ToastManager';
 import { updateSpeedUI } from '../ui/GameUiController';

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { EditorMapJson, DEFAULT_EDITOR_MAP_META } from '../../../../shared/types/editorMap';
+import { EditorMapJson, DEFAULT_EDITOR_MAP_META } from '../../../shared/types/editorMap';
 
 export interface MapState {
   map: EditorMapJson;

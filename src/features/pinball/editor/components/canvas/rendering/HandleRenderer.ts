@@ -1,6 +1,6 @@
-import { EditorMapObject } from '../../../../../shared/types/editorMap';
+import { EditorMapObject } from '../../../../shared/types/editorMap';
 import { EditorCamera } from '../../../state/slices/cameraSlice';
-import { getRotatingBarSpeedPresetFromState } from '../../../../../shared/utils/rotatingBarSpeed';
+import { getRotatingBarSpeedPresetFromState } from '../../../../shared/utils/rotatingBarSpeed';
 
 export class HandleRenderer {
   private ctx: CanvasRenderingContext2D;

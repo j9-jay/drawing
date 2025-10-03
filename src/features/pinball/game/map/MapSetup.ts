@@ -4,8 +4,8 @@
  */
 
 import { World } from 'planck';
-import { GameWorld } from '../../../shared/types';
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { GameWorld } from '../../shared/types';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import {
   createEdgeFromEditor,
   createBubbleFromEditor,

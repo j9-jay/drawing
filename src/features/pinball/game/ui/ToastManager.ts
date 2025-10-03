@@ -3,7 +3,7 @@
  * Handles temporary notification messages to the user
  */
 
-import { Toast } from '../../../shared/types';
+import { Toast } from '../../shared/types';
 
 /**
  * Show a toast notification

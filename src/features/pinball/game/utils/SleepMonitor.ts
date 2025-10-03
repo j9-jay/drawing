@@ -2,7 +2,7 @@
  * Sleep 시스템 모니터링 유틸리티
  */
 
-import { Marble } from '../../../shared/types';
+import { Marble } from '../../shared/types';
 
 export class SleepMonitor {
   private lastSleepCount = 0;

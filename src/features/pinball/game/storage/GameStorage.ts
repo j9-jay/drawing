@@ -2,7 +2,7 @@
  * Local storage manager for game settings
  */
 
-import { GameSettings, WinnerMode, MapType } from '../../../shared/types';
+import { GameSettings, WinnerMode, MapType } from '../../shared/types';
 
 export interface StorageData {
   names: string;

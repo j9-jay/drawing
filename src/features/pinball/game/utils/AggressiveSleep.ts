@@ -2,7 +2,7 @@
  * 공격적인 Sleep 최적화 시스템
  */
 
-import { Marble } from '../../../shared/types';
+import { Marble } from '../../shared/types';
 
 export class AggressiveSleep {
   private forceSlowMarblesToSleep(marbles: Marble[]): number {

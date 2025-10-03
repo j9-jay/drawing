@@ -3,7 +3,7 @@
  * Handles settings popup visibility and interactions
  */
 
-import { GameState } from '../../../shared/types';
+import { GameState } from '../../shared/types';
 
 /**
  * Setup initial settings popup visibility

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Vec2, EditorMapObject } from '../../../../../shared/types/editorMap';
+import { Vec2, EditorMapObject } from '../../../../shared/types/editorMap';
 import { useEditorStore } from '../../../state/editorState';
 import { Tool } from '../../../state/slices/toolSlice';
 import { Snap } from '../../../../platform/Snap';

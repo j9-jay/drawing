@@ -4,8 +4,8 @@
  */
 
 import { World, Vec2, Body, Edge, Circle, Box } from 'planck';
-import { GameWorld, Wall, Bubble, RotatingBar, BounceCircle, JumpPad, FinishLine, ObjectType } from '../../../shared/types';
-import { EditorMapJson } from '../../../shared/types/editorMap';
+import { GameWorld, Wall, Bubble, RotatingBar, BounceCircle, JumpPad, FinishLine, ObjectType } from '../../shared/types';
+import { EditorMapJson } from '../../shared/types/editorMap';
 import {
   ROTATING_BAR_FRICTION,
   ROTATING_BAR_RESTITUTION,

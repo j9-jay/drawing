@@ -2,8 +2,8 @@
 
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useEditorStore } from '../state/editorState';
-import { EditorMapObject, Vec2 } from '../../../shared/types/editorMap';
-import { MinimapRenderers } from '../../../shared/rendering';
+import { EditorMapObject, Vec2 } from '../../shared/types/editorMap';
+import { MinimapRenderers } from '../../shared/rendering';
 
 const Minimap: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

@@ -2,7 +2,7 @@
  * Winner display and fireworks effects
  */
 
-import { Marble, GameSettings } from '../../../shared/types';
+import { Marble, GameSettings } from '../../shared/types';
 import { generateColor } from '../utils/ColorUtils';
 import { showToast } from './ToastManager';
 
