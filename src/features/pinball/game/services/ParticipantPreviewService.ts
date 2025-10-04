@@ -10,7 +10,7 @@ export function initializeParticipants(silent: boolean = false): Participant[] {
     // If empty, fill with placeholder text
     const placeholder = textarea.getAttribute('placeholder');
     if (placeholder) {
-      textarea.value = placeholder.replace(/&#10;/g, '\n');
+      textarea.value = placeholder;
     }
   }
   return parseParticipants(silent) ?? [];

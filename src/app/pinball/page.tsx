@@ -87,7 +87,7 @@ export default function PinballGamePage() {
               <label htmlFor="names-input">Participants (newline or comma separated, *number for weight, max 8 chars)</label>
               <textarea
                 id="names-input"
-                placeholder="John Doe&#10;Jane Smith*3&#10;Bob Johnson*2&#10;Alice Brown"
+                placeholder="John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown"
               ></textarea>
             </div>
             <div className="control-buttons">
