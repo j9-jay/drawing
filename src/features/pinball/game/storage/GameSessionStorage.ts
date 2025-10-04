@@ -23,15 +23,16 @@ export function saveGameSession(
       SessionStorageUtil.save(STORAGE_KEYS.PARTICIPANTS, namesInput.value);
     }
 
-    const mapSelect = document.getElementById('map-select') as HTMLSelectElement | null;
-    if (mapSelect?.value) {
-      SessionStorageUtil.save(STORAGE_KEYS.SELECTED_MAP, mapSelect.value);
+    // Map is now stored from settings
+    if (settings.mapType) {
+      SessionStorageUtil.save(STORAGE_KEYS.SELECTED_MAP, settings.mapType);
     }
 
     SessionStorageUtil.save(STORAGE_KEYS.GAME_SETTINGS, {
       winnerMode: settings.winnerMode,
       customRank: settings.customRank,
       topNCount: settings.topNCount,
+      mapType: settings.mapType,
       timeScale: userTimeScale
     });
   } catch (error) {
@@ -69,11 +70,14 @@ export function loadGameSession(
 
     const savedMap = SessionStorageUtil.load<string>(STORAGE_KEYS.SELECTED_MAP);
     if (savedMap) {
-      const mapSelect = document.getElementById('map-select') as HTMLSelectElement | null;
-      if (mapSelect) {
-        mapSelect.value = savedMap;
-      }
       mapType = savedMap;
+      // Map display is now handled by MapSelectionModal
+      const mapDisplay = document.getElementById('map-display') as HTMLInputElement | null;
+      if (mapDisplay) {
+        const displayName = savedMap === 'default' ? 'Classic' :
+          savedMap.replace(/[_-]/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+        mapDisplay.value = displayName;
+      }
     }
     const savedSettings = SessionStorageUtil.load<any>(STORAGE_KEYS.GAME_SETTINGS);
     if (savedSettings?.timeScale) {

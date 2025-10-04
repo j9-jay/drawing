@@ -71,6 +71,7 @@ import {
   showWinnerToast,
   updateSpeedUI
 } from './ui/GameUiController';
+import { mapSelectionModal } from './ui/MapSelectionModal';
 
 export class PinballRoulette {
   private canvas: HTMLCanvasElement;
@@ -150,10 +151,16 @@ export class PinballRoulette {
     this.setupEventListeners();
     loadFromStorage(this.settings);
 
-    const mapSelect = document.getElementById('map-select') as HTMLSelectElement | null;
-    if (mapSelect) {
-      await initializeMapSelect(mapSelect);
-    }
+    // Initialize map selection modal
+    mapSelectionModal.setCallbacks({
+      onSelect: async (mapName: string) => {
+        this.settings.mapType = mapName as any;
+        await this.loadEditorMap(mapName);
+        showToast(`Map changed: ${mapName}`, 'success');
+        this.saveToSessionStorage();
+      }
+    });
+    mapSelectionModal.setCurrentMap(this.settings.mapType || 'default');
 
     // 맵 목록 로딩 완료 후 세션 스토리지에서 설정 복원
     this.loadFromSessionStorage();
@@ -223,15 +230,7 @@ export class PinballRoulette {
 
     setupEventListeners(context, callbacks);
 
-    // Map selector specific setup
-    const mapSelect = document.getElementById('map-select') as HTMLSelectElement;
-    mapSelect?.addEventListener('change', async (e) => {
-      const target = e.target as HTMLSelectElement;
-      this.settings.mapType = target.value as MapType;
-      await this.loadEditorMap(target.value);
-      showToast(`Map changed: ${target.value}`, 'success');
-      this.saveToSessionStorage();
-    });
+    // Map selector now handled by MapSelectionModal
 
     // Real-time participant updates
     const namesInput = document.getElementById('names-input') as HTMLTextAreaElement;
@@ -270,8 +269,7 @@ export class PinballRoulette {
     const signal = this.loadMapAbortController.signal;
 
     try {
-      const mapSelect = document.getElementById('map-select') as HTMLSelectElement | null;
-      const targetMapName = mapName ?? mapSelect?.value ?? 'default';
+      const targetMapName = mapName ?? this.settings.mapType ?? 'default';
 
       // Check if operation was aborted before async call
       if (signal.aborted) return;

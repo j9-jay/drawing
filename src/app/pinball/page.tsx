@@ -98,9 +98,22 @@ export default function PinballGamePage() {
           <div className="settings-right">
             <div className="setting-group">
               <label htmlFor="map-select">Map Selection</label>
-              <select id="map-select">
-                <option value="classic">Classic</option>
-              </select>
+              <div className="map-selection-group">
+                <input
+                  type="text"
+                  id="map-display"
+                  value="Classic"
+                  readOnly
+                  className="map-display-input"
+                />
+                <button
+                  id="map-select-btn"
+                  className="map-select-button"
+                  type="button"
+                >
+                  <span>📍</span> 선택
+                </button>
+              </div>
             </div>
             <div className="setting-group">
               <label htmlFor="winner-mode">Winner Selection</label>
@@ -126,6 +139,26 @@ export default function PinballGamePage() {
 
       {/* Toast Container */}
       <div id="toast-container"></div>
+
+      {/* Map Selection Modal */}
+      <div id="map-selection-modal" className="map-modal-overlay hidden">
+        <div className="map-modal">
+          <div className="modal-header">
+            <h2>맵 선택</h2>
+            <div className="modal-controls">
+              <select id="map-sort-select" className="sort-select">
+                <option value="name">가나다순</option>
+                <option value="name-desc">가나다 역순</option>
+                <option value="date">생성일순</option>
+              </select>
+              <button className="modal-close-btn" id="map-modal-close">✕</button>
+            </div>
+          </div>
+          <div className="map-grid" id="map-grid">
+            {/* Map cards will be dynamically inserted here */}
+          </div>
+        </div>
+      </div>
       </div>
 
       {/* Full Screen Button */}

@@ -46,7 +46,12 @@ export function loadFromStorage(settings: GameSettings): void {
       (document.getElementById('winner-mode') as HTMLSelectElement).value = data.winnerMode || 'first';
       (document.getElementById('custom-rank') as HTMLInputElement).value = String(data.customRank || 1);
       (document.getElementById('top-n-count') as HTMLInputElement).value = String(data.topNCount || 5);
-      (document.getElementById('map-select') as HTMLSelectElement).value = data.mapType || 'classic';
+      // Map display is now handled differently
+      const mapDisplay = document.getElementById('map-display') as HTMLInputElement;
+      if (mapDisplay) {
+        const mapName = data.mapType || 'classic';
+        mapDisplay.value = mapName === 'default' ? 'Classic' : mapName;
+      }
 
       settings.winnerMode = data.winnerMode || 'first';
       settings.customRank = data.customRank || 1;

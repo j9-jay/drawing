@@ -193,14 +193,8 @@ function setupControlEvents(
     });
   }, 100);
 
-  // Map selector
-  const mapSelector = document.getElementById('map-select') as HTMLSelectElement;
-  mapSelector?.addEventListener('change', async () => {
-    const mapName = mapSelector.value;
-    if (mapName && mapName !== 'none') {
-      await callbacks.loadMapCallback(mapName);
-    }
-  });
+  // Map selector - now handled by MapSelectionModal
+  // Old select element no longer exists
 
   // Names input - real-time participant parsing
   const namesInput = document.getElementById('names-input') as HTMLTextAreaElement;
