@@ -108,6 +108,8 @@ export class PinballRoulette {
   private gameLoopContext: GameLoopContext | null = null;
   private readonly fixedTimeStep = FIXED_TIME_STEP;
   private canvasResizeHandle?: CanvasResizeHandle;
+  private isResetting: boolean = false;
+  private loadMapAbortController?: AbortController;
 
   constructor() {
     const {
@@ -258,9 +260,21 @@ export class PinballRoulette {
   }
 
   private async loadEditorMap(mapName?: string): Promise<void> {
+    // Cancel any ongoing map loading
+    if (this.loadMapAbortController) {
+      this.loadMapAbortController.abort();
+    }
+
+    // Create new abort controller for this operation
+    this.loadMapAbortController = new AbortController();
+    const signal = this.loadMapAbortController.signal;
+
     try {
       const mapSelect = document.getElementById('map-select') as HTMLSelectElement | null;
       const targetMapName = mapName ?? mapSelect?.value ?? 'default';
+
+      // Check if operation was aborted before async call
+      if (signal.aborted) return;
 
       const result = await loadMapIntoState({
         world: this.world,
@@ -273,6 +287,9 @@ export class PinballRoulette {
         mapName: targetMapName,
         cameraZoom: this.cameraZoom
       });
+
+      // Check if operation was aborted after async call
+      if (signal.aborted) return;
 
       this.currentMap = result.map;
       this.gameWorld = result.gameWorld;
@@ -288,7 +305,10 @@ export class PinballRoulette {
 
       this.marbles = result.marbles;
     } catch (error) {
-      console.error('Failed to load editor map:', error);
+      // Ignore abort errors
+      if ((error as any)?.name !== 'AbortError') {
+        console.error('Failed to load editor map:', error);
+      }
     }
   }
 
@@ -297,6 +317,9 @@ export class PinballRoulette {
 
 
   private startGame(): void {
+    // Prevent starting game during reset
+    if (this.isResetting) return;
+
     const cameraConfig = this.getCameraConfig();
     this.marbles = startGame(
       this.controlState,
@@ -379,37 +402,54 @@ export class PinballRoulette {
   }
 
   private async resetGame(): Promise<void> {
-    // Reset zoom first
-    this.baseZoom = DEFAULT_CAMERA_ZOOM;
-    this.targetZoom = this.baseZoom;
-    this.cameraZoom = this.baseZoom;
+    // Prevent multiple concurrent resets
+    if (this.isResetting) return;
+    this.isResetting = true;
 
-    // 맵을 다시 로드하여 터진 버블 등 모든 오브젝트를 초기화
-    await this.loadEditorMap();
+    try {
+      // Reset zoom first
+      this.baseZoom = DEFAULT_CAMERA_ZOOM;
+      this.targetZoom = this.baseZoom;
+      this.cameraZoom = this.baseZoom;
 
-    const cameraConfig = this.getCameraConfig();
-    resetGame(
-      this.controlState,
-      this.currentMap,
-      this.canvas,
-      cameraConfig
-    );
-    // Sync state back
-    this.gameState = this.controlState.gameState;
-    this.winnerShown = this.controlState.winnerShown;
-    this.lastFinishedCount = this.controlState.lastFinishedCount;
-    this.currentCameraX = cameraConfig.currentCameraX;
-    this.currentCameraY = cameraConfig.currentCameraY;
-    this.targetCameraX = cameraConfig.targetCameraX;
-    this.targetCameraY = cameraConfig.targetCameraY;
-    this.originalCameraX = cameraConfig.originalCameraX;
-    this.originalCameraY = cameraConfig.originalCameraY;
+      // Clear ALL bodies from World before loading new map
+      // This ensures no duplicate bodies remain from interrupted loadEditorMap calls
+      let body = this.world.getBodyList();
+      while (body) {
+        const next = body.getNext();
+        this.world.destroyBody(body);
+        body = next;
+      }
 
-    // Clear and recreate preview marbles
-    clearMarbles(this.marbles, this.world);
-    this.participants = initializeParticipants(true);
-    this.settings.participants = this.participants;
-    this.marbles = refreshPreviewMarbles(this.participants, this.currentMap, this.canvas.width);
+      // 맵을 다시 로드하여 터진 버블 등 모든 오브젝트를 초기화
+      await this.loadEditorMap();
+
+      const cameraConfig = this.getCameraConfig();
+      resetGame(
+        this.controlState,
+        this.currentMap,
+        this.canvas,
+        cameraConfig
+      );
+      // Sync state back
+      this.gameState = this.controlState.gameState;
+      this.winnerShown = this.controlState.winnerShown;
+      this.lastFinishedCount = this.controlState.lastFinishedCount;
+      this.currentCameraX = cameraConfig.currentCameraX;
+      this.currentCameraY = cameraConfig.currentCameraY;
+      this.targetCameraX = cameraConfig.targetCameraX;
+      this.targetCameraY = cameraConfig.targetCameraY;
+      this.originalCameraX = cameraConfig.originalCameraX;
+      this.originalCameraY = cameraConfig.originalCameraY;
+
+      // Clear and recreate preview marbles
+      clearMarbles(this.marbles, this.world);
+      this.participants = initializeParticipants(true);
+      this.settings.participants = this.participants;
+      this.marbles = refreshPreviewMarbles(this.participants, this.currentMap, this.canvas.width);
+    } finally {
+      this.isResetting = false;
+    }
   }
 
 

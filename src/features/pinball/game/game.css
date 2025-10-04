@@ -18,7 +18,7 @@
     content: '';
     position: absolute;
     top: 20px; /* 상단 여백 40px 중 20px */
-    width: calc(min(1460px, 100% - 140px));
+    width: calc(min(1460px, 100%));
     height: calc(80vh + 100px); /* 버튼 영역 추가 (상단 40px + 버튼 60px) */
     max-height: 900px;
     background: #1a1a1a;
