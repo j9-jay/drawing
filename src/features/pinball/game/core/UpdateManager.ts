@@ -55,7 +55,7 @@ export interface UpdateContext {
   targetZoom: number;
   cameraConfig: CameraConfig;
   controlState: GameControlState;
-  settings: any;
+  settings: unknown;
 }
 
 export interface UpdateCallbacks {

@@ -2,7 +2,7 @@
 import { EditorMapJson } from '../../shared/types/editorMap';
 import { MapSpecConfig } from '../../maps/JsonMapTypes';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export class GameIntegration {
   /**
@@ -135,9 +135,9 @@ export class GameIntegration {
    */
   static async saveAsGameMap(editorMap: EditorMapJson): Promise<void> {
     const mapSpec = this.convertToMapSpec(editorMap);
-    
+
     try {
-      const response = await fetch('${API_URL}/api/pinball/maps/save-game-format', {
+      const response = await fetch(`${API_URL}/api/pinball/maps/save-game-format`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

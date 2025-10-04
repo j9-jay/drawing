@@ -1,134 +1,142 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import '../../features/pinball/game/game.css';
 
 export default function PinballGamePage() {
   const initialized = useRef(false);
+  const appRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Prevent double initialization in development
     if (initialized.current) return;
     initialized.current = true;
 
     // Dynamic import to ensure client-side only execution
-    import('@/features/pinball/game/core/GameInitializer').then(({
-      initializeSettings,
-      initializePhysicsWorld,
-      setupCanvas,
-      initializeParticipantsAndMarbles
-    }) => {
-      import('@/features/pinball/game/core/GameLoop').then(({ GameLoop }) => {
-        import('@/features/pinball/game/map/MapLoader').then(async ({ loadMapFromServer }) => {
-          try {
-            // Initialize game
-            const settings = initializeSettings();
-            const world = initializePhysicsWorld();
-            const canvases = setupCanvas();
+    import('@/features/pinball/game/PinballGame').then(async ({ PinballRoulette }) => {
+      try {
+        // Initialize the game
+        const game = new PinballRoulette();
 
-            // Load map
-            const currentMap = await loadMapFromServer(settings.mapType);
-
-            // Initialize participants and marbles
-            const { participants, marbles } = initializeParticipantsAndMarbles(
-              canvases.canvas,
-              currentMap
-            );
-
-            // Start game loop
-            const gameLoop = new GameLoop(
-              world,
-              canvases.canvas,
-              canvases.ctx,
-              canvases.minimapCanvas,
-              canvases.minimapCtx,
-              marbles,
-              participants,
-              currentMap,
-              settings
-            );
-
-            gameLoop.start();
-          } catch (error) {
-            console.error('Failed to initialize game:', error);
-          }
-        });
-      });
+        // Export game instance for debugging
+        (window as any).game = game;
+      } catch (error) {
+        console.error('Failed to initialize pinball game:', error);
+      }
     });
   }, []);
 
+  const handleFullScreen = () => {
+    if (!appRef.current) return;
+
+    if (!document.fullscreenElement) {
+      appRef.current.requestFullscreen().catch((err) => {
+        console.error('Failed to enter fullscreen:', err);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   return (
-    <div className="game-container">
-      <canvas id="game-canvas"></canvas>
-      <canvas id="minimap-canvas"></canvas>
-      <div id="leaderboard"></div>
-      <div id="controls"></div>
-      <div id="fps-display"></div>
+    <div className="pinball-page-container">
+      <div id="app" ref={appRef}>
+        {/* Main Game Area */}
+        <div id="game-area">
+        <canvas id="game-canvas"></canvas>
 
-      <style jsx>{`
-        .game-container {
-          position: relative;
-          width: 100vw;
-          height: 100vh;
-          overflow: hidden;
-          background: #1a1a1a;
-        }
+        {/* Minimap */}
+        <div id="minimap" className="minimap">
+          <canvas id="minimap-canvas" width="120" height="320"></canvas>
+        </div>
 
-        #game-canvas {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-        }
+        {/* Performance Monitor */}
+        <div id="performance-monitor" className="performance-monitor">
+          <div className="performance-text">
+            <div id="fps-display">FPS: --</div>
+          </div>
+        </div>
 
-        #minimap-canvas {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          width: 200px;
-          height: 200px;
-          border: 2px solid #333;
-          background: rgba(0, 0, 0, 0.5);
-        }
+        {/* Leaderboard */}
+        <div id="leaderboard" className="leaderboard">
+          <h3>Live Rankings</h3>
+          <div id="leaderboard-list"></div>
+        </div>
 
-        #leaderboard {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          min-width: 250px;
-          background: rgba(0, 0, 0, 0.8);
-          border: 2px solid #333;
-          border-radius: 8px;
-          padding: 15px;
-          color: white;
-          font-family: monospace;
-        }
+        {/* Winner Display */}
+        <div id="winner-display" className="hidden">
+          <div id="fireworks-container"></div>
+          <div id="winner-content">
+            <h1>🎉 Winner! 🎉</h1>
+            <div id="winner-name"></div>
+            <div id="winner-buttons">
+              <button id="play-again-btn" className="winner-btn">Play Again</button>
+              <button id="play-without-winner-btn" className="winner-btn secondary">Play Without Winner</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        #controls {
-          position: absolute;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: rgba(0, 0, 0, 0.8);
-          border: 2px solid #333;
-          border-radius: 8px;
-          padding: 15px;
-          color: white;
-        }
+      {/* Settings Popup */}
+      <div id="settings-popup" className="settings-popup">
+        <div className="settings-header">
+          <h4>Game Controls & Settings</h4>
+        </div>
+        <div className="settings-content">
+          <div className="settings-left">
+            <div className="setting-group">
+              <label htmlFor="names-input">Participants (newline or comma separated, *number for weight, max 8 chars)</label>
+              <textarea
+                id="names-input"
+                placeholder="John Doe&#10;Jane Smith*3&#10;Bob Johnson*2&#10;Alice Brown"
+              ></textarea>
+            </div>
+            <div className="control-buttons">
+              <button id="start-btn" className="control-btn primary">Start</button>
+              <button id="reset-btn" className="control-btn">Reset</button>
+            </div>
+          </div>
+          <div className="settings-right">
+            <div className="setting-group">
+              <label htmlFor="map-select">Map Selection</label>
+              <select id="map-select">
+                <option value="classic">Classic</option>
+              </select>
+            </div>
+            <div className="setting-group">
+              <label htmlFor="winner-mode">Winner Selection</label>
+              <select id="winner-mode">
+                <option value="first">1st Place</option>
+                <option value="last">Last Place</option>
+                <option value="custom">Custom Rank</option>
+                <option value="topN">Top N Places</option>
+              </select>
+              <input type="number" id="custom-rank" min="1" defaultValue="1" style={{display: 'none'}} />
+              <input type="number" id="top-n-count" min="1" max="50" defaultValue="5" style={{display: 'none'}} placeholder="Number of winners (max 50)" />
+            </div>
+            <div className="setting-group">
+              <label htmlFor="speed-slider">Speed</label>
+              <div className="speed-control">
+                <input type="range" id="speed-slider" min="0.1" max="0.5" step="0.1" defaultValue="0.3" />
+                <span id="speed-value">Normal</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        #fps-display {
-          position: absolute;
-          bottom: 20px;
-          right: 20px;
-          background: rgba(0, 0, 0, 0.8);
-          border: 2px solid #333;
-          border-radius: 8px;
-          padding: 10px 15px;
-          color: #0f0;
-          font-family: monospace;
-          font-size: 14px;
-        }
-      `}</style>
+      {/* Toast Container */}
+      <div id="toast-container"></div>
+      </div>
+
+      {/* Full Screen Button */}
+      <button
+        className="fullscreen-btn"
+        onClick={handleFullScreen}
+        title="Toggle fullscreen (or press ESC to exit)"
+      >
+        <span>⛶</span>
+        <span>Full Screen</span>
+      </button>
     </div>
   );
 }

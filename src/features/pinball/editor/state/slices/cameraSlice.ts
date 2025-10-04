@@ -21,12 +21,12 @@ const DEFAULT_CAMERA: EditorCamera = {
   zoom: 1
 };
 
-export const createCameraSlice = (set: any) => ({
+export const createCameraSlice = (set: unknown) => ({
   // State
   camera: { ...DEFAULT_CAMERA },
 
   // Actions
-  setCamera: (camera: Partial<EditorCamera>) => set((state: any) => ({
+  setCamera: (camera: Partial<EditorCamera>) => set((state: unknown) => ({
     camera: { ...state.camera, ...camera }
   })),
 

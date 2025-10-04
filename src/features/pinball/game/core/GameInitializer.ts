@@ -100,8 +100,8 @@ export function initializeParticipantsAndMarbles(
 export async function loadInitialMap(): Promise<EditorMapJson> {
   try {
     // Try to load default map from API
-    // Use environment variable for API URL to support different environments
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    // Use relative path for same-origin requests
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
     const response = await fetch(`${API_URL}/api/pinball/maps/default`);
     if (response.ok) {
       const editorMap = await response.json();

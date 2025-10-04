@@ -30,9 +30,9 @@ export interface GameLoopContext {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   // Legacy properties for compatibility (will be removed)
-  walls?: any[];
-  obstacles?: any[];
-  sensors?: any[];
+  walls?: unknown[];
+  obstacles?: unknown[];
+  sensors?: unknown[];
 }
 
 export interface GameLoopCallbacks {

@@ -34,7 +34,7 @@ export function createDefaultMap(): EditorMapJson {
   return {
     meta: {
       name: 'default',
-      version: 1 as any,
+      version: 1 as unknown,
       canvasSize: { width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT },
       gridSize: 20,
       spawnPoint: { x: 200, y: DEFAULT_SPAWN_HEIGHT }
@@ -48,9 +48,9 @@ export function createDefaultMap(): EditorMapJson {
           { x: 0, y: 0 },
           { x: 0, y: DEFAULT_MAP_HEIGHT }
         ],
-        material: 'normal' as any,
+        material: 'normal' as unknown,
         thickness: 10
-      } as any,
+      } as unknown,
       {
         id: 'right-wall',
         type: 'edge',
@@ -58,9 +58,9 @@ export function createDefaultMap(): EditorMapJson {
           { x: DEFAULT_MAP_WIDTH, y: 0 },
           { x: DEFAULT_MAP_WIDTH, y: DEFAULT_MAP_HEIGHT }
         ],
-        material: 'normal' as any,
+        material: 'normal' as unknown,
         thickness: 10
-      } as any,
+      } as unknown,
       // Default finish line
       {
         id: 'finish',
@@ -83,11 +83,11 @@ export function calculateAutoFinishLine(editorMap: EditorMapJson): number {
     if (obj.type === 'edge') {
       // Handle both vertices array and a/b format
       if (obj.vertices && obj.vertices.length > 0) {
-        obj.vertices.forEach((v: any) => {
+        obj.vertices.forEach((v: unknown) => {
           lowestY = Math.max(lowestY, v.y);
         });
-      } else if ((obj as any).a && (obj as any).b) {
-        lowestY = Math.max(lowestY, Math.max((obj as any).a.y, (obj as any).b.y));
+      } else if ((obj as unknown).a && (obj as unknown).b) {
+        lowestY = Math.max(lowestY, Math.max((obj as unknown).a.y, (obj as unknown).b.y));
       }
     } else if (obj.type === 'bubble') {
       lowestY = Math.max(lowestY, obj.center.y + obj.radius);
@@ -124,7 +124,7 @@ export function ensureFinishLine(editorMap: EditorMapJson): void {
 export function createEdgeFromEditor(
   world: World,
   gameWorld: GameWorld,
-  edgeObj: any,
+  edgeObj: unknown,
   scale: number
 ): Wall | null {
   // Handle vertices array for edge walls
@@ -198,7 +198,7 @@ export function createEdgeFromEditor(
 export function createBubbleFromEditor(
   world: World,
   gameWorld: GameWorld,
-  bubbleObj: any,
+  bubbleObj: unknown,
   scale: number
 ): Bubble {
   const body = world.createBody({
@@ -237,7 +237,7 @@ export function createBubbleFromEditor(
 export function createRotatingBarFromEditor(
   world: World,
   gameWorld: GameWorld,
-  barObj: any,
+  barObj: unknown,
   scale: number
 ): RotatingBar {
   const body = world.createBody({
@@ -274,7 +274,7 @@ export function createRotatingBarFromEditor(
 export function createBounceCircleFromEditor(
   world: World,
   gameWorld: GameWorld,
-  bounceCircleObj: any,
+  bounceCircleObj: unknown,
   scale: number
 ): BounceCircle {
   const body = world.createBody({
@@ -316,7 +316,7 @@ export function createBounceCircleFromEditor(
 export function createJumppadFromEditor(
   world: World,
   gameWorld: GameWorld,
-  jumppadObj: any,
+  jumppadObj: unknown,
   scale: number
 ): JumpPad {
   const body = world.createBody({
@@ -358,7 +358,7 @@ export function createJumppadFromEditor(
 export function createFinishLineFromEditor(
   world: World,
   gameWorld: GameWorld,
-  finishObj: any,
+  finishObj: unknown,
   scale: number
 ): FinishLine {
   const body = world.createBody({

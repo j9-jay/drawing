@@ -25,33 +25,33 @@ const DEFAULT_SETTINGS: EditorSettings = {
   snapThreshold: 15
 };
 
-export const createSettingsSlice = (set: any) => ({
+export const createSettingsSlice = (set: unknown) => ({
   // State
   settings: { ...DEFAULT_SETTINGS },
 
   // Actions
-  toggleGrid: () => set((state: any) => ({
+  toggleGrid: () => set((state: unknown) => ({
     settings: {
       ...state.settings,
       gridVisible: !state.settings.gridVisible
     }
   })),
 
-  toggleGridSnap: () => set((state: any) => ({
+  toggleGridSnap: () => set((state: unknown) => ({
     settings: {
       ...state.settings,
       gridSnap: !state.settings.gridSnap
     }
   })),
 
-  toggleVertexSnap: () => set((state: any) => ({
+  toggleVertexSnap: () => set((state: unknown) => ({
     settings: {
       ...state.settings,
       vertexSnap: !state.settings.vertexSnap
     }
   })),
 
-  setSnapThreshold: (threshold: number) => set((state: any) => ({
+  setSnapThreshold: (threshold: number) => set((state: unknown) => ({
     settings: {
       ...state.settings,
       snapThreshold: threshold

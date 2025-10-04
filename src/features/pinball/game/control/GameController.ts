@@ -30,12 +30,12 @@ export interface GameControlState {
 export function startGame(
   state: GameControlState,
   settings: GameSettings,
-  participants: any[],
+  participants: unknown[],
   marbles: Marble[],
   world: World,
   currentMap: EditorMapJson | null,
   canvas: HTMLCanvasElement,
-  cameraConfig: any,
+  cameraConfig: unknown,
   parseParticipantsFn: () => boolean
 ): Marble[] {
   if (!parseParticipantsFn()) return marbles;
@@ -120,7 +120,7 @@ export function stopGame(
   world: World,
   currentMap: EditorMapJson | null,
   canvas: HTMLCanvasElement,
-  cameraConfig: any
+  cameraConfig: unknown
 ): void {
   state.gameState = 'idle';
   clearMarbles(marbles, world);
@@ -166,7 +166,7 @@ export function resetGame(
   state: GameControlState,
   currentMap: EditorMapJson | null,
   canvas: HTMLCanvasElement,
-  cameraConfig: any
+  cameraConfig: unknown
 ): void {
   state.gameState = 'idle';
   state.winnerShown = false;

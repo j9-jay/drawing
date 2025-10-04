@@ -23,7 +23,7 @@ export interface EventHandlerContext {
   marbles: Marble[];
   world: World;
   currentMap: EditorMapJson | null;
-  mapManager: any;
+  mapManager: unknown;
   timeScale: number;
 }
 

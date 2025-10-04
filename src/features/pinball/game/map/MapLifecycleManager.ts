@@ -14,7 +14,7 @@ const DEFAULT_MAP_NAME = 'default';
 
 export async function initializeMapSelect(selectElement: HTMLSelectElement): Promise<void> {
   try {
-    const response = await fetch('http://localhost:7070/api/maps/list');
+    const response = await fetch('/api/pinball/maps/list-game');
     if (!response.ok) {
       return populateDefault(selectElement);
     }
@@ -114,7 +114,7 @@ export async function loadMapIntoState(input: LoadMapInput): Promise<LoadMapResu
 
 async function loadEditorMap(mapName: string): Promise<EditorMapJson> {
   try {
-    const response = await fetch(`http://localhost:7070/api/maps/load/${mapName}`);
+    const response = await fetch(`/api/pinball/maps/load-game/${mapName}`);
     if (response.ok) {
       return await response.json();
     }

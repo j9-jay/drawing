@@ -224,7 +224,7 @@ export function renderMinimapStructure(
       const shape = fixtureItem.getShape();
       if (shape.getType() === 'edge') {
         // Render edge as line on minimap
-        const edge = shape as any;
+        const edge = shape as unknown;
         const v1 = body.getWorldPoint(edge.m_vertex1);
         const v2 = body.getWorldPoint(edge.m_vertex2);
 

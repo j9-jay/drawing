@@ -1,6 +1,6 @@
 import { EditorMapJson } from '../../shared/types/editorMap';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 // Save map to server or download as fallback
 export async function saveMap(mapJson: EditorMapJson): Promise<void> {
@@ -61,7 +61,7 @@ function sanitizeFilename(filename: string): string {
 // Load maps list from server
 export async function loadMapsList(): Promise<string[]> {
   try {
-    const response = await fetch('${API_URL}/api/pinball/maps/list');
+    const response = await fetch(`${API_URL}/api/pinball/maps/list`);
     if (response.ok) {
       const maps = await response.json();
       return maps;

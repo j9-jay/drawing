@@ -1,0 +1,636 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.pinball-page-container {
+    position: relative;
+    min-height: calc(100vh - 64px); /* navbar 높이 제외 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.pinball-page-container::before {
+    content: '';
+    position: absolute;
+    top: 20px; /* 상단 여백 40px 중 20px */
+    width: calc(min(1460px, 100% - 140px));
+    height: calc(80vh + 100px); /* 버튼 영역 추가 (상단 40px + 버튼 60px) */
+    max-height: 900px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    z-index: 0;
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    height: 80vh;
+    max-height: 800px;
+    display: flex;
+    flex-direction: column;
+    background: #1a1a1a;
+    border: 2px solid #444;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.setting-group {
+    margin-bottom: 20px;
+}
+
+.setting-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+.setting-group textarea,
+.setting-group select,
+.setting-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 14px;
+}
+
+.setting-group textarea {
+    height: 80px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.settings-popup .setting-group {
+    margin-bottom: 8px;
+}
+
+.settings-popup .setting-group textarea {
+    height: 50px;
+}
+
+.setting-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+/* Game Area */
+#game-area {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+#game-canvas {
+    width: 100%;  /* Full screen width */
+    height: 100%;  /* Full screen height */
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    display: block;
+}
+
+/* Winner Display */
+#winner-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 3px solid #ffd700;
+    border-radius: 15px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    min-width: 300px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+#winner-display.hidden {
+    display: none;
+}
+
+#winner-content {
+    text-align: center;
+    color: #fff;
+    z-index: 501;
+}
+
+#winner-content h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    animation: bounce 1s ease-in-out infinite alternate;
+}
+
+#winner-name {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffd700;
+    margin-bottom: 30px;
+}
+
+#winner-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.winner-btn {
+    background: #4CAF50;
+    border: none;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.winner-btn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.winner-btn.secondary {
+    background: #FF9800;
+}
+
+.winner-btn.secondary:hover {
+    background: #F57C00;
+}
+
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}
+
+
+/* Minimap */
+.minimap {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+#minimap-canvas {
+    display: block;
+    background: #1a1a1a;
+    border: 2px solid #444;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Performance Monitor */
+.performance-monitor {
+    position: absolute;
+    top: 364px; /* 미니맵 아래 위치 (20 + 320 + 4px 여백 + 테두리) */
+    left: 20px;
+    z-index: 101; /* 미니맵보다 높은 z-index */
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #0f0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #0f0;
+    min-width: 120px;
+}
+
+.performance-monitor.hidden {
+    display: none;
+}
+
+.performance-text {
+    line-height: 1.4;
+}
+
+#fps-display {
+    color: #0f0;
+    font-weight: bold;
+}
+
+/* Leaderboard */
+.leaderboard {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    min-width: 250px;
+    max-height: calc(80vh - 80px);
+    overflow-y: auto;
+    z-index: 100;
+    border: 2px solid #444;
+    /* Hide scrollbar while keeping functionality */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.leaderboard::-webkit-scrollbar {
+    display: none; /* WebKit browsers (Chrome, Safari, Edge) */
+}
+
+.leaderboard h3 {
+    color: #ffd700;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+}
+
+.leaderboard-item.rank-1 {
+    border-left-color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.leaderboard-item.rank-2 {
+    border-left-color: #c0c0c0;
+    background: rgba(192, 192, 192, 0.1);
+}
+
+.leaderboard-item.rank-3 {
+    border-left-color: #cd7f32;
+    background: rgba(205, 127, 50, 0.1);
+}
+
+.leaderboard-item.finished {
+    opacity: 0.7;
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.leaderboard-item.preview {
+    background: rgba(100, 100, 100, 0.1);
+}
+
+.leaderboard-rank {
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff;
+    min-width: 30px;
+}
+
+.leaderboard-name {
+    flex: 1;
+    margin-left: 10px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.leaderboard-status {
+    font-size: 12px;
+    color: #ccc;
+}
+
+
+/* Settings Popup */
+.settings-popup {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 580px; /* 650px에서 580px로 더 감소 */
+    max-width: calc(100% - 40px); /* 반응형 대응 */
+    background: #2d2d2d;
+    border: 2px solid #444;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.settings-popup.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+.settings-header {
+    padding: 8px 15px;
+    background: #333;
+    border-bottom: 1px solid #444;
+    border-radius: 8px 8px 0 0;
+}
+
+.settings-header h4 {
+    margin: 0;
+    color: #fff;
+    font-size: 16px;
+}
+
+.settings-content {
+    padding: 12px;
+    display: flex;
+    gap: 20px;
+}
+
+.settings-left {
+    flex: 1; /* 5:5 비율 - 좌측 50% */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.settings-right {
+    flex: 1; /* 5:5 비율 - 우측 50% */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.settings-right select,
+.settings-right input[type="number"] {
+    padding: 8px;
+    font-size: 13px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.settings-popup .setting-group textarea {
+    height: 100px;
+}
+
+.control-btn {
+    background: #444;
+    border: none;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    min-width: 60px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.control-btn:hover {
+    background: #555;
+    transform: translateY(-2px);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+}
+
+.control-btn.primary {
+    background: #4CAF50;
+}
+
+.control-btn.primary:hover {
+    background: #45a049;
+}
+
+/* Speed Control */
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+}
+
+.settings-popup .speed-control {
+    margin: 0;
+    padding: 5px 8px;
+}
+
+.speed-control label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 35px;
+}
+
+.speed-control input[type="range"] {
+    width: 80px;
+    height: 6px;
+    background: #444;
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.speed-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.speed-control input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+#speed-value {
+    color: #4CAF50;
+    font-weight: bold;
+    min-width: 80px;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* Toast Container */
+#toast-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: #333;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+    min-width: 200px;
+}
+
+.toast.error {
+    border-left-color: #f44336;
+}
+
+.toast.success {
+    border-left-color: #4CAF50;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Fireworks */
+#fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 500;
+}
+
+.firework {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(20);
+        opacity: 0;
+    }
+}
+
+/* Full Screen Button */
+.fullscreen-btn {
+    position: relative;
+    margin: 16px auto 0;
+    background: #4CAF50;
+    border: none;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fullscreen-btn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.fullscreen-btn:active {
+    transform: translateY(0);
+}
+
+/* 전체화면 상태일 때 */
+#app:fullscreen {
+    max-width: 100%;
+    max-height: 100%;
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+}
+
+.pinball-page-container:has(#app:fullscreen) .fullscreen-btn {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 700px) { /* 1000px에서 700px로 조정 */
+    .pinball-page-container {
+        padding: 10px;
+    }
+
+    #app {
+        height: 70vh;
+    }
+
+    .settings-popup {
+        width: calc(100% - 40px);
+        left: 10px;
+        right: 10px;
+    }
+
+    .settings-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .control-buttons {
+        flex-wrap: wrap;
+    }
+
+    .fullscreen-btn {
+        margin-top: 15px;
+        padding: 10px 24px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .control-btn {
+        padding: 10px 15px;
+        font-size: 16px;
+        min-width: 50px;
+        height: 45px;
+    }
+
+    #winner-content h1 {
+        font-size: 2rem;
+    }
+
+    #winner-name {
+        font-size: 1.5rem;
+    }
+
+    .settings-popup {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        width: calc(100% - 20px);
+    }
+}

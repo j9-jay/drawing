@@ -1,0 +1,1446 @@
+{
+  "meta": {
+    "name": "Default Map",
+    "version": 1,
+    "canvasSize": {
+      "width": 1500,
+      "height": 10000
+    },
+    "gridSize": 30,
+    "spawnPoint": {
+      "x": 750,
+      "y": 300
+    }
+  },
+  "objects": [
+    {
+      "id": "bff64ef9-dc5d-43c2-a211-37a4b07b5573",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 450,
+          "y": 90
+        },
+        {
+          "x": 450,
+          "y": 900
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "0deed600-2d5e-443b-81ce-355bc1fde2f1",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1050,
+          "y": 900
+        },
+        {
+          "x": 1050,
+          "y": 90
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "51deae48-96c7-4aff-93ec-f5acd2846354",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 750,
+        "y": 750
+      },
+      "length": 270,
+      "thickness": 15,
+      "angularSpeed": 2,
+      "speedLevel": "fast"
+    },
+    {
+      "id": "d8c010a1-54c2-4524-a12e-c429c1e31b97",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 450,
+          "y": 90
+        },
+        {
+          "x": 1050,
+          "y": 90
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "cac20082-abfc-41b7-bcf0-b4a05d4295e8",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 450,
+          "y": 900
+        },
+        {
+          "x": 450,
+          "y": 930
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "58aedf17-e893-412d-829d-13c27d5c1954",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 300,
+          "y": 1200
+        },
+        {
+          "x": 450,
+          "y": 930
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "61df9a70-b22b-4bde-89fb-cafa8b990471",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1050,
+          "y": 900
+        },
+        {
+          "x": 1200,
+          "y": 1200
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "168890f8-346e-4d19-b523-a36ac278aa0b",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 300,
+          "y": 1200
+        },
+        {
+          "x": 300,
+          "y": 2250
+        },
+        {
+          "x": 300,
+          "y": 2250
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "1a429520-212b-40b5-bb47-91862120f237",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1200,
+          "y": 2250
+        },
+        {
+          "x": 1200,
+          "y": 2220
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "c16546f2-ba8c-4d5a-afd3-ee7e672ba535",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1200,
+          "y": 1200
+        },
+        {
+          "x": 1200,
+          "y": 2220
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "6021c93f-6129-44f9-8797-661c863bb061",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 510,
+          "y": 1050
+        },
+        {
+          "x": 570,
+          "y": 1110
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "b5be9303-e2fa-4bd6-9e9f-8a1ce215f36e",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 630,
+          "y": 1050
+        },
+        {
+          "x": 690,
+          "y": 1110
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "2a869c77-01e5-4304-80e1-e20062b567e3",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 750,
+          "y": 1050
+        },
+        {
+          "x": 810,
+          "y": 1110
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "f12649cd-cc91-41b4-a97e-db9520182a0f",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 930,
+          "y": 1110
+        },
+        {
+          "x": 870,
+          "y": 1050
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "fda5d0a5-2fc1-4736-ada6-d29e415721ac",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1050,
+          "y": 1110
+        },
+        {
+          "x": 990,
+          "y": 1050
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "6fcd9db1-ceb1-4f72-bf3e-c22f9d237429",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1020,
+          "y": 1200
+        },
+        {
+          "x": 960,
+          "y": 1260
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "8ce337e7-36a5-451c-b434-9e74e792e2a3",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 900,
+          "y": 1200
+        },
+        {
+          "x": 840,
+          "y": 1260
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "0895b892-5c30-41cf-afe6-394c65b0421a",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 780,
+          "y": 1200
+        },
+        {
+          "x": 720,
+          "y": 1260
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "1d009d75-d800-4708-9b59-f48f899e136c",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 660,
+          "y": 1200
+        },
+        {
+          "x": 600,
+          "y": 1260
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "bfbcff57-1043-47c2-9fac-0c1cf27f4c23",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 540,
+          "y": 1200
+        },
+        {
+          "x": 480,
+          "y": 1260
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "463fa045-ac25-4767-8bc8-9ce1dd981f5e",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 510,
+          "y": 1350
+        },
+        {
+          "x": 570,
+          "y": 1410
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "118f149d-a777-48c3-95de-042506c9db5c",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 390,
+          "y": 1350
+        },
+        {
+          "x": 450,
+          "y": 1410
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "23f9a86e-25ae-4723-a4f8-9868c444032c",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 630,
+          "y": 1350
+        },
+        {
+          "x": 690,
+          "y": 1410
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "347848bf-162b-4fa3-ae4c-fc0e70542e32",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 750,
+          "y": 1350
+        },
+        {
+          "x": 810,
+          "y": 1410
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "735a7d0d-8363-4802-bb31-a2afe9094580",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 870,
+          "y": 1350
+        },
+        {
+          "x": 930,
+          "y": 1410
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "0c8e9be2-a4fe-4127-aaec-4b582c9205b9",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 990,
+          "y": 1350
+        },
+        {
+          "x": 1050,
+          "y": 1410
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "6b48f189-424b-4bbe-b15d-db52f062a2fa",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1140,
+          "y": 1500
+        },
+        {
+          "x": 1080,
+          "y": 1560
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "0571fb15-d1b4-402a-99ce-3ac5f9b97110",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1020,
+          "y": 1500
+        },
+        {
+          "x": 960,
+          "y": 1560
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "86814329-ee0d-4064-a587-db45a7ba7316",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 900,
+          "y": 1500
+        },
+        {
+          "x": 840,
+          "y": 1560
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "6eca93a0-df4e-43be-b42b-7756443cf62f",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 780,
+          "y": 1500
+        },
+        {
+          "x": 720,
+          "y": 1560
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "b236f56f-b156-442b-86c9-aec064c85026",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 660,
+          "y": 1500
+        },
+        {
+          "x": 600,
+          "y": 1560
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "21878579-9f70-440b-a07f-7a6c8684e2b5",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 540,
+          "y": 1500
+        },
+        {
+          "x": 480,
+          "y": 1560
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "ce9d22f3-1d06-4885-9f25-fba3d309fd3f",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 450,
+        "y": 1800
+      },
+      "length": 150,
+      "thickness": 15,
+      "angularSpeed": 1
+    },
+    {
+      "id": "a5df3cbb-ae55-483d-bfd2-7a2603914d4b",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 660,
+        "y": 1800
+      },
+      "length": 150,
+      "thickness": 15,
+      "angularSpeed": 1
+    },
+    {
+      "id": "d8e34f83-b65c-4b23-bb95-48c5d6d34781",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 870,
+        "y": 1800
+      },
+      "length": 150,
+      "thickness": 15,
+      "angularSpeed": -1
+    },
+    {
+      "id": "2fadf171-a36a-48ff-8939-a8d9ccd17f71",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 1080,
+        "y": 1800
+      },
+      "length": 150,
+      "thickness": 15,
+      "angularSpeed": -1
+    },
+    {
+      "id": "b98f88f6-6e6f-421b-9f51-acc753c8b7ae",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 420,
+        "y": 2040
+      },
+      "length": 150,
+      "thickness": 15,
+      "angularSpeed": 1
+    },
+    {
+      "id": "d25856a4-c4ca-4509-880c-344e0ec74210",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 630,
+        "y": 2040
+      },
+      "length": 150,
+      "thickness": 15,
+      "angularSpeed": 1
+    },
+    {
+      "id": "fc597bdd-3bf4-4fd7-9328-e4f4de20d91c",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 840,
+        "y": 2040
+      },
+      "length": 150,
+      "thickness": 15,
+      "angularSpeed": -1
+    },
+    {
+      "id": "5d10449a-edfb-4704-af77-6cdb245f9cc3",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 1050,
+        "y": 2040
+      },
+      "length": 150,
+      "thickness": 15,
+      "angularSpeed": -1
+    },
+    {
+      "id": "c821028c-747f-451b-be09-3ccca04a163e",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 300,
+          "y": 2250
+        },
+        {
+          "x": 300,
+          "y": 2550
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "9830b149-e2c2-4f11-85aa-def8231f3cdd",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1200,
+          "y": 2220
+        },
+        {
+          "x": 1200,
+          "y": 2250
+        },
+        {
+          "x": 1200,
+          "y": 2550
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "c8b7e799-b76b-406d-a099-482322b961b9",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 510,
+          "y": 2340
+        },
+        {
+          "x": 420,
+          "y": 2490
+        },
+        {
+          "x": 600,
+          "y": 2490
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "c561b57e-759b-49f7-bafe-c978c7936cef",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 510,
+          "y": 2340
+        },
+        {
+          "x": 600,
+          "y": 2490
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "32ad12b9-8812-4c9d-95dd-baab820bf295",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 900,
+          "y": 2490
+        },
+        {
+          "x": 990,
+          "y": 2340
+        },
+        {
+          "x": 1080,
+          "y": 2490
+        },
+        {
+          "x": 900,
+          "y": 2490
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "e6a4e653-26c5-411b-baac-7afcac12057b",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 750,
+          "y": 2460
+        },
+        {
+          "x": 660,
+          "y": 2610
+        },
+        {
+          "x": 840,
+          "y": 2610
+        },
+        {
+          "x": 750,
+          "y": 2460
+        },
+        {
+          "x": 750,
+          "y": 2460
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "8eccb0db-65f8-4d76-b796-0a77df638ed2",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 300,
+          "y": 2550
+        },
+        {
+          "x": 450,
+          "y": 2700
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "1abc6619-4d65-47b4-b54c-db25f02c35ad",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 300,
+          "y": 2850
+        },
+        {
+          "x": 450,
+          "y": 2700
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "26e90f42-436a-4370-8763-3cd44295244f",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1200,
+          "y": 2550
+        },
+        {
+          "x": 1050,
+          "y": 2700
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "9b949cd1-29aa-4863-a21f-1043454a283d",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1200,
+          "y": 2850
+        },
+        {
+          "x": 1050,
+          "y": 2700
+        },
+        {
+          "x": 1050,
+          "y": 2700
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "d310139d-53b6-46ee-9ae0-6566316f26a9",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 600,
+          "y": 2670
+        },
+        {
+          "x": 510,
+          "y": 2820
+        },
+        {
+          "x": 690,
+          "y": 2820
+        },
+        {
+          "x": 600,
+          "y": 2670
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "b5306ca5-738c-4bcb-b8dd-899ff23beee5",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 900,
+          "y": 2670
+        },
+        {
+          "x": 810,
+          "y": 2820
+        },
+        {
+          "x": 990,
+          "y": 2820
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "f9b18ca9-6284-41f0-943f-0357693692f7",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 900,
+          "y": 2670
+        },
+        {
+          "x": 990,
+          "y": 2820
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "719ca164-5a5b-480d-8420-f3f333c435a5",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 300,
+          "y": 2850
+        },
+        {
+          "x": 300,
+          "y": 3150
+        },
+        {
+          "x": 300,
+          "y": 3450
+        },
+        {
+          "x": 300,
+          "y": 3600
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "c2f7b7e3-43c1-4131-9074-bf8852b986b3",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 450,
+          "y": 3750
+        },
+        {
+          "x": 300,
+          "y": 3600
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "dc6db017-6f13-45f4-a69d-428d681bb614",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1200,
+          "y": 2850
+        },
+        {
+          "x": 1200,
+          "y": 3600
+        },
+        {
+          "x": 1050,
+          "y": 3750
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "bc3e0f18-8750-4a65-b87c-cd6f687ce82a",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 600,
+          "y": 3150
+        },
+        {
+          "x": 750,
+          "y": 3300
+        },
+        {
+          "x": 600,
+          "y": 3450
+        },
+        {
+          "x": 450,
+          "y": 3600
+        },
+        {
+          "x": 600,
+          "y": 3750
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "fae29619-1f59-44e7-8703-4697316b6902",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 900,
+          "y": 3150
+        },
+        {
+          "x": 1050,
+          "y": 3300
+        },
+        {
+          "x": 750,
+          "y": 3600
+        },
+        {
+          "x": 900,
+          "y": 3750
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "49601293-7fd6-4753-8daa-fe04086c6350",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 450,
+          "y": 3750
+        },
+        {
+          "x": 450,
+          "y": 4350
+        },
+        {
+          "x": 450,
+          "y": 4350
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "af0a5c45-7b54-477c-8273-9cde2899e020",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1050,
+          "y": 3750
+        },
+        {
+          "x": 1050,
+          "y": 4350
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "d5ca66b7-1a0f-49ad-bbd4-d01fc9549f37",
+      "type": "bubble",
+      "center": {
+        "x": 600,
+        "y": 3900
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "61ea06e9-8b30-459a-b247-f48ddc665bf7",
+      "type": "bubble",
+      "center": {
+        "x": 900,
+        "y": 3900
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "7702b2ac-e54d-44d9-80dc-72160c3a503f",
+      "type": "bubble",
+      "center": {
+        "x": 750,
+        "y": 3900
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "17934068-b564-4e52-88a6-e55bf4b47bfe",
+      "type": "bubble",
+      "center": {
+        "x": 600,
+        "y": 4050
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "f9219b7c-5a02-4d0d-a90d-280d03dbb5f2",
+      "type": "bubble",
+      "center": {
+        "x": 750,
+        "y": 4050
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "2f5a498a-117f-4944-a4ac-8d54faea5efd",
+      "type": "bubble",
+      "center": {
+        "x": 900,
+        "y": 4050
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "38dfe13b-0bf7-4f6a-ae2e-0f5779dd1294",
+      "type": "bubble",
+      "center": {
+        "x": 900,
+        "y": 4200
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "57c19e70-9fc4-44a5-9ce5-f34579863571",
+      "type": "bubble",
+      "center": {
+        "x": 750,
+        "y": 4200
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "222a7f03-1808-4744-9962-baf2cd46b34c",
+      "type": "bubble",
+      "center": {
+        "x": 600,
+        "y": 4200
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "7bc5c841-f34a-414f-b791-5af4ceb3e8d1",
+      "type": "bubble",
+      "center": {
+        "x": 600,
+        "y": 4350
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "db911b22-bbe8-4a4f-89d2-dd9163b6743a",
+      "type": "bubble",
+      "center": {
+        "x": 750,
+        "y": 4350
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "d2796c06-85a3-472c-a9b1-53e16b1b003c",
+      "type": "bubble",
+      "center": {
+        "x": 900,
+        "y": 4350
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "45585646-7431-4552-aa93-cbaafa80ddaa",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 720,
+          "y": 5010
+        },
+        {
+          "x": 720,
+          "y": 5310
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "90a1a87f-1650-4a6d-836a-321a0d62914a",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 780,
+          "y": 5010
+        },
+        {
+          "x": 780,
+          "y": 5310
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "9325e0b9-a633-4df3-a561-7d837b2c0df6",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 630,
+        "y": 5010
+      },
+      "length": 240,
+      "thickness": 15,
+      "angularSpeed": -0.5,
+      "speedLevel": "slow"
+    },
+    {
+      "id": "9253def7-8540-4f93-bfb7-4c25b3b82c8e",
+      "type": "rotatingBar",
+      "pivot": {
+        "x": 870,
+        "y": 5010
+      },
+      "length": 240,
+      "thickness": 15,
+      "angularSpeed": 0.5,
+      "speedLevel": "slow"
+    },
+    {
+      "id": "922080c8-1f36-41b4-9e3b-7adb2d83d26c",
+      "type": "finishLine",
+      "a": {
+        "x": 690,
+        "y": 5310
+      },
+      "b": {
+        "x": 810,
+        "y": 5310
+      },
+      "thickness": 5
+    },
+    {
+      "id": "01f1853a-ac89-4104-b4cb-f4fc5d5e1fb0",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1050,
+          "y": 4380
+        },
+        {
+          "x": 930,
+          "y": 4500
+        },
+        {
+          "x": 1050,
+          "y": 4650
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "21a8b26b-c82c-48b3-8043-01593b36236d",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1050,
+          "y": 4350
+        },
+        {
+          "x": 1050,
+          "y": 4380
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "3f9ebcab-fc8b-4761-8317-1b657dd0bb45",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 1050,
+          "y": 4650
+        },
+        {
+          "x": 780,
+          "y": 5010
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "2f5e0b06-0d26-4f2e-aae2-967e7cfe6c41",
+      "type": "edge",
+      "vertices": [
+        {
+          "x": 720,
+          "y": 5010
+        },
+        {
+          "x": 450,
+          "y": 4650
+        },
+        {
+          "x": 570,
+          "y": 4500
+        },
+        {
+          "x": 450,
+          "y": 4350
+        }
+      ],
+      "material": {
+        "restitution": 0.2,
+        "friction": 0.5
+      }
+    },
+    {
+      "id": "93c5bab2-e64d-474f-9f50-4a146d0ca221",
+      "type": "bounceCircle",
+      "position": {
+        "x": 750,
+        "y": 4800
+      },
+      "radius": 30,
+      "bounceMultiplier": 1.6
+    },
+    {
+      "id": "b9657fa9-0e50-44ca-8ede-a61336f47a03",
+      "type": "bounceCircle",
+      "position": {
+        "x": 660,
+        "y": 4710
+      },
+      "radius": 30,
+      "bounceMultiplier": 1.6
+    },
+    {
+      "id": "cdc5a8fb-04fa-4ff5-b3ce-487116567be0",
+      "type": "bounceCircle",
+      "position": {
+        "x": 840,
+        "y": 4710
+      },
+      "radius": 30,
+      "bounceMultiplier": 1.6
+    },
+    {
+      "id": "35f1a110-d458-4dfe-a8df-03fd976881be",
+      "type": "bubble",
+      "center": {
+        "x": 660,
+        "y": 4530
+      },
+      "radius": 30,
+      "restitution": 1.4
+    },
+    {
+      "id": "92a2f14d-def0-4885-9222-ad8934503478",
+      "type": "bubble",
+      "center": {
+        "x": 840,
+        "y": 4530
+      },
+      "radius": 30,
+      "restitution": 1.4
+    }
+  ]
+}

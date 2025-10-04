@@ -23,7 +23,7 @@ export interface ToolActions {
   cancelCreation: () => void;
 }
 
-export const createToolSlice = (set: any) => ({
+export const createToolSlice = (set: unknown) => ({
   // State
   currentTool: 'select' as Tool,
   creationState: {
@@ -50,7 +50,7 @@ export const createToolSlice = (set: any) => ({
     }
   }),
 
-  updateCreation: (updates: Partial<EditorMapObject>) => set((state: any) => ({
+  updateCreation: (updates: Partial<EditorMapObject>) => set((state: unknown) => ({
     creationState: {
       ...state.creationState,
       tempObject: state.creationState.tempObject

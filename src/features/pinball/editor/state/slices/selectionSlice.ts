@@ -12,7 +12,7 @@ export interface SelectionActions {
   setHovered: (id: string | null) => void;
 }
 
-export const createSelectionSlice = (set: any) => ({
+export const createSelectionSlice = (set: unknown) => ({
   // State
   selectedIds: new Set<string>(),
   hoveredId: null as string | null,

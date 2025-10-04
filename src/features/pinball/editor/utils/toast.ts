@@ -8,9 +8,44 @@ export interface ToastOptions {
 
 class ToastManager {
   private container: HTMLElement | null = null;
-  
+  private stylesInjected = false;
+
+  private ensureStyles() {
+    if (this.stylesInjected || typeof window === 'undefined') return;
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInToast {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideOutToast {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    this.stylesInjected = true;
+  }
+
   private ensureContainer() {
+    if (typeof window === 'undefined') return null;
+
     if (!this.container) {
+      this.ensureStyles();
       this.container = document.createElement('div');
       this.container.id = 'toast-container';
       this.container.style.cssText = `
@@ -31,8 +66,9 @@ class ToastManager {
       duration = 3000,
       dismissible = true
     } = options;
-    
+
     const container = this.ensureContainer();
+    if (!container) return null;
     
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
@@ -107,32 +143,5 @@ class ToastManager {
     return this.show(message, { ...options, type: 'info' });
   }
 }
-
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideInToast {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideOutToast {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-  }
-`;
-document.head.appendChild(style);
 
 export const toast = new ToastManager();

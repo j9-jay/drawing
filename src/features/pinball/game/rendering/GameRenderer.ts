@@ -85,7 +85,7 @@ export function render(
 
   // Update rotating bars continuously regardless of game state
   const rotatingBars = gameWorld.getRotatingBars();
-  updateRotatingBars(rotatingBars as any, timeScale);
+  updateRotatingBars(rotatingBars as unknown, timeScale);
 
   // Apply smooth camera offset and zoom
   const cameraOffsetX = currentCameraX;
@@ -130,7 +130,7 @@ export function renderWalls(ctx: CanvasRenderingContext2D, gameWorld: GameWorld)
       const shape = fixture.getShape();
       if (shape.getType() === 'edge') {
         // Render edge as glowing line
-        const edge = shape as any;
+        const edge = shape as unknown;
         const v1 = body.getWorldPoint(edge.m_vertex1);
         const v2 = body.getWorldPoint(edge.m_vertex2);
 
