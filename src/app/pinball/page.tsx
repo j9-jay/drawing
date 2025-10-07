@@ -1,11 +1,18 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import '../../features/pinball/game/game.css';
+import { useEditorStore } from '@/features/pinball/editor/state/editorState';
+
+const EditorModal = dynamic(() => import('@/features/pinball/editor/components/EditorModal'), {
+  ssr: false
+});
 
 export default function PinballGamePage() {
   const initialized = useRef(false);
   const appRef = useRef<HTMLDivElement>(null);
+  const { openEditor } = useEditorStore();
 
   useEffect(() => {
     if (initialized.current) return;
@@ -19,11 +26,21 @@ export default function PinballGamePage() {
 
         // Export game instance for debugging
         (window as any).game = game;
+
+        // Setup Map Editor button click handler
+        const mapEditorBtn = document.querySelector('.map-editor-btn');
+        if (mapEditorBtn) {
+          mapEditorBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openEditor();
+          });
+        }
       } catch (error) {
         console.error('Failed to initialize pinball game:', error);
       }
     });
-  }, []);
+  }, [openEditor]);
 
   const handleFullScreen = () => {
     if (!appRef.current) return;
@@ -146,6 +163,14 @@ export default function PinballGamePage() {
           <div className="modal-header">
             <h2>Map selection</h2>
             <div className="modal-controls">
+              <button
+                className="map-editor-btn"
+                type="button"
+                title="Open map editor"
+              >
+                <span>✏️</span>
+                <span>Map Editor</span>
+              </button>
               <select id="map-sort-select" className="sort-select">
                 <option value="name">가나다순</option>
                 <option value="name-desc">가나다 역순</option>
@@ -170,6 +195,9 @@ export default function PinballGamePage() {
         <span>⛶</span>
         <span>Full Screen</span>
       </button>
+
+      {/* Editor Modal */}
+      <EditorModal />
     </div>
   );
 }

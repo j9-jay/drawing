@@ -723,8 +723,29 @@
 
 .modal-controls {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
+}
+
+.map-editor-btn {
+    padding: 8px 16px;
+    background: #4A9EFF;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.map-editor-btn:hover {
+    background: #357ABD;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
 }
 
 .sort-select {

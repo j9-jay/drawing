@@ -24,13 +24,27 @@ export async function GET() {
 
     const jsonFiles = files.filter(file => file.endsWith('.json'));
 
-    // 파일 정보 수집
+    // 파일 정보 수집 (displayName 포함)
     const mapList = await Promise.all(
       jsonFiles.map(async (file) => {
         const filePath = path.join(mapsDir, file);
         const stats = await fs.stat(filePath);
+
+        // Read file to get meta.name for displayName
+        let displayName = file.replace('.json', '');
+        try {
+          const fileContent = await fs.readFile(filePath, 'utf-8');
+          const mapData = JSON.parse(fileContent);
+          if (mapData.meta?.name) {
+            displayName = mapData.meta.name;
+          }
+        } catch (error) {
+          console.warn(`Failed to read meta.name from ${file}:`, error);
+        }
+
         return {
           name: file.replace('.json', ''),
+          displayName,
           lastModified: stats.mtime.toISOString(),
           size: stats.size
         };

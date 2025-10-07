@@ -237,7 +237,7 @@ export function renderMarbles(ctx: CanvasRenderingContext2D, marbles: Marble[]):
 
     // Draw name
     ctx.fillStyle = '#fff';
-    ctx.font = `${Math.min(marble.size / 2, 16)}px Arial`; // Increased font size
+    ctx.font = `14px Arial`; // Increased font size
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.strokeStyle = '#000';
@@ -246,8 +246,8 @@ export function renderMarbles(ctx: CanvasRenderingContext2D, marbles: Marble[]):
     const displayName = marble.name.length > MARBLE_NAME_TRUNCATE_THRESHOLD
       ? marble.name.substring(0, MAX_MARBLE_DISPLAY_NAME_LENGTH)
       : marble.name;
-    ctx.strokeText(displayName, x, y);
-    ctx.fillText(displayName, x, y);
+    ctx.strokeText(displayName, x, y - marble.size - 8);
+    ctx.fillText(displayName, x, y - marble.size - 8);
   });
 }
 

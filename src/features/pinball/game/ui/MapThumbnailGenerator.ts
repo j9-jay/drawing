@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Map Thumbnail Generator
  * Generates thumbnail images for maps
@@ -10,61 +12,18 @@ export class MapThumbnailGenerator {
   private ctx: CanvasRenderingContext2D;
   private readonly WIDTH = 150;
   private readonly HEIGHT = 250;
-  private cache: Map<string, string> = new Map();
-  private readonly CACHE_KEY = 'mapThumbnailCache';
-  private readonly CACHE_EXPIRY_DAYS = 7;
 
   constructor() {
     this.canvas = document.createElement('canvas');
     this.canvas.width = this.WIDTH;
     this.canvas.height = this.HEIGHT;
     this.ctx = this.canvas.getContext('2d')!;
-    this.loadCache();
-  }
-
-  private loadCache(): void {
-    try {
-      const stored = localStorage.getItem(this.CACHE_KEY);
-      if (stored) {
-        const data = JSON.parse(stored);
-        const expiry = new Date(data.expiry);
-        if (expiry > new Date()) {
-          this.cache = new Map(data.cache);
-        } else {
-          localStorage.removeItem(this.CACHE_KEY);
-        }
-      }
-    } catch (error) {
-      console.warn('Failed to load thumbnail cache:', error);
-    }
-  }
-
-  private saveCache(): void {
-    try {
-      const expiry = new Date();
-      expiry.setDate(expiry.getDate() + this.CACHE_EXPIRY_DAYS);
-      const data = {
-        cache: Array.from(this.cache.entries()),
-        expiry: expiry.toISOString()
-      };
-      localStorage.setItem(this.CACHE_KEY, JSON.stringify(data));
-    } catch (error) {
-      console.warn('Failed to save thumbnail cache:', error);
-    }
   }
 
   /**
    * Generate thumbnail for a map
    */
   public async generateThumbnail(mapData: EditorMapJson): Promise<string> {
-    // Generate cache key based on map content
-    const cacheKey = this.generateCacheKey(mapData);
-
-    // Check cache first
-    if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
-    }
-
     // Clear canvas
     this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
 
@@ -109,26 +68,7 @@ export class MapThumbnailGenerator {
     // Convert to data URL
     const thumbnail = this.canvas.toDataURL('image/png');
 
-    // Cache the result
-    this.cache.set(cacheKey, thumbnail);
-    this.saveCache();
-
     return thumbnail;
-  }
-
-  private generateCacheKey(mapData: EditorMapJson): string {
-    // Create a simple hash based on map content
-    const typeCounts: Record<string, number> = {};
-    mapData.objects.forEach(obj => {
-      typeCounts[obj.type] = (typeCounts[obj.type] || 0) + 1;
-    });
-
-    const content = JSON.stringify({
-      objectCount: mapData.objects.length,
-      types: typeCounts,
-      spawnPoint: mapData.meta?.spawnPoint || null
-    });
-    return btoa(content).substring(0, 20);
   }
 
   private calculateMapBounds(mapData: EditorMapJson): {
@@ -297,38 +237,28 @@ export class MapThumbnailGenerator {
    * Generate thumbnail from map name by loading it first
    */
   public async generateThumbnailFromName(mapName: string): Promise<string | undefined> {
-    // Check name-based cache first
-    const nameCacheKey = `name_${mapName}`;
-    if (this.cache.has(nameCacheKey)) {
-      return this.cache.get(nameCacheKey)!;
-    }
-
     try {
       const response = await fetch(`/api/pinball/maps/load/${mapName}`);
       if (!response.ok) {
+        console.warn(`Failed to load map "${mapName}" for thumbnail generation:`, response.status);
         return undefined;
       }
 
       const mapData = await response.json();
-      const thumbnail = await this.generateThumbnail(mapData);
 
-      // Also cache by name for quick lookup
-      this.cache.set(nameCacheKey, thumbnail);
-      this.saveCache();
+      // Validate mapData structure
+      if (!mapData || !mapData.meta || !mapData.objects || !Array.isArray(mapData.objects)) {
+        console.error(`Invalid map data structure for "${mapName}":`, mapData);
+        return undefined;
+      }
+
+      const thumbnail = await this.generateThumbnail(mapData);
 
       return thumbnail;
     } catch (error) {
       console.error(`Failed to generate thumbnail for ${mapName}:`, error);
       return undefined;
     }
-  }
-
-  /**
-   * Clear the thumbnail cache
-   */
-  public clearCache(): void {
-    this.cache.clear();
-    localStorage.removeItem(this.CACHE_KEY);
   }
 }
 

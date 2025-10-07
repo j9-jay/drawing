@@ -13,6 +13,7 @@ import { toast } from '../utils/toast';
 import { GameIntegration } from '../services/GameIntegration';
 import Minimap from './Minimap';
 import MapList from './MapList';
+import { mapSelectionModal } from '../../game/ui/MapSelectionModal';
 import '../editor.css';
 
 const EditorModal: React.FC = () => {
@@ -60,11 +61,60 @@ const EditorModal: React.FC = () => {
     try {
       await saveMap(map);
       toast.success(`Map "${map.meta.name}" saved successfully!`);
+      return true;
     } catch (error) {
       console.error('Save failed:', error);
       toast.error(`Failed to save map: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      return false;
     }
   }, [map]);
+
+  const handleSaveAndReturn = useCallback(async () => {
+    const success = await handleSave();
+    if (success) {
+      closeEditor();
+      // Refresh and reopen map selection modal
+      await mapSelectionModal.open();
+    }
+  }, [handleSave, closeEditor]);
+
+  const handleSaveAndApply = useCallback(async () => {
+    // Validate for game conversion
+    const conversionErrors = GameIntegration.validateForGameConversion(map);
+    if (conversionErrors.length > 0) {
+      toast.error(`Cannot apply to game:\n• ${conversionErrors.join('\n• ')}`, { duration: 5000 });
+      return;
+    }
+
+    try {
+      // Save the map
+      const saveSuccess = await handleSave();
+      if (!saveSuccess) return;
+
+      // Apply the map to the game (game will load and convert automatically)
+      const game = (window as any).game;
+      if (game && typeof game.loadMap === 'function') {
+        await game.loadMap(map.meta.name);
+        toast.success(`Map "${map.meta.name}" applied to game!`);
+      } else {
+        toast.success(`Map "${map.meta.name}" saved!`);
+      }
+
+      // Close editor and refresh map selection
+      closeEditor();
+      await mapSelectionModal.open();
+    } catch (error) {
+      console.error('Save and apply failed:', error);
+      toast.error(`Failed to apply map: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }, [map, handleSave, closeEditor]);
+
+  const handleClose = useCallback(async () => {
+    if (confirm('Close editor? Any unsaved changes will be lost.')) {
+      closeEditor();
+      await mapSelectionModal.open();
+    }
+  }, [closeEditor]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -106,7 +156,7 @@ const EditorModal: React.FC = () => {
           e.preventDefault();
           break;
         case 'escape':
-          closeEditor();
+          handleClose();
           e.preventDefault();
           break;
         case 'delete':
@@ -142,7 +192,7 @@ const EditorModal: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, setTool, closeEditor, handleUndo, handleRedo, handleSave]);
+  }, [isOpen, setTool, handleClose, handleUndo, handleRedo, handleSave]);
 
   const handleNewMap = useCallback(() => {
     if (confirm('Create new map? Any unsaved changes will be lost.')) {
@@ -164,29 +214,6 @@ const EditorModal: React.FC = () => {
       toast.error(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }, [loadMap]);
-
-  const handleExportForGame = useCallback(async () => {
-    // Validate map for game conversion
-    const conversionErrors = GameIntegration.validateForGameConversion(map);
-    if (conversionErrors.length > 0) {
-      toast.error(`Cannot export for game:\n• ${conversionErrors.join('\n• ')}`, { duration: 5000 });
-      return;
-    }
-
-    try {
-      await GameIntegration.saveAsGameMap(map);
-      toast.success(`Map "${map.meta.name}" exported for game successfully!`);
-    } catch (error) {
-      console.error('Export failed:', error);
-      toast.error(`Failed to export map for game: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  }, [map]);
-
-  const handleClose = useCallback(() => {
-    if (confirm('Close editor? Any unsaved changes will be lost.')) {
-      closeEditor();
-    }
-  }, [closeEditor]);
 
   if (!isOpen) return null;
 
@@ -218,11 +245,11 @@ const EditorModal: React.FC = () => {
             <button className="btn" onClick={handleRedo} disabled={!undoRedoManager.canRedo()}>
               Redo
             </button>
-            <button className="btn btn-primary" onClick={handleSave} title="Save Map (Ctrl+S)">
-              Save
+            <button className="btn btn-success" onClick={handleSaveAndApply} title="Save and apply to game">
+              💾 Save & Apply
             </button>
-            <button className="btn" onClick={handleExportForGame} title="Export for Game">
-              Export for Game
+            <button className="btn btn-primary" onClick={handleSaveAndReturn} title="Save and return to map selection">
+              Save & Return
             </button>
             <button className="btn btn-danger" onClick={handleClose} title="Close (Esc)">
               Close

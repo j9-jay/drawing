@@ -131,56 +131,6 @@ export class GameIntegration {
   }
   
   /**
-   * Save editor map as game-compatible format
-   */
-  static async saveAsGameMap(editorMap: EditorMapJson): Promise<void> {
-    const mapSpec = this.convertToMapSpec(editorMap);
-
-    try {
-      const response = await fetch(`${API_URL}/api/pinball/maps/save-game-format`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: editorMap.meta.name,
-          mapSpec: JSON.stringify(mapSpec, null, 2)
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to save game map: ${response.status}`);
-      }
-      
-    } catch (error) {
-      console.error('Failed to save game map:', error);
-      
-      // Fallback: download as JSON file
-      const blob = new Blob([JSON.stringify(mapSpec, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${this.sanitizeFilename(editorMap.meta.name)}_game.json`;
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      URL.revokeObjectURL(url);
-    }
-  }
-  
-  private static sanitizeFilename(filename: string): string {
-    return filename
-      .replace(/[<>:"/\\|?*]/g, '_')
-      .replace(/\s+/g, '_')
-      .replace(/_+/g, '_')
-      .replace(/^_|_$/g, '')
-      .toLowerCase() || 'untitled_map';
-  }
-  
-  /**
    * Preview conversion without saving
    */
   static previewConversion(editorMap: EditorMapJson): string {

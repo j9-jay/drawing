@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Map Selection Modal Manager
  * Handles the map selection UI modal functionality
@@ -98,7 +100,7 @@ class MapSelectionModalManager {
   private async loadMaps(): Promise<void> {
     try {
       // Try to load from API
-      const response = await fetch('/api/pinball/maps/list-game');
+      const response = await fetch('/api/pinball/maps/list');
       if (response.ok) {
         const mapList = await response.json();
         this.maps = mapList;

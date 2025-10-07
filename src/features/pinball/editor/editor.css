@@ -280,6 +280,15 @@
   background: #d63428;
 }
 
+.btn-success {
+  background: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.btn-success:hover {
+  background: #45a049;
+}
+
 /* Main Layout */
 .editor-main {
   display: flex;

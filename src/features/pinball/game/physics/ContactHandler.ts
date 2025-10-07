@@ -35,7 +35,7 @@ function handleJumpPadContact(
 
     // Additional upward impulse for extra bounce
     const currentVel = marbleBody.getLinearVelocity();
-    const upwardImpulse = Vec2(0, -Math.abs(currentVel.y) * (1000 - 1) * 5);
+    const upwardImpulse = Vec2(0, -Math.abs(currentVel.y) * (bounceMultiplier - 1) * 5);
     marbleBody.applyLinearImpulse(upwardImpulse, marbleBody.getWorldCenter());
   }
 }
