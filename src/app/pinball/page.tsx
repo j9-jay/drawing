@@ -102,7 +102,7 @@ export default function PinballGamePage() {
                 <input
                   type="text"
                   id="map-display"
-                  value="Classic"
+                  value="default"
                   readOnly
                   className="map-display-input"
                 />
@@ -111,7 +111,7 @@ export default function PinballGamePage() {
                   className="map-select-button"
                   type="button"
                 >
-                  <span>📍</span> 선택
+                  <span>🗺️</span> Select
                 </button>
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function PinballGamePage() {
       <div id="map-selection-modal" className="map-modal-overlay hidden">
         <div className="map-modal">
           <div className="modal-header">
-            <h2>맵 선택</h2>
+            <h2>Map selection</h2>
             <div className="modal-controls">
               <select id="map-sort-select" className="sort-select">
                 <option value="name">가나다순</option>

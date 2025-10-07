@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 디렉토리 생성
-    const mapsDir = path.join(process.cwd(), 'data/pinball/maps/editor');
+    const mapsDir = path.join(process.cwd(), 'data/pinball/maps');
     await fs.mkdir(mapsDir, { recursive: true });
 
     // 파일명 생성 (안전한 문자만 사용)

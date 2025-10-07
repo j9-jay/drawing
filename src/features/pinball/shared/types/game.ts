@@ -28,14 +28,12 @@ export interface LeaderboardItem {
 
 export type GameState = 'idle' | 'running' | 'finished';
 export type WinnerMode = 'first' | 'last' | 'custom' | 'topN';
-export type MapType = 'classic' | 'default';
 
 export interface GameSettings {
   participants: Participant[];
   winnerMode: WinnerMode;
   customRank: number;
   topNCount: number;
-  mapType: MapType;
 }
 
 export interface Toast {

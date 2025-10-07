@@ -17,31 +17,13 @@ export async function DELETE(
       );
     }
 
-    const editorDir = path.join(process.cwd(), 'data/pinball/maps/editor');
-    const gameDir = path.join(process.cwd(), 'data/pinball/maps/game');
+    const mapsDir = path.join(process.cwd(), 'data/pinball/maps');
+    const filePath = path.join(mapsDir, `${name}.json`);
 
-    const editorFilePath = path.join(editorDir, `${name}.json`);
-    const gameFilePath = path.join(gameDir, `${name}_game.json`);
-
-    let deletedFiles = 0;
-
-    // 에디터 맵 삭제
+    // 맵 삭제
     try {
-      await fs.unlink(editorFilePath);
-      deletedFiles++;
+      await fs.unlink(filePath);
     } catch (err) {
-      // 파일이 없으면 무시
-    }
-
-    // 게임 맵 삭제
-    try {
-      await fs.unlink(gameFilePath);
-      deletedFiles++;
-    } catch (err) {
-      // 파일이 없으면 무시
-    }
-
-    if (deletedFiles === 0) {
       return NextResponse.json(
         { error: 'Map not found' },
         { status: 404 }
@@ -50,8 +32,7 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: `Map deleted successfully (${deletedFiles} file(s))`,
-      deletedFiles
+      message: 'Map deleted successfully'
     });
   } catch (error) {
     console.error('Failed to delete map:', error);

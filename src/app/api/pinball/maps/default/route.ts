@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   const defaultMap = {
     meta: {
-      name: 'Default Map',
+      name: 'default',
       canvasSize: { width: 1200, height: 1600 },
       gridSize: 20,
       spawnPoint: { x: 600, y: 100 }

@@ -2,14 +2,13 @@
  * Local storage manager for game settings
  */
 
-import { GameSettings, WinnerMode, MapType } from '../../shared/types';
+import { GameSettings, WinnerMode } from '../../shared/types';
 
 export interface StorageData {
   names: string;
   winnerMode: WinnerMode;
   customRank: number;
   topNCount: number;
-  mapType: MapType;
 }
 
 const STORAGE_KEY = 'pinballRouletteSettings';
@@ -23,8 +22,7 @@ export function saveToStorage(settings: GameSettings): void {
     names: (document.getElementById('names-input') as HTMLTextAreaElement).value,
     winnerMode: settings.winnerMode,
     customRank: settings.customRank,
-    topNCount: settings.topNCount,
-    mapType: settings.mapType,
+    topNCount: settings.topNCount
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -46,17 +44,10 @@ export function loadFromStorage(settings: GameSettings): void {
       (document.getElementById('winner-mode') as HTMLSelectElement).value = data.winnerMode || 'first';
       (document.getElementById('custom-rank') as HTMLInputElement).value = String(data.customRank || 1);
       (document.getElementById('top-n-count') as HTMLInputElement).value = String(data.topNCount || 5);
-      // Map display is now handled differently
-      const mapDisplay = document.getElementById('map-display') as HTMLInputElement;
-      if (mapDisplay) {
-        const mapName = data.mapType || 'classic';
-        mapDisplay.value = mapName === 'default' ? 'Classic' : mapName;
-      }
 
       settings.winnerMode = data.winnerMode || 'first';
       settings.customRank = data.customRank || 1;
       settings.topNCount = data.topNCount || 5;
-      settings.mapType = data.mapType || 'classic';
 
       // 로드 후 UI 상태 업데이트
       const customRank = document.getElementById('custom-rank') as HTMLInputElement;

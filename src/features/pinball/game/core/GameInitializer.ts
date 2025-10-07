@@ -21,7 +21,6 @@ export function initializeSettings(): GameSettings {
     winnerMode: 'first',
     customRank: 1,
     topNCount: 5,
-    mapType: 'default',
     participants: []
   };
 

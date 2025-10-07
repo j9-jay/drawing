@@ -4,7 +4,7 @@ import path from 'path';
 
 export async function GET() {
   try {
-    const mapsDir = path.join(process.cwd(), 'data/pinball/maps/editor');
+    const mapsDir = path.join(process.cwd(), 'data/pinball/maps');
 
     // 디렉토리 생성 (없으면)
     try {

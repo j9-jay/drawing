@@ -8,6 +8,7 @@ import { thumbnailGenerator } from './MapThumbnailGenerator';
 
 export interface MapData {
   name: string;
+  displayName: string;
   lastModified?: string;
   size?: number;
   thumbnail?: string;
@@ -100,13 +101,10 @@ class MapSelectionModalManager {
       const response = await fetch('/api/pinball/maps/list-game');
       if (response.ok) {
         const mapList = await response.json();
-        this.maps = [
-          { name: 'default', lastModified: '2024-01-01', size: 0 },
-          ...mapList
-        ];
+        this.maps = mapList;
       } else {
         // Fallback to default only
-        this.maps = [{ name: 'default', lastModified: '2024-01-01', size: 0 }];
+        this.maps = [{ name: 'default', displayName: 'Default Map', lastModified: '2024-01-01', size: 0 }];
       }
 
       // Generate thumbnails
@@ -122,7 +120,7 @@ class MapSelectionModalManager {
       this.maps = await Promise.all(thumbnailPromises);
     } catch (error) {
       console.warn('Failed to load maps:', error);
-      this.maps = [{ name: 'default', lastModified: '2024-01-01', size: 0 }];
+      this.maps = [{ name: 'default', displayName: 'Default Map', lastModified: '2024-01-01', size: 0 }];
     }
   }
 
@@ -173,18 +171,30 @@ class MapSelectionModalManager {
     const card = document.createElement('div');
     card.className = `map-card ${map.name === this.currentMap ? 'selected' : ''}`;
 
+    // Create fallback thumbnail if none exists
+    const fallbackThumbnail = `data:image/svg+xml;base64,${btoa(`
+      <svg width="150" height="250" xmlns="http://www.w3.org/2000/svg">
+        <rect width="150" height="250" fill="#1a1a1a"/>
+        <rect width="150" height="250" fill="none" stroke="rgba(74, 158, 255, 0.3)" stroke-width="2"/>
+        <text x="50%" y="50%" fill="#666" text-anchor="middle" dy=".3em" font-family="sans-serif" font-size="14">
+          Map
+        </text>
+      </svg>
+    `)}`;
+
     card.innerHTML = `
       <div class="map-thumbnail">
-        ${map.thumbnail
-          ? `<img src="${map.thumbnail}" alt="${map.name}">`
-          : '<div class="placeholder-thumbnail">🗺️</div>'
-        }
+        <img
+          src="${map.thumbnail || fallbackThumbnail}"
+          alt="${map.displayName}"
+          onerror="this.src='${fallbackThumbnail}'"
+        >
       </div>
       <div class="map-info">
-        <h3>${this.formatMapName(map.name)}</h3>
+        <h3>${map.displayName}</h3>
         <div class="map-meta">
           ${map.difficulty ? `<span class="difficulty ${map.difficulty}">${map.difficulty}</span>` : ''}
-          <span class="size">${this.formatSize(map.size || 0)}</span>
+          <span class="date">${this.formatDate(map.lastModified)}</span>
         </div>
       </div>
     `;
@@ -194,15 +204,6 @@ class MapSelectionModalManager {
     return card;
   }
 
-  private formatMapName(name: string): string {
-    // Convert 'default' to 'Classic' or format other names
-    if (name === 'default') return 'Classic';
-
-    // Capitalize first letter and replace underscores/hyphens with spaces
-    return name
-      .replace(/[_-]/g, ' ')
-      .replace(/\b\w/g, char => char.toUpperCase());
-  }
 
   private formatSize(bytes: number): string {
     if (bytes === 0) return '';
@@ -212,12 +213,34 @@ class MapSelectionModalManager {
     return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
   }
 
+  private formatDate(dateString?: string): string {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+
+    return date.toLocaleDateString();
+  }
+
   private selectMap(mapName: string): void {
     this.currentMap = mapName;
 
+    // Find map to get displayName
+    const map = this.maps.find(m => m.name === mapName);
+    const displayName = map?.displayName || mapName;
+
     // Update display
     if (this.mapDisplay) {
-      this.mapDisplay.value = this.formatMapName(mapName);
+      this.mapDisplay.value = displayName;
     }
 
     // Call the callback
@@ -227,7 +250,7 @@ class MapSelectionModalManager {
     this.close();
 
     // Show toast
-    showToast(`Map selected: ${this.formatMapName(mapName)}`, 'success');
+    showToast(`Map selected: ${displayName}`, 'success');
   }
 
   public setCallbacks(callbacks: MapSelectionCallbacks): void {
@@ -237,7 +260,8 @@ class MapSelectionModalManager {
   public setCurrentMap(mapName: string): void {
     this.currentMap = mapName;
     if (this.mapDisplay) {
-      this.mapDisplay.value = this.formatMapName(mapName);
+      const map = this.maps.find(m => m.name === mapName);
+      this.mapDisplay.value = map?.displayName || mapName;
     }
   }
 }

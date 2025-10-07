@@ -70,7 +70,6 @@ export function createDefaultSettings(): GameSettings {
     winnerMode: 'first',
     customRank: 1,
     topNCount: 5,
-    mapType: 'classic',
     participants: []
   };
 }

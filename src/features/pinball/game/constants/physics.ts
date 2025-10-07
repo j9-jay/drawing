@@ -29,11 +29,11 @@ export const BUBBLE_DEFAULT_RESTITUTION = 1.2; // 버블 기본 반발력 (높�
 
 // Bounce circle physics properties
 export const BOUNCE_CIRCLE_FRICTION = 0.1; // 바운스 서클 마찰력
-export const DEFAULT_BOUNCE_CIRCLE_RESTITUTION = 2.0; // 바운스 서클 기본 반발력
+export const DEFAULT_BOUNCE_CIRCLE_RESTITUTION = 30.0; // 바운스 서클 기본 반발력
 
 // Jump pad physics properties
-export const JUMPPAD_FRICTION = 0.1; // 점프 패드 마찰력
-export const DEFAULT_JUMPPAD_RESTITUTION = 1.6; // 점프 패드 기본 반발력
+export const JUMPPAD_FRICTION = 0.0; // 점프 패드 마찰력
+export const DEFAULT_JUMPPAD_RESTITUTION = 10; // 점프 패드 기본 반발력
 
 // Legacy jump pad constants (impulse-based, deprecated)
 export const JUMPPAD_FORCE_MULTIPLIER_X = 12;

@@ -9,13 +9,14 @@ import { TIME_SCALE_MIN, TIME_SCALE_MAX } from '../constants/ui';
 interface LoadResult {
   participants: ReturnType<typeof initializeParticipants>;
   marbles: Marble[];
-  mapType: string | null;
+  mapName: string | null;
   timeScale: number | null;
 }
 
 export function saveGameSession(
   settings: GameSettings,
-  userTimeScale: number
+  userTimeScale: number,
+  currentMapName: string
 ): void {
   try {
     const namesInput = document.getElementById('names-input') as HTMLTextAreaElement | null;
@@ -23,16 +24,13 @@ export function saveGameSession(
       SessionStorageUtil.save(STORAGE_KEYS.PARTICIPANTS, namesInput.value);
     }
 
-    // Map is now stored from settings
-    if (settings.mapType) {
-      SessionStorageUtil.save(STORAGE_KEYS.SELECTED_MAP, settings.mapType);
-    }
+    // Save map name
+    SessionStorageUtil.save(STORAGE_KEYS.SELECTED_MAP, currentMapName);
 
     SessionStorageUtil.save(STORAGE_KEYS.GAME_SETTINGS, {
       winnerMode: settings.winnerMode,
       customRank: settings.customRank,
       topNCount: settings.topNCount,
-      mapType: settings.mapType,
       timeScale: userTimeScale
     });
   } catch (error) {
@@ -49,7 +47,7 @@ export function loadGameSession(
 ): LoadResult {
   let participants = initializeParticipants(true);
   let marbles: Marble[] = [];
-  let mapType: string | null = null;
+  let mapName: string | null = null;
   let timeScale: number | null = null;
 
   try {
@@ -70,14 +68,8 @@ export function loadGameSession(
 
     const savedMap = SessionStorageUtil.load<string>(STORAGE_KEYS.SELECTED_MAP);
     if (savedMap) {
-      mapType = savedMap;
+      mapName = savedMap;
       // Map display is now handled by MapSelectionModal
-      const mapDisplay = document.getElementById('map-display') as HTMLInputElement | null;
-      if (mapDisplay) {
-        const displayName = savedMap === 'default' ? 'Classic' :
-          savedMap.replace(/[_-]/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
-        mapDisplay.value = displayName;
-      }
     }
     const savedSettings = SessionStorageUtil.load<any>(STORAGE_KEYS.GAME_SETTINGS);
     if (savedSettings?.timeScale) {
@@ -89,7 +81,7 @@ export function loadGameSession(
 
  marbles = refreshPreviewMarbles(participants, currentMap, canvas.width);
 
-  return { participants, marbles, mapType, timeScale };
+  return { participants, marbles, mapName, timeScale };
 }
 
 export function loadSavedSettings(): GameSettings | null {

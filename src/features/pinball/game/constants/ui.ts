@@ -7,7 +7,7 @@ export const TIME_SCALE_MIN = 0.1;
 export const TIME_SCALE_MAX = 0.5;
 
 // 참석자 이름 관련
-export const MAX_PARTICIPANT_NAME_LENGTH = 8;  // 참석자 이름 최대 길이
+export const MAX_PARTICIPANT_NAME_LENGTH = 15;  // 참석자 이름 최대 길이
 export const MAX_MARBLE_DISPLAY_NAME_LENGTH = 4;     // 구슬에 표시되는 이름 길이
 export const MARBLE_NAME_TRUNCATE_THRESHOLD = 5;      // 이름 축약 기준 길이
 

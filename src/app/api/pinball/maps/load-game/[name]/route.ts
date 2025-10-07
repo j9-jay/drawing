@@ -17,30 +17,13 @@ export async function GET(
       );
     }
 
-    const mapsDir = path.join(process.cwd(), 'data/pinball/maps/game');
+    const mapsDir = path.join(process.cwd(), 'data/pinball/maps');
+    const filePath = path.join(mapsDir, `${name}.json`);
 
-    // Try both {name}.json and {name}_game.json
-    let filePath = path.join(mapsDir, `${name}.json`);
-    let fileExists = false;
-
+    // Check if file exists
     try {
       await fs.access(filePath);
-      fileExists = true;
     } catch {
-      // Try with _game suffix
-      filePath = path.join(mapsDir, `${name}_game.json`);
-      try {
-        await fs.access(filePath);
-        fileExists = true;
-      } catch {
-        return NextResponse.json(
-          { error: 'Map not found' },
-          { status: 404 }
-        );
-      }
-    }
-
-    if (!fileExists) {
       return NextResponse.json(
         { error: 'Map not found' },
         { status: 404 }

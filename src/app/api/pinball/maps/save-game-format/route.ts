@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 디렉토리 생성
-    const mapsDir = path.join(process.cwd(), 'data/pinball/maps/game');
+    const mapsDir = path.join(process.cwd(), 'data/pinball/maps');
     await fs.mkdir(mapsDir, { recursive: true });
 
     // 파일명 생성 (안전한 문자만 사용)
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       .replace(/^_|_$/g, '')
       .toLowerCase() || 'untitled_map';
 
-    const filePath = path.join(mapsDir, `${sanitizedName}_game.json`);
+    const filePath = path.join(mapsDir, `${sanitizedName}.json`);
 
     // 파일 저장 (validated data)
     await fs.writeFile(filePath, JSON.stringify(gameMapData, null, 2), 'utf-8');
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Game map saved successfully',
-      filename: `${sanitizedName}_game.json`
+      filename: `${sanitizedName}.json`
     });
   } catch (error) {
     console.error('Failed to save game map:', error);

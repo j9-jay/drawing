@@ -5,7 +5,6 @@ export type {
   LeaderboardItem,
   GameState,
   WinnerMode,
-  MapType,
   GameSettings,
   Toast
 } from './game';

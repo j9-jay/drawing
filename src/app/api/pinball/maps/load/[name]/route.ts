@@ -17,7 +17,7 @@ export async function GET(
       );
     }
 
-    const mapsDir = path.join(process.cwd(), 'data/pinball/maps/editor');
+    const mapsDir = path.join(process.cwd(), 'data/pinball/maps');
     const filePath = path.join(mapsDir, `${name}.json`);
 
     // 파일 존재 확인

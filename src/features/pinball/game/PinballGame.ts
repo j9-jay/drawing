@@ -1,5 +1,5 @@
 import { World } from 'planck';
-import { Participant, Marble, GameState, MapType, GameSettings } from '../shared/types';
+import { Participant, Marble, GameState, GameSettings } from '../shared/types';
 import { GameWorld, GameEntity, Wall } from '../shared/types/gameObjects';
 import { EditorMapJson } from '../shared/types/editorMap';
 import {
@@ -86,6 +86,7 @@ export class PinballRoulette {
   private settings: GameSettings;
   private finishLine: number = 0;
   private currentMap: EditorMapJson | null = null;
+  private currentMapName: string = 'default';
   private lastFinishedCount: number = 0; // 마지막으로 확인한 완주자 수
   private gameStartTime: number = 0;
   private timeScale: number = DEFAULT_TIME_SCALE; // 현재 게임 속도 (슬로우모션 포함)
@@ -154,13 +155,12 @@ export class PinballRoulette {
     // Initialize map selection modal
     mapSelectionModal.setCallbacks({
       onSelect: async (mapName: string) => {
-        this.settings.mapType = mapName as any;
+        this.currentMapName = mapName;
         await this.loadEditorMap(mapName);
-        showToast(`Map changed: ${mapName}`, 'success');
         this.saveToSessionStorage();
       }
     });
-    mapSelectionModal.setCurrentMap(this.settings.mapType || 'default');
+    mapSelectionModal.setCurrentMap(this.currentMapName);
 
     // 맵 목록 로딩 완료 후 세션 스토리지에서 설정 복원
     this.loadFromSessionStorage();
@@ -207,9 +207,8 @@ export class PinballRoulette {
       stopGame: () => this.stopGame(),
       resetGame: async () => await this.resetGame(),
       loadMapCallback: async (mapName: string) => {
-        this.settings.mapType = mapName as MapType;
+        this.currentMapName = mapName;
         await this.loadEditorMap(mapName);
-        showToast(`Map changed: ${mapName}`, 'success');
       },
       parseParticipants: (verbose: boolean) => {
         this.participants = initializeParticipants(verbose);
@@ -269,7 +268,7 @@ export class PinballRoulette {
     const signal = this.loadMapAbortController.signal;
 
     try {
-      const targetMapName = mapName ?? this.settings.mapType ?? 'default';
+      const targetMapName = mapName ?? this.currentMapName;
 
       // Check if operation was aborted before async call
       if (signal.aborted) return;
@@ -613,7 +612,7 @@ export class PinballRoulette {
    * 현재 게임 설정을 세션 스토리지에 저장
    */
   private saveToSessionStorage(): void {
-    saveGameSession(this.settings, this.userTimeScale);
+    saveGameSession(this.settings, this.userTimeScale, this.currentMapName);
   }
 
   /**
@@ -623,8 +622,9 @@ export class PinballRoulette {
     const result = loadGameSession(this.world, this.canvas, this.currentMap);
     this.participants = result.participants;
     this.settings.participants = result.participants;
-    if (result.mapType) {
-      this.settings.mapType = result.mapType as MapType;
+    if (result.mapName) {
+      this.currentMapName = result.mapName;
+      mapSelectionModal.setCurrentMap(this.currentMapName);
     }
 
     clearMarbles(this.marbles, this.world);
