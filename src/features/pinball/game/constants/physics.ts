@@ -9,8 +9,8 @@ export const FIXED_TIME_STEP = 1 / 60;
 export const PIXELS_PER_METER = 30; // Conversion ratio between Planck units and canvas pixels
 export const SENSOR_TRIGGER_DISTANCE = 2; // Radius (meters) to trigger sensor interactions
 
-export const MARBLE_PREVIEW_SIZE = 12; // pixels
-export const MARBLE_GAME_SIZE = 12; // pixels
+export const MARBLE_PREVIEW_SIZE = 11; // pixels
+export const MARBLE_GAME_SIZE = 11; // pixels
 export const MARBLE_BODY_DENSITY = 20.0;
 export const MARBLE_FRICTION = 0.3;
 export const MARBLE_RESTITUTION = 0.3;
