@@ -10,6 +10,7 @@ const navItems = [
   { href: '/about', label: '소개' },
   { href: '/posts', label: '게시판' },
   { href: '/pinball', label: '핀볼게임' },
+  { href: '/roulette', label: '룰렛게임' },
 ];
 
 export function Navbar() {

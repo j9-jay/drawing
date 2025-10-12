@@ -67,7 +67,7 @@ export default function PinballGamePage() {
         </div>
 
         {/* Performance Monitor */}
-        <div id="performance-monitor" className="performance-monitor">
+        <div id="performance-monitor" className="performance-monitor hidden">
           <div className="performance-text">
             <div id="fps-display">FPS: --</div>
           </div>
