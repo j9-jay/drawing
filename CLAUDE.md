@@ -26,16 +26,7 @@ Dev server: http://localhost:3000
 
 ## Code Structure
 
-- **App Router**: `src/app/` - pages/layouts using Next.js App Router
-  - `layout.tsx`: Root layout, Geist fonts, ToastProvider
-  - `page.tsx`: Home page
-- **Components**: `src/components/` - centralized component library
-  - `ui/`: UI components (Button, Input, Card, Modal, Toast, etc.)
-  - `layout/`: Layout components (Navbar, Footer, Hero)
-  - `game/`: Game-specific components (GameCanvas, ControlPanel)
-- **Styles**: `src/styles/` - theme configuration
-  - `theme.ts`: Linear Dark theme (colors, typography, spacing)
-- **Path alias**: `@/*` → `./src/*`
+- **Architecture**: refer to ARCHITECTURE.md
 
 ## Technical Stack
 
@@ -91,6 +82,8 @@ Dev server: http://localhost:3000
    - No existing component fits the use case
    - Combination of existing components doesn't work
    - Document in CLAUDE.md after creation
+
+7. **Update architecture**: update ARCHITECTURE.md file when needed
 
 ### Styling Rules
 
