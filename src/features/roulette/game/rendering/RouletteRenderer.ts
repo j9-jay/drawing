@@ -164,11 +164,11 @@ export class RouletteRenderer {
 
     // Constraint 1: Text height (vertical in rotated coordinate)
     // Text starts at textRadius and can extend inward toward minRadius
-    // Use weighted average: 30% outer (textRadius) + 70% inner (minRadius)
+    // Use weighted average: 20% outer (textRadius) + 80% inner (minRadius)
     // More conservative toward inner edge where sector narrows
-    const avgRadius = textRadius * 0.3 + minRadius * 0.7;
+    const avgRadius = textRadius * 0.01 + minRadius * 0.99;
     const sectorWidthAtAvgRadius = 2 * avgRadius * Math.sin(halfAngle);
-    const availableHeight = sectorWidthAtAvgRadius * 0.9; // Use 90% of weighted average width
+    const availableHeight = sectorWidthAtAvgRadius * 1.5; // Use 110% for more aggressive filling
 
     // Constraint 2: Text width (horizontal in rotated coordinate)
     // Text is right-aligned at textRadius, grows inward
