@@ -27,6 +27,7 @@ export class RouletteGame {
   private animationId: number | null = null;
   private lastTimestamp: number = 0;
   private totalRotation: number = 0; // Track total rotation for min cycles validation
+  private targetFontSize: number = 0; // Target font size for dynamic zoom
 
   constructor() {
     // Get canvas element
@@ -101,16 +102,34 @@ export class RouletteGame {
   }
 
   /**
-   * Parse participants from string
-   * @param input - Comma-separated names (e.g., "홍길동, 김철수, 이영희")
+   * Parse participants from string with optional weights
+   * Format: "Name*weight" (e.g., "홍길동*2" for weight 2)
+   * @param input - Comma or newline-separated names with optional weights
    * @returns Parsed participants array
    */
   parseParticipants(input: string): Participant[] {
     return input
-      .split(',')
-      .map(name => name.trim())
-      .filter(name => name.length > 0)
-      .map(name => ({ name, weight: 1 }));
+      .split(/[,\n]/) // Split by comma or newline
+      .map(entry => entry.trim())
+      .filter(entry => entry.length > 0)
+      .map(entry => {
+        // Check for weight pattern: "Name*3" (name must be 1-50 characters)
+        const match = entry.match(/^(.{1,50})\*(\d+)$/);
+
+        if (match) {
+          const name = match[1].trim();
+          if (name.length === 0) {
+            // Empty name after trimming, use as-is without weight
+            return { name: entry, weight: 1 };
+          }
+          const weight = parseInt(match[2], 10);
+          return { name, weight: Math.max(1, weight) }; // Minimum weight is 1
+        }
+
+        // No weight specified, default to 1
+        return { name: entry, weight: 1 };
+      })
+      .filter(p => p.name.length > 0); // Filter out empty names
   }
 
   /**
@@ -138,6 +157,7 @@ export class RouletteGame {
     this.currentAngle = 0;
     this.currentVelocity = 0;
     this.totalRotation = 0;
+    this.targetFontSize = 0;
     this.state = 'idle';
     this.spinConfig = null;
     hideWinner();
@@ -249,6 +269,30 @@ export class RouletteGame {
   }
 
   /**
+   * Update target font size for dynamic zoom
+   * Calculates the expected winner's text size
+   */
+  private updateTargetFontSize(): void {
+    const winner = determineWinner(this.currentAngle, this.participants);
+    if (!winner) {
+      this.targetFontSize = 0;
+      return;
+    }
+
+    // Calculate total weight
+    const totalWeight = this.participants.reduce((sum, p) => sum + p.weight, 0);
+    const fullCircle = Math.PI * 2;
+
+    // Calculate winner's sector angle
+    const sectorAngle = fullCircle * (winner.weight / totalWeight);
+
+    // Calculate font size for this sector
+    this.targetFontSize = this.renderer.calculateFontSizeForSector(winner.name, sectorAngle);
+
+    console.log(`Target winner: ${winner.name}, fontSize: ${this.targetFontSize}px`);
+  }
+
+  /**
    * Update camera effects
    * Handles zoom transitions and shake effects
    *
@@ -256,12 +300,17 @@ export class RouletteGame {
    * @param deltaTime - Time elapsed since last frame in seconds
    */
   private updateCamera(timestamp: number, deltaTime: number): void {
-    // Update zoom based on current velocity
-    updateCameraZoom(
-      this.cameraState,
-      Math.abs(this.currentVelocity),
-      deltaTime
-    );
+    // Only update zoom when game is active (not in idle state)
+    // This prevents zoom-in effect before game starts
+    if (this.state !== 'idle') {
+      updateCameraZoom(
+        this.cameraState,
+        Math.abs(this.currentVelocity),
+        deltaTime,
+        this.targetFontSize, // Pass target font size for dynamic zoom
+        this.canvas.height   // Pass canvas height for zoom calculation
+      );
+    }
 
     // Apply shake effect if active
     applyCameraShake(this.cameraState, timestamp);
@@ -307,6 +356,10 @@ export class RouletteGame {
     // Check if spinning should transition to decelerating
     if (this.state === 'spinning' && this.currentVelocity < this.spinConfig.initialVelocity * DECELERATION_THRESHOLD) {
       this.state = 'decelerating';
+
+      // Calculate target font size for dynamic zoom
+      this.updateTargetFontSize();
+
       console.log('Entering deceleration phase');
     }
 

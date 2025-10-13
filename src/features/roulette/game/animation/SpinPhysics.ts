@@ -14,7 +14,12 @@ import { STOP_THRESHOLD } from '../constants/spin';
 
 /**
  * Update spin physics for one frame
- * Applies friction-based deceleration and updates angle
+ * Applies dynamic friction-based deceleration and updates angle
+ *
+ * Dynamic Friction Model:
+ * - High velocity: Higher friction (fast deceleration)
+ * - Low velocity: Lower friction (slow deceleration, sliding effect)
+ * - This creates a natural "sliding to stop" feel
  *
  * @param angle - Current angle in radians
  * @param velocity - Current angular velocity in rad/s
@@ -28,10 +33,24 @@ export function updateSpinPhysics(
   config: SpinConfig,
   deltaTime: number
 ): { angle: number; velocity: number; stopped: boolean } {
-  // Apply friction: exponential decay
+  // Calculate dynamic friction based on current velocity
+  // When velocity is high: use higher friction (fast deceleration)
+  // When velocity is low: use lower friction (slow deceleration, sliding)
+  const velocityRatio = Math.abs(velocity) / config.initialVelocity;
+
+  // Friction range: from base friction to higher friction
+  // velocityRatio = 1.0 (high speed) → use higher friction (0.985)
+  // velocityRatio = 0.0 (low speed) → use lower friction (0.995)
+  const frictionHigh = 0.985; // Fast deceleration at high speed
+  const frictionLow = 0.995;  // Slow deceleration at low speed (sliding)
+
+  // Interpolate friction based on velocity
+  const dynamicFriction = frictionLow + (frictionHigh - frictionLow) * velocityRatio;
+
+  // Apply friction: exponential decay with dynamic friction
   // v(t+Δt) = v(t) × friction^(Δt×60)
   // Note: 60 FPS normalization factor for consistent feel across frame rates
-  const newVelocity = velocity * Math.pow(config.friction, deltaTime * 60);
+  const newVelocity = velocity * Math.pow(dynamicFriction, deltaTime * 60);
 
   // Update angle: θ(t+Δt) = θ(t) + v(t) × Δt
   const newAngle = angle + newVelocity * deltaTime;

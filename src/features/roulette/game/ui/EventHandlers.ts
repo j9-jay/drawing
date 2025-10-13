@@ -41,8 +41,27 @@ function validateMinParticipants(participants: Participant[]): boolean {
  */
 function startNewSpin(game: RouletteGame): void {
   hideWinner();
+
+  // Normalize textarea to newline format before spinning (요구사항 6)
+  normalizeTextareaToNewlines();
+
   const speed = getSelectedSpeed();
   game.startSpinning(speed);
+}
+
+/**
+ * Helper: Normalize textarea content to newline-separated format
+ */
+function normalizeTextareaToNewlines(): void {
+  const textarea = document.getElementById('roulette-names-input') as HTMLTextAreaElement;
+  if (!textarea) return;
+
+  const participants = parseParticipantsFromInput();
+  const normalizedText = participants
+    .map(p => p.weight > 1 ? `${p.name}*${p.weight}` : p.name)
+    .join('\n');
+
+  textarea.value = normalizedText;
 }
 
 /**
@@ -63,9 +82,9 @@ function getSpinSpeedText(speed: SpinSpeed): string {
 export function setupEventListeners(game: RouletteGame): void {
   setupCanvasClickListener(game);
   setupSpinButtonListener(game);
-  setupResetButtonListener(game);
   setupWinnerButtonListeners(game);
   setupParticipantInputListener(game);
+  setupUtilityButtonListeners(game);
   setupSpeedPreference();
 }
 
@@ -117,29 +136,7 @@ function setupSpinButtonListener(game: RouletteGame): void {
 }
 
 /**
- * Reset button listener
- */
-function setupResetButtonListener(game: RouletteGame): void {
-  const resetBtn = document.getElementById('roulette-reset-btn');
-
-  if (!resetBtn) {
-    console.warn('Reset button not found');
-    return;
-  }
-
-  resetBtn.addEventListener('click', () => {
-    const participants = parseParticipantsFromInput();
-    if (!validateMinParticipants(participants)) return;
-
-    game.setParticipants(participants);
-    hideWinner();
-
-    showToast('게임이 리셋되었습니다', 'info');
-  });
-}
-
-/**
- * Helper: Remove winner and restart with remaining participants
+ * Helper: Remove winner and return to idle state (don't start spinning)
  */
 function removeWinnerAndRestart(game: RouletteGame, winnerName: string): void {
   if (!winnerName) {
@@ -157,7 +154,8 @@ function removeWinnerAndRestart(game: RouletteGame, winnerName: string): void {
 
   game.setParticipants(newParticipants);
   updateTextareaFromParticipants(newParticipants);
-  startNewSpin(game);
+  // Don't start new spin, just return to idle state
+  hideWinner();
 
   showToast(`${winnerName}님이 제외되었습니다`, 'info');
 }
@@ -170,7 +168,8 @@ function setupPlayAgainButton(game: RouletteGame): void {
   if (!playAgainBtn) return;
 
   playAgainBtn.addEventListener('click', () => {
-    startNewSpin(game);
+    // Just hide winner and return to idle state (don't start spinning)
+    hideWinner();
   });
 }
 
@@ -229,6 +228,8 @@ function setupParticipantInputListener(game: RouletteGame): void {
   textarea.addEventListener('input', () => {
     const participants = parseParticipantsFromInput();
     updateParticipantsPreview(participants);
+    // Update game immediately when participants change (요구사항 4)
+    game.setParticipants(participants);
   });
 
   initializeParticipantInput(game);
@@ -303,7 +304,8 @@ export function parseParticipantsFromInput(): Participant[] {
 
 /**
  * Update textarea from participants array
- * Used when winner is removed
+ * Always uses newline format (not comma-separated)
+ * Used when winner is removed, shuffle, or sort
  *
  * @param participants - Participants array
  */
@@ -316,12 +318,78 @@ function updateTextareaFromParticipants(participants: Participant[]): void {
 
   const text = participants
     .map(p => p.weight > 1 ? `${p.name}*${p.weight}` : p.name)
-    .join(', ');
+    .join('\n');
 
   textarea.value = text;
 
   // Trigger input event to update preview
   textarea.dispatchEvent(new Event('input'));
+}
+
+/**
+ * Setup utility buttons (shuffle, sort)
+ */
+function setupUtilityButtonListeners(game: RouletteGame): void {
+  setupShuffleButton(game);
+  setupSortButton(game);
+}
+
+/**
+ * Setup shuffle button
+ */
+function setupShuffleButton(game: RouletteGame): void {
+  const shuffleBtn = document.getElementById('roulette-shuffle-btn');
+  if (!shuffleBtn) return;
+
+  shuffleBtn.addEventListener('click', () => {
+    const participants = parseParticipantsFromInput();
+    if (participants.length === 0) return;
+
+    // Shuffle array using Fisher-Yates algorithm
+    const shuffled = [...participants];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    game.setParticipants(shuffled);
+    updateTextareaFromParticipants(shuffled);
+    showToast('참가자 순서가 섞였습니다', 'info');
+  });
+}
+
+/**
+ * Setup sort button (toggle between ascending and descending)
+ */
+function setupSortButton(game: RouletteGame): void {
+  let sortDirection: 'asc' | 'desc' = 'asc';
+  const sortBtn = document.getElementById('roulette-sort-btn');
+  if (!sortBtn) return;
+
+  sortBtn.addEventListener('click', () => {
+    const participants = parseParticipantsFromInput();
+    if (participants.length === 0) return;
+
+    // Sort by name
+    const sorted = [...participants].sort((a, b) => {
+      if (sortDirection === 'asc') {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
+
+    // Toggle direction for next click
+    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+
+    // Update button text to show current direction
+    sortBtn.textContent = sortDirection === 'asc' ? '↑ aA 정렬' : '↓ aA 정렬';
+    sortBtn.title = sortDirection === 'asc' ? '참가자 정렬 (오름차순)' : '참가자 정렬 (내림차순)';
+
+    game.setParticipants(sorted);
+    updateTextareaFromParticipants(sorted);
+    showToast(`${sortDirection === 'asc' ? '오름' : '내림'}차순 정렬되었습니다`, 'info');
+  });
 }
 
 /**

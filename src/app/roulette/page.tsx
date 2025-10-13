@@ -47,6 +47,17 @@ export default function RoulettePage() {
           <div className="roulette-settings-content">
             <div className="roulette-setting-group">
               <label htmlFor="roulette-names-input">참가자 (줄바꿈 또는 쉼표로 구분, *숫자로 가중치, 최대 8자)</label>
+
+              {/* Utility buttons above textarea */}
+              <div className="roulette-utility-buttons">
+                <button id="roulette-shuffle-btn" className="roulette-utility-btn" title="참가자 순서 섞기">
+                  🔀 섞기
+                </button>
+                <button id="roulette-sort-btn" className="roulette-utility-btn" title="참가자 정렬 (오름/내림차순)">
+                  ↑ aA 정렬
+                </button>
+              </div>
+
               <textarea
                 id="roulette-names-input"
                 placeholder="홍길동, 김철수*3, 이영희*2, 박민수"
@@ -74,13 +85,12 @@ export default function RoulettePage() {
 
             <div className="roulette-control-buttons">
               <button id="roulette-spin-btn" className="roulette-control-btn primary">회전</button>
-              <button id="roulette-reset-btn" className="roulette-control-btn">리셋</button>
               <button
                 className="roulette-control-btn roulette-fullscreen-btn"
                 onClick={handleFullScreen}
                 title="전체화면 전환 (ESC로 나가기)"
               >
-                ⛶
+                ⛶ 전체화면
               </button>
             </div>
           </div>

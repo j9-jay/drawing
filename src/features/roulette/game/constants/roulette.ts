@@ -7,10 +7,10 @@ export const WHEEL_RADIUS = 300;           // 룰렛 반지름 (px)
 export const CENTER_CIRCLE_RADIUS = 30;    // 중앙 원 반지름
 export const WHEEL_BORDER_WIDTH = 5;       // 테두리 두께
 
-// 포인터 (화살표) - 3시 방향
+// 포인터 (화살표) - 3시 방향 바깥쪽
 export const POINTER_SIZE = 40;
 export const POINTER_COLOR = '#FFD700';    // 골드
-export const POINTER_ANGLE = Math.PI / 2;  // 90° (3시 방향)
+export const POINTER_OFFSET = 30;          // 룰렛 바깥쪽 오프셋 (px)
 
 // 색상 팔레트 (참가자별 자동 할당)
 export const SECTOR_COLORS = [
@@ -21,19 +21,16 @@ export const SECTOR_COLORS = [
 ];
 
 // 텍스트 렌더링
-export const SECTOR_TEXT_SIZE = 16;        // 폰트 크기
 export const SECTOR_TEXT_COLOR = '#FFFFFF';
-export const SECTOR_TEXT_RADIUS_RATIO = 0.7; // 텍스트 위치 (반지름의 70%)
+export const SECTOR_TEXT_RADIUS_RATIO = 0.92; // 텍스트 끝 위치 (반지름의 92%, 바깥쪽에 붙음)
+export const SECTOR_TEXT_MIN_RADIUS_RATIO = 0.30; // 텍스트 최소 반지름 (중앙 30%는 침범 불가)
 
 // 추가 색상 상수
-export const SECTOR_BORDER_COLOR = '#000';
-export const WHEEL_OUTER_COLOR = '#FFD700';
-export const CENTER_CIRCLE_COLOR = '#1a1a1a';
-export const CENTER_CIRCLE_BORDER_COLOR = '#FFD700';
+export const WHEEL_GLOW_COLOR = '#00ffff'; // Cyan glowing border (like pinball edges)
 export const EMPTY_WHEEL_FILL_COLOR = 'rgba(255, 255, 255, 0.1)';
 export const EMPTY_WHEEL_BORDER_COLOR = '#444';
 export const EMPTY_WHEEL_TEXT_COLOR = '#888';
-export const POINTER_BORDER_COLOR = '#000';
+export const POINTER_BORDER_COLOR = '#fff'; // White border for visibility
 
 // 참가자 제한
 export const MIN_PARTICIPANTS = 2;

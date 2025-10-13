@@ -134,9 +134,37 @@
 }
 
 .roulette-setting-group textarea {
-    height: 100px;
+    height: 400px;
     resize: vertical;
     font-family: inherit;
+}
+
+/* Utility buttons above textarea */
+.roulette-utility-buttons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.roulette-utility-btn {
+    background: #444;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.roulette-utility-btn:hover {
+    background: #555;
+    transform: translateY(-1px);
+}
+
+.roulette-utility-btn:active {
+    transform: translateY(0);
 }
 
 /* Textarea validation styles */
@@ -283,9 +311,9 @@
 /* Full Screen Button (inside settings) */
 .roulette-fullscreen-btn {
     background: #666;
-    font-size: 20px;
-    min-width: 50px;
-    flex: 0 0 auto;
+    font-size: 18px;
+    min-width: 120px;
+    flex: 1;
 }
 
 .roulette-fullscreen-btn:hover {

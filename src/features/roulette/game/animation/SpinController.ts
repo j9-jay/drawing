@@ -42,19 +42,16 @@ export function createSpinConfig(speed: SpinSpeed): SpinConfig {
  * Determine winner based on final roulette angle
  *
  * Algorithm:
- * 1. Pinset is at 3 o'clock position (π/2 radians)
- * 2. Calculate relative angle: (pinset angle - roulette angle)
- * 3. Normalize to [0, 2π) range
- * 4. Determine which sector falls under the pinset
+ * 1. Pointer is at 3 o'clock position (0 radians)
+ * 2. Normalize roulette angle to [0, 2π) range
+ * 3. Determine which weighted sector is at the pointer position
  *
- * Example (4 participants):
- * - Sector 0 (홍길동): [0°, 90°)
- * - Sector 1 (김철수): [90°, 180°)
- * - Sector 2 (이영희): [180°, 270°)
- * - Sector 3 (박민수): [270°, 360°)
+ * Supports weighted sectors:
+ * - Each participant's sector size is proportional to their weight
+ * - Example: [홍길동(w:1), 김철수(w:3)] → 김철수 gets 75% of wheel
  *
  * @param angle - Final roulette angle in radians
- * @param participants - List of participants
+ * @param participants - List of participants with weights
  * @returns Winning participant
  */
 export function determineWinner(
@@ -65,29 +62,39 @@ export function determineWinner(
     return null;
   }
 
-  // Pinset position: 3 o'clock (90°)
-  const PINSET_ANGLE = Math.PI / 2;
+  // Pointer is at 3 o'clock (0 radians)
+  // Wheel has rotated by 'angle' radians
+  // To find which sector is at the pointer, we calculate the relative angle
+  // relativeAngle = 2π - angle (or -angle normalized to [0, 2π))
+  const fullCircle = Math.PI * 2;
+  const relativeAngle = (fullCircle - angle % fullCircle) % fullCircle;
 
-  // Calculate angle from pinset's perspective
-  // Subtract roulette rotation to find which sector is under the pinset
-  const relativeAngle = PINSET_ANGLE - angle;
+  // Calculate total weight
+  const totalWeight = participants.reduce((sum, p) => sum + p.weight, 0);
 
-  // Normalize to [0, 2π)
-  const normalizedAngle = normalizeAngle(relativeAngle);
+  // Small epsilon for floating-point comparison
+  const EPSILON = 1e-10;
 
-  // Calculate sector size
-  const sectorAngle = (Math.PI * 2) / participants.length;
+  // Find which weighted sector the pointer points to
+  // Use accumulated weight to avoid floating-point precision errors
+  let accumulatedWeight = 0;
+  for (let i = 0; i < participants.length; i++) {
+    const startRatio = accumulatedWeight / totalWeight;
+    const endRatio = (accumulatedWeight + participants[i].weight) / totalWeight;
 
-  // Determine winner index
-  // Floor division to get sector number
-  // Ensure angle is strictly less than 2π to prevent edge case overflow
-  const safeAngle = normalizedAngle >= Math.PI * 2 ? normalizedAngle - Math.PI * 2 : normalizedAngle;
-  const winnerIndex = Math.floor(safeAngle / sectorAngle);
+    const startAngle = fullCircle * startRatio;
+    const endAngle = fullCircle * endRatio;
 
-  // Clamp to valid range (safety check)
-  const safeIndex = Math.max(0, Math.min(winnerIndex, participants.length - 1));
+    // Check if relative angle falls within this sector (with epsilon tolerance)
+    if (relativeAngle >= startAngle - EPSILON && relativeAngle < endAngle + EPSILON) {
+      return participants[i];
+    }
 
-  return participants[safeIndex];
+    accumulatedWeight += participants[i].weight;
+  }
+
+  // Fallback to last participant (edge case handling)
+  return participants[participants.length - 1];
 }
 
 /**

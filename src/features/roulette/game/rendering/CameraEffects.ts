@@ -6,7 +6,9 @@
 import { CameraState } from '../../shared/types/roulette';
 import {
   ZOOM_DEFAULT,
-  ZOOM_WIN,
+  ZOOM_TARGET_TEXT_HEIGHT_RATIO,
+  ZOOM_MIN_CLAMP,
+  ZOOM_MAX_CLAMP,
   ZOOM_TRANSITION_SPEED,
   ZOOM_LERP_THRESHOLD,
   ZOOM_START_VELOCITY,
@@ -38,6 +40,29 @@ function lerp(a: number, b: number, t: number): number {
 }
 
 /**
+ * Calculate dynamic zoom level based on text size and canvas dimensions
+ * Completely fluid calculation: smaller text → larger zoom to make it visible
+ *
+ * @param fontSize - Current font size in pixels
+ * @param canvasHeight - Canvas height in pixels
+ * @returns Dynamic zoom level (clamped between min/max)
+ */
+function calculateDynamicZoomWin(fontSize: number, canvasHeight: number): number {
+  // Current text height (with line height)
+  const currentTextHeight = fontSize * 1.2;
+
+  // Target text height: make text occupy target ratio of screen height
+  const targetTextHeight = canvasHeight * ZOOM_TARGET_TEXT_HEIGHT_RATIO;
+
+  // Calculate required zoom to reach target size
+  // zoom = target / current
+  const calculatedZoom = targetTextHeight / currentTextHeight;
+
+  // Clamp zoom to reasonable bounds
+  return Math.max(ZOOM_MIN_CLAMP, Math.min(ZOOM_MAX_CLAMP, calculatedZoom));
+}
+
+/**
  * Ease-in-out cubic function
  * Provides smooth acceleration and deceleration
  * @param t - Progress value (0-1)
@@ -50,23 +75,29 @@ function easeInOutCubic(t: number): number {
 }
 
 /**
- * Update camera zoom based on spin velocity
+ * Update camera zoom based on spin velocity, text size, and canvas dimensions
  *
  * Zoom behavior:
  * - High velocity (> ZOOM_START_VELOCITY): Default zoom (1.0x)
  * - Low velocity (< ZOOM_START_VELOCITY): Gradual zoom in
- * - Near stop: Maximum zoom (1.5x) for winner highlight
+ * - Near stop: Dynamic zoom based on text size
+ *   - Smaller text → larger zoom (to make it readable)
+ *   - Larger text → smaller zoom (already visible)
  *
  * Uses ease-in-out curve for smooth zoom transition
  *
  * @param cameraState - Current camera state (mutated)
  * @param velocity - Current angular velocity (rad/s)
  * @param deltaTime - Time elapsed since last frame (unused, kept for API consistency)
+ * @param targetFontSize - Target font size in pixels (optional, for dynamic zoom)
+ * @param canvasHeight - Canvas height in pixels (optional, for dynamic zoom)
  */
 export function updateCameraZoom(
   cameraState: CameraState,
   velocity: number,
-  deltaTime: number
+  deltaTime: number,
+  targetFontSize?: number,
+  canvasHeight?: number
 ): void {
   // Determine target zoom based on velocity
   let targetZoom: number;
@@ -82,8 +113,13 @@ export function updateCameraZoom(
     // Apply ease-in-out for smooth zoom curve
     const easedProgress = easeInOutCubic(progress);
 
-    // Interpolate between default and win zoom
-    targetZoom = lerp(ZOOM_DEFAULT, ZOOM_WIN, easedProgress);
+    // Calculate dynamic zoom win level based on text size
+    const zoomWin = (targetFontSize !== undefined && canvasHeight !== undefined)
+      ? calculateDynamicZoomWin(targetFontSize, canvasHeight)
+      : ZOOM_MAX_CLAMP; // Default to max if no info
+
+    // Interpolate between default and dynamic win zoom
+    targetZoom = lerp(ZOOM_DEFAULT, zoomWin, easedProgress);
   }
 
   // Update target zoom
