@@ -10,9 +10,9 @@ export const SPIN_SPEEDS = {
 } as const;
 
 // 물리 상수
-export const FRICTION_COEFFICIENT = 0.98; // 감속 계수 (매 프레임 곱)
-export const STOP_THRESHOLD = 0.05;       // 정지 판단 임계값 (rad/s)
-export const MIN_ROTATION_CYCLES = 3;     // 최소 3바퀴 회전 보장
+export const FRICTION_COEFFICIENT = 0.99; // 감속 계수 (더 느린 감속)
+export const STOP_THRESHOLD = 0.007;        // 정지 판단 임계값 (더 길게 미끄러짐)
+export const MIN_ROTATION_CYCLES = 3;      // 최소 3바퀴 회전 보장
 
 // 60FPS 기준 deltaTime
 export const TARGET_FPS = 60;

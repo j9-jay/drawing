@@ -383,7 +383,7 @@ function setupSortButton(game: RouletteGame): void {
     sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
 
     // Update button text to show current direction
-    sortBtn.textContent = sortDirection === 'asc' ? '↑ aA 정렬' : '↓ aA 정렬';
+    sortBtn.textContent = sortDirection === 'asc' ? '↑aA 정렬' : '↓aA 정렬';
     sortBtn.title = sortDirection === 'asc' ? '참가자 정렬 (오름차순)' : '참가자 정렬 (내림차순)';
 
     game.setParticipants(sorted);

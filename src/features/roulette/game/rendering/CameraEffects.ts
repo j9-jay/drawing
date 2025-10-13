@@ -216,6 +216,25 @@ export function applyCameraShake(
 }
 
 /**
+ * Apply zoom lerp transition towards targetZoom
+ * Used when stopped to smoothly return to default zoom
+ * @param cameraState - Current camera state (mutated)
+ */
+export function applyCameraZoomLerp(cameraState: CameraState): void {
+  const zoomDelta = cameraState.targetZoom - cameraState.zoom;
+
+  if (Math.abs(zoomDelta) < ZOOM_LERP_THRESHOLD) {
+    cameraState.zoom = cameraState.targetZoom;
+  } else {
+    cameraState.zoom = lerp(
+      cameraState.zoom,
+      cameraState.targetZoom,
+      ZOOM_TRANSITION_SPEED
+    );
+  }
+}
+
+/**
  * Reset camera shake state
  * Useful for testing or manual reset
  */

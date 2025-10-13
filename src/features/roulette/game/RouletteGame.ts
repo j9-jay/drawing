@@ -10,7 +10,7 @@ import { RouletteRenderer } from './rendering/RouletteRenderer';
 import { updateSpinPhysics } from './animation/SpinPhysics';
 import { startSpin, createSpinConfig, determineWinner } from './animation/SpinController';
 import { showWinner, hideWinner } from './ui/WinnerDisplay';
-import { updateCameraZoom, applyCameraShake, triggerCameraShake } from './rendering/CameraEffects';
+import { updateCameraZoom, applyCameraShake, applyCameraZoomLerp } from './rendering/CameraEffects';
 import { setupEventListeners } from './ui/EventHandlers';
 import { loadParticipants, saveParticipants } from './storage/RouletteStorage';
 
@@ -212,8 +212,8 @@ export class RouletteGame {
   private onSpinStopped(): void {
     this.state = 'stopped';
 
-    // Trigger camera shake effect for winner reveal
-    triggerCameraShake();
+    // Reset camera zoom to default (smoothly)
+    this.cameraState.targetZoom = ZOOM_DEFAULT;
 
     // Determine winner
     const winner = determineWinner(this.currentAngle, this.participants);
@@ -300,9 +300,9 @@ export class RouletteGame {
    * @param deltaTime - Time elapsed since last frame in seconds
    */
   private updateCamera(timestamp: number, deltaTime: number): void {
-    // Only update zoom when game is active (not in idle state)
-    // This prevents zoom-in effect before game starts
-    if (this.state !== 'idle') {
+    // Update zoom based on state
+    if (this.state === 'spinning' || this.state === 'decelerating') {
+      // Dynamic zoom during spin
       updateCameraZoom(
         this.cameraState,
         Math.abs(this.currentVelocity),
@@ -310,6 +310,9 @@ export class RouletteGame {
         this.targetFontSize, // Pass target font size for dynamic zoom
         this.canvas.height   // Pass canvas height for zoom calculation
       );
+    } else if (this.state === 'stopped') {
+      // Smooth lerp to targetZoom when stopped
+      applyCameraZoomLerp(this.cameraState);
     }
 
     // Apply shake effect if active

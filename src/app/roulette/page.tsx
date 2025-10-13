@@ -54,7 +54,7 @@ export default function RoulettePage() {
                   🔀 섞기
                 </button>
                 <button id="roulette-sort-btn" className="roulette-utility-btn" title="참가자 정렬 (오름/내림차순)">
-                  ↑ aA 정렬
+                  ↑aA 정렬
                 </button>
               </div>
 
