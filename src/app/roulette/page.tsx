@@ -39,27 +39,7 @@ export default function RoulettePage() {
   return (
     <div className="roulette-page-container">
       <div id="roulette-app" ref={appRef}>
-        {/* Main Game Area */}
-        <div id="roulette-game-area">
-          <canvas id="roulette-canvas"></canvas>
-
-          {/* Winner Display */}
-          <div id="roulette-winner-display" className="hidden">
-            <div id="roulette-fireworks-container"></div>
-            <div id="roulette-winner-content">
-              <h1>🎉 Winner! 🎉</h1>
-              <div id="roulette-winner-name"></div>
-              <div id="roulette-winner-buttons">
-                <button id="roulette-play-again-btn" className="roulette-winner-btn">다시 시작</button>
-                <button id="roulette-play-without-winner-btn" className="roulette-winner-btn secondary">
-                  당첨자 제외하고 시작
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Settings Popup */}
+        {/* Settings Sidebar */}
         <div id="roulette-settings-popup" className="roulette-settings-popup">
           <div className="roulette-settings-header">
             <h4>룰렛 설정</h4>
@@ -95,23 +75,40 @@ export default function RoulettePage() {
             <div className="roulette-control-buttons">
               <button id="roulette-spin-btn" className="roulette-control-btn primary">회전</button>
               <button id="roulette-reset-btn" className="roulette-control-btn">리셋</button>
+              <button
+                className="roulette-control-btn roulette-fullscreen-btn"
+                onClick={handleFullScreen}
+                title="전체화면 전환 (ESC로 나가기)"
+              >
+                ⛶
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Toast Container */}
-        <div id="roulette-toast-container"></div>
-      </div>
+        {/* Main Game Area */}
+        <div id="roulette-game-area">
+          <canvas id="roulette-canvas"></canvas>
 
-      {/* Full Screen Button */}
-      <button
-        className="roulette-fullscreen-btn"
-        onClick={handleFullScreen}
-        title="전체화면 전환 (ESC로 나가기)"
-      >
-        <span>⛶</span>
-        <span>전체화면</span>
-      </button>
+          {/* Winner Display */}
+          <div id="roulette-winner-display" className="hidden">
+            <div id="roulette-fireworks-container"></div>
+            <div id="roulette-winner-content">
+              <h1>🎉 Winner! 🎉</h1>
+              <div id="roulette-winner-name"></div>
+              <div id="roulette-winner-buttons">
+                <button id="roulette-play-again-btn" className="roulette-winner-btn">다시 시작</button>
+                <button id="roulette-play-without-winner-btn" className="roulette-winner-btn secondary">
+                  당첨자 제외하고 시작
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Toast Container */}
+          <div id="roulette-toast-container"></div>
+        </div>
+      </div>
     </div>
   );
 }

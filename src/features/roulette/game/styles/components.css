@@ -77,25 +77,17 @@
     background: #F57C00;
 }
 
-/* Settings Popup */
+/* Settings Sidebar */
 .roulette-settings-popup {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    width: 580px;
-    max-width: calc(100% - 40px);
+    width: 300px;
+    min-width: 280px;
+    max-width: 320px;
+    height: 100%;
     background: #2d2d2d;
-    border: 2px solid #444;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.roulette-settings-popup.hidden {
-    opacity: 0;
-    transform: translateY(20px);
-    pointer-events: none;
+    border-right: 2px solid #444;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .roulette-settings-header {
@@ -288,59 +280,41 @@
     animation: explode 1s ease-out forwards;
 }
 
-/* Full Screen Button */
+/* Full Screen Button (inside settings) */
 .roulette-fullscreen-btn {
-    position: relative;
-    margin: 16px auto 0;
-    background: #4CAF50;
-    border: none;
-    color: #fff;
-    padding: 12px 30px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    background: #666;
+    font-size: 20px;
+    min-width: 50px;
+    flex: 0 0 auto;
 }
 
 .roulette-fullscreen-btn:hover {
-    background: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-}
-
-.roulette-fullscreen-btn:active {
-    transform: translateY(0);
+    background: #777;
 }
 
 /* Responsive Design */
-@media (max-width: 700px) {
-    .roulette-settings-popup {
-        width: calc(100% - 40px);
-        left: 10px;
-        right: 10px;
-    }
-
-    .roulette-control-buttons {
-        flex-wrap: wrap;
-    }
-
-    .roulette-fullscreen-btn {
-        margin-top: 15px;
-        padding: 10px 24px;
-        font-size: 14px;
-    }
-}
-
 @media (max-width: 768px) {
+    #roulette-app {
+        flex-direction: column;
+    }
+
+    .roulette-settings-popup {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 2px solid #444;
+    }
+
     .roulette-control-btn {
         padding: 10px 15px;
         font-size: 16px;
         height: 45px;
+    }
+
+    .roulette-fullscreen-btn {
+        min-width: 45px;
+        font-size: 18px;
     }
 
     #roulette-winner-content h1 {
@@ -351,15 +325,18 @@
         font-size: 1.5rem;
     }
 
-    .roulette-settings-popup {
-        bottom: 10px;
-        left: 10px;
-        right: 10px;
-        width: calc(100% - 20px);
+    .roulette-speed-selector {
+        flex-direction: row;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 500px) {
+    .roulette-control-buttons {
+        flex-wrap: wrap;
     }
 
-    .roulette-speed-selector {
-        flex-direction: column;
-        gap: 10px;
+    .roulette-control-btn {
+        flex: 1 1 45%;
     }
 }
