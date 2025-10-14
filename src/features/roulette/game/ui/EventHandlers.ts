@@ -65,23 +65,11 @@ function normalizeTextareaToNewlines(): void {
 }
 
 /**
- * Helper: Get spin speed text for toast
- */
-function getSpinSpeedText(speed: SpinSpeed): string {
-  switch (speed) {
-    case 'WEAK': return '약하게';
-    case 'STRONG': return '세게';
-    default: return '보통';
-  }
-}
-
-/**
  * Setup all event listeners for roulette game
  * @param game - RouletteGame instance
  */
 export function setupEventListeners(game: RouletteGame): void {
   setupCanvasClickListener(game);
-  setupSpinButtonListener(game);
   setupWinnerButtonListeners(game);
   setupParticipantInputListener(game);
   setupUtilityButtonListeners(game);
@@ -106,32 +94,6 @@ function setupCanvasClickListener(game: RouletteGame): void {
     if (!validateMinParticipants(participants)) return;
 
     startNewSpin(game);
-  });
-}
-
-/**
- * Spin button listener
- */
-function setupSpinButtonListener(game: RouletteGame): void {
-  const spinBtn = document.getElementById('roulette-spin-btn');
-
-  if (!spinBtn) {
-    console.warn('Spin button not found');
-    return;
-  }
-
-  spinBtn.addEventListener('click', () => {
-    if (!canStartSpin(game)) return;
-
-    const participants = parseParticipantsFromInput();
-    if (!validateMinParticipants(participants)) return;
-
-    game.setParticipants(participants);
-
-    const speed = getSelectedSpeed();
-    startNewSpin(game);
-
-    showToast(`${getSpinSpeedText(speed)} 회전 시작!`, 'success');
   });
 }
 

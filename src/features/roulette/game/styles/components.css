@@ -308,18 +308,6 @@
     animation: explode 1s ease-out forwards;
 }
 
-/* Full Screen Button (inside settings) */
-.roulette-fullscreen-btn {
-    background: #666;
-    font-size: 18px;
-    min-width: 120px;
-    flex: 1;
-}
-
-.roulette-fullscreen-btn:hover {
-    background: #777;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
     #roulette-app {
@@ -338,11 +326,6 @@
         padding: 10px 15px;
         font-size: 16px;
         height: 45px;
-    }
-
-    .roulette-fullscreen-btn {
-        min-width: 45px;
-        font-size: 18px;
     }
 
     #roulette-winner-content h1 {

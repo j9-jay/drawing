@@ -83,16 +83,7 @@ export default function RoulettePage() {
               </div>
             </div>
 
-            <div className="roulette-control-buttons">
-              <button id="roulette-spin-btn" className="roulette-control-btn primary">회전</button>
-              <button
-                className="roulette-control-btn roulette-fullscreen-btn"
-                onClick={handleFullScreen}
-                title="전체화면 전환 (ESC로 나가기)"
-              >
-                ⛶ 전체화면
-              </button>
-            </div>
+            {/* Control buttons removed - spin via canvas click, fullscreen moved outside */}
           </div>
         </div>
 
@@ -119,6 +110,16 @@ export default function RoulettePage() {
           <div id="roulette-toast-container"></div>
         </div>
       </div>
+
+      {/* Full Screen Button */}
+      <button
+        className="fullscreen-btn"
+        onClick={handleFullScreen}
+        title="Toggle fullscreen (or press ESC to exit)"
+      >
+        <span>⛶</span>
+        <span>Full Screen</span>
+      </button>
     </div>
   );
 }
