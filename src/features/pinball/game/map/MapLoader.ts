@@ -17,61 +17,12 @@ import {
   DEFAULT_BOUNCE_CIRCLE_RESTITUTION,
   JUMPPAD_FRICTION,
   DEFAULT_JUMPPAD_RESTITUTION,
-  ROTATING_BAR_DEFAULT_SPEED,
-  DEFAULT_MAP_WIDTH,
-  DEFAULT_MAP_HEIGHT
+  ROTATING_BAR_DEFAULT_SPEED
 } from '../constants/physics';
 import {
   DEFAULT_SPAWN_HEIGHT,
-  DEFAULT_FINISH_LINE_OFFSET,
-  FINISH_LINE_BUFFER
+  DEFAULT_FINISH_LINE_OFFSET
 } from '../constants/map';
-
-/**
- * Create default map when no map is available
- */
-export function createDefaultMap(): EditorMapJson {
-  return {
-    meta: {
-      name: 'default',
-      version: 1 as unknown,
-      canvasSize: { width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT },
-      gridSize: 20,
-      spawnPoint: { x: 200, y: DEFAULT_SPAWN_HEIGHT }
-    },
-    objects: [
-      // Borders
-      {
-        id: 'left-wall',
-        type: 'edge',
-        vertices: [
-          { x: 0, y: 0 },
-          { x: 0, y: DEFAULT_MAP_HEIGHT }
-        ],
-        material: 'normal' as unknown,
-        thickness: 10
-      } as unknown,
-      {
-        id: 'right-wall',
-        type: 'edge',
-        vertices: [
-          { x: DEFAULT_MAP_WIDTH, y: 0 },
-          { x: DEFAULT_MAP_WIDTH, y: DEFAULT_MAP_HEIGHT }
-        ],
-        material: 'normal' as unknown,
-        thickness: 10
-      } as unknown,
-      // Default finish line
-      {
-        id: 'finish',
-        type: 'finishLine',
-        a: { x: 0, y: 700 },
-        b: { x: DEFAULT_MAP_WIDTH, y: 700 },
-        thickness: 5
-      }
-    ]
-  };
-}
 
 /**
  * Calculate auto finish line position based on map objects

@@ -2,8 +2,6 @@
 import { EditorMapJson } from '../../shared/types/editorMap';
 import { MapSpecConfig } from '../../maps/JsonMapTypes';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
-
 export class GameIntegration {
   /**
    * Convert editor map to game-compatible MapSpec format

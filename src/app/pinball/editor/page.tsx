@@ -1,9 +1,17 @@
 'use client';
 
-import EditorModal from '@/features/pinball/editor/components/EditorModal';
-import EditorButton from '@/features/pinball/editor/components/EditorButton';
+import dynamic from 'next/dynamic';
 import { useEditorStore } from '@/features/pinball/editor/state/editorState';
 import { useEffect } from 'react';
+
+// Dynamic imports to prevent SSR issues
+const EditorModal = dynamic(() => import('@/features/pinball/editor/components/EditorModal'), {
+  ssr: false
+});
+
+const EditorButton = dynamic(() => import('@/features/pinball/editor/components/EditorButton'), {
+  ssr: false
+});
 
 export default function PinballEditorPage() {
   const { openEditor } = useEditorStore();

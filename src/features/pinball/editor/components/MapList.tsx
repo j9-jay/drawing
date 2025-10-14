@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MapListItem, fetchMapList, loadMapFromServer, deleteMapFromServer } from '../services/mapList';
+import { MapListItem, fetchMapList, loadMapFromStatic } from '../services/mapList';
 import { useEditorStore } from '../state/editorState';
 import { undoRedoManager } from '../state/undoRedo';
 import { toast } from '../utils/toast';
@@ -23,10 +23,10 @@ const MapList: React.FC<MapListProps> = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  const loadMapList = async () => {
+  const loadMapList = () => {
     setLoading(true);
     try {
-      const mapList = await fetchMapList();
+      const mapList = fetchMapList();
       setMaps(mapList);
     } catch (error) {
       toast.error(`Failed to load map list: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -35,13 +35,17 @@ const MapList: React.FC<MapListProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleLoadMap = async (mapName: string) => {
+  const handleLoadMap = (mapName: string) => {
     if (!confirm(`Load map "${mapName}"? Any unsaved changes will be lost.`)) {
       return;
     }
 
     try {
-      const mapData = await loadMapFromServer(mapName);
+      const mapData = loadMapFromStatic(mapName);
+      if (!mapData) {
+        toast.error(`Map "${mapName}" not found`);
+        return;
+      }
       loadMap(mapData);
       undoRedoManager.clear();
       toast.success(`Map "${mapName}" loaded successfully!`);
@@ -49,30 +53,6 @@ const MapList: React.FC<MapListProps> = ({ isOpen, onClose }) => {
     } catch (error) {
       toast.error(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-  };
-
-  const handleDeleteMap = async (mapName: string) => {
-    if (!confirm(`Are you sure you want to delete map "${mapName}"? This action cannot be undone.`)) {
-      return;
-    }
-
-    try {
-      await deleteMapFromServer(mapName);
-      toast.success(`Map "${mapName}" deleted successfully!`);
-      loadMapList(); // Refresh the list
-    } catch (error) {
-      toast.error(`Failed to delete map: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  };
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
-
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString() + ' ' + new Date(dateString).toLocaleTimeString();
   };
 
   if (!isOpen) return null;
@@ -94,25 +74,27 @@ const MapList: React.FC<MapListProps> = ({ isOpen, onClose }) => {
             <div className="map-list">
               <div className="map-list-header-row">
                 <div className="col-name">Name</div>
-                <div className="col-size">Size</div>
-                <div className="col-modified">Last Modified</div>
+                <div className="col-difficulty">Difficulty</div>
                 <div className="col-actions">Actions</div>
               </div>
-              
+
               {maps.map((map) => (
-                <div 
-                  key={map.name} 
+                <div
+                  key={map.name}
                   className={`map-list-item ${selectedMap === map.name ? 'selected' : ''}`}
                   onClick={() => setSelectedMap(map.name)}
                 >
                   <div className="col-name" title={map.name}>
-                    {map.name}
+                    {map.displayName}
                   </div>
-                  <div className="col-size">
-                    {formatFileSize(map.size)}
-                  </div>
-                  <div className="col-modified">
-                    {formatDate(map.lastModified)}
+                  <div className="col-difficulty">
+                    {map.difficulty ? (
+                      <span className={`difficulty-badge ${map.difficulty}`}>
+                        {map.difficulty}
+                      </span>
+                    ) : (
+                      <span className="difficulty-badge">-</span>
+                    )}
                   </div>
                   <div className="col-actions">
                     <button 
@@ -124,12 +106,10 @@ const MapList: React.FC<MapListProps> = ({ isOpen, onClose }) => {
                     >
                       Load
                     </button>
-                    <button 
-                      className="btn btn-small btn-danger" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteMap(map.name);
-                      }}
+                    <button
+                      className="btn btn-small btn-danger"
+                      disabled
+                      title="Static maps cannot be deleted. Remove from StaticMapLoader.ts and redeploy."
                     >
                       Delete
                     </button>

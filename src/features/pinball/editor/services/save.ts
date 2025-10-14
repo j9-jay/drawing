@@ -1,38 +1,17 @@
 import { EditorMapJson } from '../../shared/types/editorMap';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
-
-// Save map to server or download as fallback
-export async function saveMap(mapJson: EditorMapJson): Promise<void> {
+/**
+ * Save map by downloading as JSON file
+ * No server storage - developer must manually add to data/pinball/maps/
+ */
+export function saveMap(mapJson: EditorMapJson): void {
   const jsonString = JSON.stringify(mapJson, null, 2);
-
-  try {
-    // Try to save to development server first
-    const response = await fetch(`${API_URL}/api/pinball/maps/save`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: mapJson.meta.name,
-        json: jsonString
-      }),
-    });
-
-    if (response.ok) {
-      return;
-    } else {
-      throw new Error(`Server save failed: ${response.status} ${response.statusText}`);
-    }
-  } catch (error) {
-    console.warn('Failed to save to server, falling back to download:', error);
-    
-    // Fallback: download the file
-    downloadMapAsFile(mapJson.meta.name, jsonString);
-  }
+  downloadMapAsFile(mapJson.meta.name, jsonString);
 }
 
-// Download map as JSON file
+/**
+ * Download map as JSON file
+ */
 function downloadMapAsFile(mapName: string, jsonString: string): void {
   const blob = new Blob([jsonString], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -48,71 +27,70 @@ function downloadMapAsFile(mapName: string, jsonString: string): void {
   URL.revokeObjectURL(url);
 }
 
-// Sanitize filename for safe file system usage
+/**
+ * Sanitize filename for safe file system usage
+ * Removes invalid characters and normalizes format
+ */
 function sanitizeFilename(filename: string): string {
-  return filename
-    .replace(/[<>:"/\\|?*]/g, '_') // Replace invalid characters
-    .replace(/\s+/g, '_') // Replace spaces with underscores
-    .replace(/_+/g, '_') // Collapse multiple underscores
-    .replace(/^_|_$/g, '') // Trim underscores from start/end
-    .toLowerCase() || 'untitled_map'; // Fallback if empty
+  // Step 1: Replace invalid filesystem characters with underscores
+  const replaceInvalidChars = filename.replace(/[<>:"/\\|?*]/g, '_');
+
+  // Step 2: Normalize all spaces to underscores
+  const normalizeSpaces = replaceInvalidChars.replace(/\s+/g, '_');
+
+  // Step 3: Collapse multiple consecutive underscores into one
+  const collapseUnderscores = normalizeSpaces.replace(/_+/g, '_');
+
+  // Step 4: Trim leading/trailing underscores
+  const trimUnderscores = collapseUnderscores.replace(/^_|_$/g, '');
+
+  // Step 5: Convert to lowercase and provide fallback
+  const result = trimUnderscores.toLowerCase();
+
+  return result || 'untitled_map';
 }
 
-// Load maps list from server
-export async function loadMapsList(): Promise<string[]> {
-  try {
-    const response = await fetch(`${API_URL}/api/pinball/maps/list`);
-    if (response.ok) {
-      const maps = await response.json();
-      return maps;
-    }
-  } catch (error) {
-    console.warn('Failed to load maps list from server:', error);
-  }
-  
-  return [];
-}
-
-// Load specific map from server
-export async function loadMapFromServer(mapName: string): Promise<EditorMapJson | null> {
-  try {
-    const response = await fetch(`${API_URL}/api/pinball/maps/load/${encodeURIComponent(mapName)}`);
-    if (response.ok) {
-      const mapJson = await response.json();
-      return mapJson;
-    }
-  } catch (error) {
-    console.warn('Failed to load map from server:', error);
-  }
-  
-  return null;
-}
-
-// Load map from uploaded file
+/**
+ * Load map from uploaded file
+ * Used for importing user-created maps
+ */
 export function loadMapFromFile(file: File): Promise<EditorMapJson> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    
+
     reader.onload = (e) => {
       try {
         const jsonString = e.target?.result as string;
         const mapJson = JSON.parse(jsonString) as EditorMapJson;
-        
+
         // Basic validation
         if (!mapJson.meta || !mapJson.objects || !Array.isArray(mapJson.objects)) {
           throw new Error('Invalid map file format');
         }
-        
+
         resolve(mapJson);
       } catch (error) {
         reject(new Error(`Failed to parse map file: ${error}`));
       }
     };
-    
+
     reader.onerror = () => {
       reject(new Error('Failed to read file'));
     };
-    
+
     reader.readAsText(file);
   });
+}
+
+/**
+ * Load map from static loader (for editing existing maps)
+ */
+import { StaticMapLoader } from '../../shared/map/StaticMapLoader';
+
+export function loadStaticMap(mapName: string): EditorMapJson | null {
+  return StaticMapLoader.getMapByName(mapName);
+}
+
+export function getStaticMapNames(): string[] {
+  return StaticMapLoader.getMapNames();
 }

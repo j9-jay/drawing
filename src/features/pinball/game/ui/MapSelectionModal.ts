@@ -7,6 +7,8 @@
 
 import { showToast } from './ToastManager';
 import { thumbnailGenerator } from './MapThumbnailGenerator';
+import { StaticMapLoader } from '../../shared/map/StaticMapLoader';
+import { formatDate } from '../../shared/utils/formatting';
 
 export interface MapData {
   name: string;
@@ -99,39 +101,46 @@ class MapSelectionModalManager {
 
   private async loadMaps(): Promise<void> {
     try {
-      // Try to load from API
-      const response = await fetch('/api/pinball/maps/list');
-      if (response.ok) {
-        const mapList = await response.json();
-        this.maps = mapList;
-      } else {
-        // Fallback to default only
-        this.maps = [{ name: 'default', displayName: 'Default Map', lastModified: '2024-01-01', size: 0 }];
-      }
-
-      // Generate thumbnails
-      const thumbnailPromises = this.maps.map(async (map) => {
-        const thumbnail = await thumbnailGenerator.generateThumbnailFromName(map.name);
-        return {
-          ...map,
-          thumbnail,
-          difficulty: this.getMapDifficulty(map.name)
-        };
-      });
-
-      this.maps = await Promise.all(thumbnailPromises);
+      const mapInfoList = this.loadMapInfoList();
+      this.maps = await this.generateThumbnails(mapInfoList);
     } catch (error) {
-      console.warn('Failed to load maps:', error);
-      this.maps = [{ name: 'default', displayName: 'Default Map', lastModified: '2024-01-01', size: 0 }];
+      this.handleLoadMapsError(error);
     }
   }
 
-  private getMapDifficulty(mapName: string): 'easy' | 'medium' | 'hard' | undefined {
-    // Placeholder logic - can be enhanced later
-    if (mapName.toLowerCase().includes('easy')) return 'easy';
-    if (mapName.toLowerCase().includes('hard')) return 'hard';
-    if (mapName.toLowerCase().includes('medium')) return 'medium';
-    return undefined;
+  private loadMapInfoList(): MapData[] {
+    const mapInfoList = StaticMapLoader.getAllMapInfo();
+
+    return mapInfoList.map(info => ({
+      name: info.name,
+      displayName: info.displayName,
+      lastModified: new Date().toISOString(),
+      size: 0,
+      difficulty: info.difficulty
+    }));
+  }
+
+  private async generateThumbnails(maps: MapData[]): Promise<MapData[]> {
+    const thumbnailPromises = maps.map(async (map) => {
+      const thumbnail = await thumbnailGenerator.generateThumbnailFromName(map.name);
+      return {
+        ...map,
+        thumbnail
+      };
+    });
+
+    return Promise.all(thumbnailPromises);
+  }
+
+  private handleLoadMapsError(error: unknown): void {
+    console.error('Failed to load maps:', error);
+
+    this.maps = [{
+      name: 'default',
+      displayName: 'Default Map',
+      lastModified: new Date().toISOString(),
+      size: 0
+    }];
   }
 
   private sortMaps(maps: MapData[]): MapData[] {
@@ -196,7 +205,7 @@ class MapSelectionModalManager {
         <h3>${map.displayName}</h3>
         <div class="map-meta">
           ${map.difficulty ? `<span class="difficulty ${map.difficulty}">${map.difficulty}</span>` : ''}
-          <span class="date">${this.formatDate(map.lastModified)}</span>
+          <span class="date">${formatDate(map.lastModified)}</span>
         </div>
       </div>
     `;
@@ -204,33 +213,6 @@ class MapSelectionModalManager {
     card.addEventListener('click', () => this.selectMap(map.name));
 
     return card;
-  }
-
-
-  private formatSize(bytes: number): string {
-    if (bytes === 0) return '';
-
-    const sizes = ['B', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
-  }
-
-  private formatDate(dateString?: string): string {
-    if (!dateString) return '';
-
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-
-    return date.toLocaleDateString();
   }
 
   private selectMap(mapName: string): void {

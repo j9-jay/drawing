@@ -4,7 +4,7 @@ import { GameWorld } from '../../shared/types/gameObjects';
 import { EditorMapJson } from '../../shared/types/editorMap';
 import { clearMarbles } from '../physics/PhysicsHelpers';
 import { setupMapFromEditor, calculateCameraBounds } from './MapSetup';
-import { createDefaultMap } from './MapLoader';
+import { StaticMapLoader } from '../../shared/map/StaticMapLoader';
 import { PIXELS_PER_METER } from '../constants/physics';
 import { FALLBACK_SPAWN_HEIGHT } from '../constants/map';
 import { createPreviewMarbles, createTestMarbles } from '../entities/MarbleManager';
@@ -12,37 +12,17 @@ import { updatePreviewLeaderboard } from '../ui/LeaderboardUI';
 
 const DEFAULT_MAP_NAME = 'default';
 
-export async function initializeMapSelect(selectElement: HTMLSelectElement): Promise<void> {
-  try {
-    const response = await fetch('/api/pinball/maps/list');
-    if (!response.ok) {
-      return populateDefault(selectElement);
-    }
+export function initializeMapSelect(selectElement: HTMLSelectElement): void {
+  const mapInfoList = StaticMapLoader.getAllMapInfo();
 
-    const mapList: Array<{ name: string; displayName?: string; lastModified: string; size: number }> = await response.json();
-
-    selectElement.innerHTML = '';
-
-    populateDefault(selectElement);
-
-    mapList.forEach((mapInfo) => {
-      const option = document.createElement('option');
-      option.value = mapInfo.name;
-      option.textContent = mapInfo.name;
-      selectElement.appendChild(option);
-    });
-  } catch (error) {
-    console.warn('Dev server not available, using default map only:', (error as Error).message);
-    populateDefault(selectElement);
-  }
-}
-
-function populateDefault(selectElement: HTMLSelectElement): void {
   selectElement.innerHTML = '';
-  const defaultOption = document.createElement('option');
-  defaultOption.value = DEFAULT_MAP_NAME;
-  defaultOption.textContent = 'Default Map';
-  selectElement.appendChild(defaultOption);
+
+  mapInfoList.forEach((mapInfo) => {
+    const option = document.createElement('option');
+    option.value = mapInfo.name;
+    option.textContent = mapInfo.displayName;
+    selectElement.appendChild(option);
+  });
 }
 
 export interface LoadMapInput {
@@ -69,7 +49,7 @@ export interface LoadMapResult {
   marbles: Marble[];
 }
 
-export async function loadMapIntoState(input: LoadMapInput): Promise<LoadMapResult> {
+export function loadMapIntoState(input: LoadMapInput): LoadMapResult {
   const { world, canvas, participants, marbles, gameState, gameWorld } = input;
 
   // Clear existing entities from physics world and GameWorld
@@ -83,9 +63,8 @@ export async function loadMapIntoState(input: LoadMapInput): Promise<LoadMapResu
   clearMarbles(marbles, world);
 
   const targetMapName = input.mapName ?? DEFAULT_MAP_NAME;
-  const editorMap = await loadEditorMap(targetMapName);
-
-  ensureSpawnPoint(editorMap);
+  const loadedMap = loadEditorMap(targetMapName);
+  const editorMap = ensureSpawnPoint(loadedMap);
 
   const setup = setupMapFromEditor(world, editorMap);
 
@@ -112,24 +91,29 @@ export async function loadMapIntoState(input: LoadMapInput): Promise<LoadMapResu
   };
 }
 
-async function loadEditorMap(mapName: string): Promise<EditorMapJson> {
-  try {
-    const response = await fetch(`/api/pinball/maps/load/${mapName}`);
-    if (response.ok) {
-      return await response.json();
-    }
-  } catch (error) {
-    console.warn(`Could not load map "${mapName}" from API:`, error);
+function loadEditorMap(mapName: string): EditorMapJson {
+  const map = StaticMapLoader.getMapByName(mapName);
+
+  if (map) {
+    return map;
   }
 
-  return createDefaultMap();
+  console.warn(`Map "${mapName}" not found, falling back to default`);
+  return StaticMapLoader.getDefaultMap();
 }
 
-function ensureSpawnPoint(map: EditorMapJson): void {
+function ensureSpawnPoint(map: EditorMapJson): EditorMapJson {
   if (!map.meta.spawnPoint) {
-    map.meta.spawnPoint = {
-      x: map.meta.canvasSize.width / 2,
-      y: FALLBACK_SPAWN_HEIGHT
+    return {
+      ...map,
+      meta: {
+        ...map.meta,
+        spawnPoint: {
+          x: map.meta.canvasSize.width / 2,
+          y: FALLBACK_SPAWN_HEIGHT
+        }
+      }
     };
-}
+  }
+  return map;
 }

@@ -6,6 +6,7 @@
  */
 
 import { EditorMapJson } from '../../shared/types/editorMap';
+import { StaticMapLoader } from '../../shared/map/StaticMapLoader';
 
 export class MapThumbnailGenerator {
   private canvas: HTMLCanvasElement;
@@ -234,26 +235,24 @@ export class MapThumbnailGenerator {
   }
 
   /**
-   * Generate thumbnail from map name by loading it first
+   * Generate thumbnail from map name
    */
   public async generateThumbnailFromName(mapName: string): Promise<string | undefined> {
     try {
-      const response = await fetch(`/api/pinball/maps/load/${mapName}`);
-      if (!response.ok) {
-        console.warn(`Failed to load map "${mapName}" for thumbnail generation:`, response.status);
+      const mapData = StaticMapLoader.getMapByName(mapName);
+
+      if (!mapData) {
+        console.warn(`Map "${mapName}" not found for thumbnail generation`);
         return undefined;
       }
 
-      const mapData = await response.json();
-
-      // Validate mapData structure
-      if (!mapData || !mapData.meta || !mapData.objects || !Array.isArray(mapData.objects)) {
-        console.error(`Invalid map data structure for "${mapName}":`, mapData);
+      // Validate mapData structure (defensive check)
+      if (!mapData.meta || !mapData.objects || !Array.isArray(mapData.objects)) {
+        console.error(`Invalid map data structure for "${mapName}"`);
         return undefined;
       }
 
       const thumbnail = await this.generateThumbnail(mapData);
-
       return thumbnail;
     } catch (error) {
       console.error(`Failed to generate thumbnail for ${mapName}:`, error);

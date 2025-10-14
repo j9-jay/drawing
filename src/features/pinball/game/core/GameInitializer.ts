@@ -9,7 +9,7 @@ import { loadFromStorage } from '../storage/GameStorage';
 import { parseParticipants } from '../entities/ParticipantManager';
 import { createPreviewMarbles, createTestMarbles } from '../entities/MarbleManager';
 import { updatePreviewLeaderboard } from '../ui/LeaderboardUI';
-import { createDefaultMap } from '../map/MapLoader';
+import { StaticMapLoader } from '../../shared/map/StaticMapLoader';
 import { FALLBACK_SPAWN_HEIGHT } from '../constants/map';
 import { INITIALIZER_GRAVITY_Y } from '../constants/physics';
 
@@ -96,29 +96,16 @@ export function initializeParticipantsAndMarbles(
 /**
  * Load initial map
  */
-export async function loadInitialMap(): Promise<EditorMapJson> {
-  try {
-    // Try to load default map from API
-    // Use relative path for same-origin requests
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
-    const response = await fetch(`${API_URL}/api/pinball/maps/default`);
-    if (response.ok) {
-      const editorMap = await response.json();
+export function loadInitialMap(): EditorMapJson {
+  const editorMap = StaticMapLoader.getDefaultMap();
 
-      // Ensure spawn point exists
-      if (!editorMap.meta.spawnPoint) {
-        editorMap.meta.spawnPoint = {
-          x: editorMap.meta.canvasSize.width / 2,
-          y: FALLBACK_SPAWN_HEIGHT
-        };
-      }
-
-      return editorMap;
-    }
-  } catch (error) {
-    console.warn('Could not load map from API during initialization:', error);
+  // Ensure spawn point exists
+  if (!editorMap.meta.spawnPoint) {
+    editorMap.meta.spawnPoint = {
+      x: editorMap.meta.canvasSize.width / 2,
+      y: FALLBACK_SPAWN_HEIGHT
+    };
   }
 
-  // Fall back to default map
-  return createDefaultMap();
+  return editorMap;
 }
