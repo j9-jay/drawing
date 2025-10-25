@@ -48,7 +48,7 @@ export function createSpinConfig(speed: SpinSpeed): SpinConfig {
  *
  * Supports weighted sectors:
  * - Each participant's sector size is proportional to their weight
- * - Example: [홍길동(w:1), 김철수(w:3)] → 김철수 gets 75% of wheel
+ * - Example: [John Doe(w:1), Jane Smith(w:3)] → Jane Smith gets 75% of wheel
  *
  * @param angle - Final roulette angle in radians
  * @param participants - List of participants with weights

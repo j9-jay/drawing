@@ -60,8 +60,8 @@ export default function RoulettePage() {
 
               <textarea
                 id="roulette-names-input"
-                placeholder="홍길동, 김철수*3, 이영희*2, 박민수"
-                defaultValue="홍길동, 김철수, 이영희, 박민수"
+                placeholder="John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown"
+                defaultValue="John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown"
               ></textarea>
             </div>
 

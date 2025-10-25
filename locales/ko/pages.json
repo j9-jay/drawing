@@ -20,7 +20,7 @@
       "controls": {
         "title": "게임 컨트롤 & 설정",
         "participants": "참가자 (줄바꿈 또는 쉼표로 구분, *숫자로 가중치, 최대 8자)",
-        "participantsPlaceholder": "홍길동, 김철수*3, 이영희*2, 박민수",
+        "participantsPlaceholder": "John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown",
         "start": "시작",
         "reset": "리셋",
         "mapSelection": "맵 선택",

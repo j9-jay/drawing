@@ -214,7 +214,7 @@ function getParticipantInputValue(): string {
 
 /**
  * Helper: Parse single participant entry
- * @param entry - Entry string (e.g., "홍길동" or "홍길동*3")
+ * @param entry - Entry string (e.g., "John Doe" or "John Doe*3")
  * @returns Participant object or null if invalid
  */
 function parseParticipantEntry(entry: string): Participant | null {
@@ -241,8 +241,8 @@ function parseParticipantEntry(entry: string): Participant | null {
 /**
  * Parse participants from textarea input
  * Supports formats:
- * - "홍길동, 김철수, 이영희"
- * - "홍길동*2, 김철수*3, 이영희" (weighted)
+ * - "John Doe, Jane Smith, Bob Johnson"
+ * - "John Doe*2, Jane Smith*3, Bob Johnson" (weighted)
  * - Line breaks or commas as separators
  *
  * @returns Parsed participants array
