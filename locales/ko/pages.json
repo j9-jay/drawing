@@ -1,0 +1,83 @@
+{
+  "home": {
+    "title": "Easy-Picky",
+    "description": "웹 개발, 프로그래밍, 게임 개발에 관한 블로그입니다."
+  },
+  "about": {
+    "title": "소개",
+    "description": "Easy-Picky 블로그 소개",
+    "keywords": ["블로그", "개발", "Next.js", "React"]
+  },
+  "pinball": {
+    "title": "핀볼 게임",
+    "description": "물리 엔진 기반 핀볼 게임을 즐겨보세요",
+    "keywords": ["핀볼", "게임", "물리엔진", "Planck.js"],
+    "editor": {
+      "title": "핀볼 맵 에디터",
+      "description": "나만의 핀볼 맵을 만들어보세요"
+    },
+    "game": {
+      "controls": {
+        "title": "게임 컨트롤 & 설정",
+        "participants": "참가자 (줄바꿈 또는 쉼표로 구분, *숫자로 가중치, 최대 8자)",
+        "participantsPlaceholder": "홍길동, 김철수*3, 이영희*2, 박민수",
+        "start": "시작",
+        "reset": "리셋",
+        "mapSelection": "맵 선택",
+        "select": "선택",
+        "winnerMode": "당첨자 선정",
+        "firstPlace": "1등",
+        "lastPlace": "꼴등",
+        "customRank": "커스텀 순위",
+        "topNPlaces": "상위 N명",
+        "speed": "속도",
+        "speedNormal": "보통"
+      },
+      "leaderboard": {
+        "title": "실시간 순위"
+      },
+      "winner": {
+        "title": "🎉 당첨! 🎉",
+        "playAgain": "다시 하기",
+        "playWithoutWinner": "당첨자 제외하고 시작"
+      },
+      "mapModal": {
+        "title": "맵 선택",
+        "sortByName": "가나다순",
+        "sortByNameDesc": "가나다 역순",
+        "sortByDate": "생성일순"
+      },
+      "fullscreen": "전체화면"
+    }
+  },
+  "roulette": {
+    "title": "룰렛 게임",
+    "description": "랜덤 선택 룰렛 게임",
+    "keywords": ["룰렛", "게임", "랜덤"],
+    "game": {
+      "settings": {
+        "title": "룰렛 설정",
+        "participants": "참가자 (줄바꿈 또는 쉼표로 구분, *숫자로 가중치, 최대 8자)",
+        "participantsPlaceholder": "홍길동, 김철수*3, 이영희*2, 박민수",
+        "defaultParticipants": "홍길동, 김철수, 이영희, 박민수",
+        "shuffle": "🔀 섞기",
+        "sort": "↑aA 정렬",
+        "speed": "회전 속도",
+        "speedWeak": "약하게",
+        "speedNormal": "보통",
+        "speedStrong": "세게"
+      },
+      "winner": {
+        "title": "🎉 Winner! 🎉",
+        "playAgain": "다시 시작",
+        "playWithoutWinner": "당첨자 제외하고 시작"
+      },
+      "fullscreen": "전체화면"
+    }
+  },
+  "components": {
+    "title": "컴포넌트 라이브러리",
+    "description": "UI 컴포넌트 데모 및 사용법",
+    "keywords": ["컴포넌트", "UI", "React", "Tailwind"]
+  }
+}

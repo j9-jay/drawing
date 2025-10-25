@@ -1,12 +1,14 @@
 # ARCHITECTURE.md
 
-Next.js 15 App Router 게임 프로젝트 (핀볼, 룰렛)
+Next.js 15 App Router 게임 프로젝트 (핀볼, 룰렛) + 18개 언어 i18n 지원
 
 ## Stack
 
 **Core**: Next.js 15.5.4 (App Router), React 19, TypeScript 5, Tailwind CSS 4
 **State**: Zustand 5
 **Physics**: Planck.js 1.4
+**i18n**: 커스텀 구현 (Middleware + Dynamic Routes)
+**SEO**: Next.js Metadata API + JSON-LD
 **Utils**: lucide-react, clsx, class-variance-authority, tailwind-merge
 
 ## Project Structure
@@ -14,21 +16,25 @@ Next.js 15 App Router 게임 프로젝트 (핀볼, 룰렛)
 ```
 src/
 ├── app/              # Next.js App Router
-│   ├── layout.tsx    # Root: Navbar, ToastProvider
-│   ├── page.tsx      # Home
-│   ├── about/        # About 페이지
-│   ├── pinball/      # 핀볼 게임
-│   │   ├── page.tsx           # 게임 플레이
-│   │   └── editor/page.tsx    # 맵 에디터
-│   ├── roulette/     # 룰렛 게임
-│   │   └── page.tsx           # 게임 플레이
-│   ├── components/   # 컴포넌트 데모
+│   ├── layout.tsx    # Root: locale-agnostic
+│   ├── [locale]/     # 다국어 페이지 (18개 언어)
+│   │   ├── layout.tsx         # <html lang>, SEO, Navbar
+│   │   ├── page.tsx           # Home (redirect to about)
+│   │   ├── about/page.tsx     # About 페이지
+│   │   ├── pinball/           # 핀볼 게임
+│   │   │   ├── page.tsx               # 게임 플레이
+│   │   │   └── editor/page.tsx        # 맵 에디터
+│   │   ├── roulette/page.tsx  # 룰렛 게임
+│   │   ├── components/page.tsx # 컴포넌트 데모
+│   │   └── sitemap.ts         # Locale별 사이트맵
 │   └── api/pinball/maps/      # 맵 CRUD API
 │
 ├── components/       # 공통 컴포넌트 라이브러리
 │   ├── ui/          # 21개 UI 컴포넌트
-│   ├── layout/      # Navbar, Footer, Hero, MobileNav
-│   └── game/        # GameCanvas, ControlPanel
+│   ├── layout/      # Navbar (w/ LanguageSwitcher), Footer, Hero, MobileNav
+│   ├── game/        # GameCanvas, ControlPanel
+│   ├── seo/         # JsonLd
+│   └── LanguageSwitcher.tsx  # 언어 전환 콤보박스
 │
 ├── features/
 │   ├── pinball/     # 핀볼 게임 Feature
@@ -41,12 +47,32 @@ src/
 │       └── shared/      # 공유 타입
 │
 ├── lib/             # 유틸리티
-│   └── utils.ts     # 공통 유틸
+│   ├── utils.ts     # 공통 유틸
+│   └── i18n/        # 다국어 지원 인프라
+│       ├── config.ts       # 18개 locale, fallback 설정
+│       ├── detect.ts       # 언어 감지, 봇 감지
+│       ├── hreflang.ts     # alternate links 생성
+│       ├── cookies.ts      # locale 쿠키 관리
+│       ├── translations.ts # 번역 로더
+│       └── metadata.ts     # SEO 메타데이터 헬퍼
 │
 ├── styles/
 │   └── theme.ts     # Linear Dark 테마
 │
-└── types/           # 타입 정의
+├── types/           # 타입 정의
+│
+└── middleware.ts    # Locale 감지 & 리다이렉트
+
+locales/             # 번역 파일
+├── ko/              # 한국어 (완전 번역)
+│   ├── common.json
+│   ├── nav.json
+│   └── pages.json
+└── en/              # 영어 (완전 번역)
+    ├── common.json
+    ├── nav.json
+    └── pages.json
+    # 나머지 16개 언어: en으로 fallback
 
 data/pinball/maps/   # 핀볼 맵 JSON
 ```
@@ -391,24 +417,100 @@ npm start      # Production
 npm run lint   # ESLint
 ```
 
-## 6. 주요 경로 매핑
+## 6. 다국어 (i18n) 아키텍처
+
+### 지원 언어 (18개)
+
+**번역 완료**: ko (한국어), en (영어)
+**설정 완료**: ja, zh-Hans, es, fr, de, pt-BR, ru, it, id, tr, vi, th, hi, ar, nl, pl
+- 미번역 언어는 영어로 fallback
+
+### URL 구조
+
+**Before**: `/about`, `/pinball`
+**After**: `/{locale}/about`, `/{locale}/pinball`
+
+예시:
+- 한국어: `/ko/about`, `/ko/pinball`
+- 영어: `/en/about`, `/en/pinball`
+- 일본어: `/ja/about` (영어 fallback)
+
+### 언어 감지 로직 (middleware.ts)
+
+1. **Cookie** `locale` (180일 유효) → 유효하면 사용
+2. **봇 감지** (User-Agent) → DEFAULT_LOCALE (en)
+3. **Accept-Language** 헤더 파싱 → 지원 언어 매핑
+4. **기본값** → en
+
+### 리다이렉트 정책
+
+- `/` → `/{detected-locale}/` (302)
+- `/xyz/about` (잘못된 locale) → `/en/about` (302)
+- 쿠키 자동 저장 (180일)
+
+### SEO 최적화
+
+모든 페이지에 다음 태그 자동 생성:
+- `<html lang="{locale}">`
+- `<link rel="canonical" href="...">`
+- `<link rel="alternate" hreflang="..." href="...">` (19개: 18 + x-default)
+- `<meta property="og:locale" content="...">`
+- `<meta property="og:locale:alternate" content="...">` (17개)
+- `<script type="application/ld+json">` (inLanguage)
+
+### Sitemap
+
+- 경로: `/{locale}/sitemap.xml`
+- 각 URL에 18개 locale의 alternate 링크 포함
+- changeFrequency: weekly
+- priority: 홈(1.0), 나머지(0.8)
+
+### 언어 전환기 (LanguageSwitcher)
+
+- 위치: Navbar 우측 (Desktop & Mobile)
+- 드롭다운: 18개 언어 선택
+- 동작: 현재 경로 유지하며 locale만 변경 + 쿠키 저장
+
+### 새 언어 추가 방법
+
+```bash
+# 1. 번역 파일 생성
+mkdir locales/ja
+cp -r locales/en/* locales/ja/
+
+# 2. 번역 (common.json, nav.json, pages.json)
+
+# 3. 완료 (코드 수정 불필요)
+```
+
+### 관련 파일
+
+- `src/lib/i18n/` - i18n 인프라
+- `locales/` - 번역 파일
+- `src/middleware.ts` - 언어 감지
+- `src/components/LanguageSwitcher.tsx` - UI
+- `src/app/[locale]/layout.tsx` - SEO 메타
+
+## 7. 주요 경로 매핑
 
 | 경로 | 파일 | 설명 |
 |-----|------|------|
-| `/` | `app/page.tsx` | 홈 |
-| `/pinball` | `app/pinball/page.tsx` | 핀볼 게임 플레이 |
-| `/pinball/editor` | `app/pinball/editor/page.tsx` | 핀볼 맵 에디터 |
-| `/roulette` | `app/roulette/page.tsx` | 룰렛 게임 |
-| `/components` | `app/components/page.tsx` | 컴포넌트 데모 |
-| `/about` | `app/about/page.tsx` | About |
+| `/` | `middleware.ts` → `/{locale}/` | 자동 리다이렉트 |
+| `/{locale}/` | `app/[locale]/page.tsx` | 홈 (→ /about) |
+| `/{locale}/about` | `app/[locale]/about/page.tsx` | About |
+| `/{locale}/pinball` | `app/[locale]/pinball/page.tsx` | 핀볼 게임 플레이 |
+| `/{locale}/pinball/editor` | `app/[locale]/pinball/editor/page.tsx` | 핀볼 맵 에디터 |
+| `/{locale}/roulette` | `app/[locale]/roulette/page.tsx` | 룰렛 게임 |
+| `/{locale}/components` | `app/[locale]/components/page.tsx` | 컴포넌트 데모 |
+| `/{locale}/sitemap.xml` | `app/[locale]/sitemap.ts` | Sitemap |
 
-## 7. 상태 관리
+## 8. 상태 관리
 
 **글로벌**: Zustand (핀볼 에디터)
 **로컬**: React useState/useReducer
 **서버 상태**: Next.js Server Components
 
-## 8. 파일 규칙
+## 9. 파일 규칙
 
 **Features** (`features/pinball/`, `features/roulette/`):
 - 최상위: Package-by-feature
@@ -422,7 +524,7 @@ npm run lint   # ESLint
 
 **함수**: camelCase, SRP 준수
 
-## 9. API 엔드포인트
+## 10. API 엔드포인트
 
 ### `/api/pinball/maps`
 - `GET`: 맵 목록/단일 조회
@@ -430,7 +532,7 @@ npm run lint   # ESLint
 - `PUT`: 맵 수정
 - `DELETE`: 맵 삭제
 
-## 10. 성능 최적화
+## 11. 성능 최적화
 
 **게임**:
 - 고정 60 FPS 루프
@@ -449,3 +551,4 @@ npm run lint   # ESLint
 - **컴포넌트 재사용**: 신규 생성 전 기존 확인 필수
 - **테마 우선**: `@/styles/theme` 사용
 - **타입 안전**: TypeScript strict mode
+- **i18n 문서**: `docs/PR_DESCRIPTION.md`, `docs/i18n-seo-qa.md`

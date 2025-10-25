@@ -1,0 +1,32 @@
+{
+  "siteName": "Easy-Picky",
+  "siteDescription": "웹 개발, 프로그래밍, 게임 개발에 관한 블로그입니다.",
+  "buttons": {
+    "login": "로그인",
+    "logout": "로그아웃",
+    "submit": "제출",
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "수정",
+    "back": "뒤로",
+    "next": "다음",
+    "close": "닫기",
+    "confirm": "확인"
+  },
+  "loading": "로딩 중...",
+  "error": {
+    "title": "오류가 발생했습니다",
+    "generic": "문제가 발생했습니다. 다시 시도해주세요.",
+    "notFound": "페이지를 찾을 수 없습니다.",
+    "serverError": "서버 오류가 발생했습니다."
+  },
+  "footer": {
+    "copyright": "© 2025 Easy-Picky. All rights reserved.",
+    "links": {
+      "privacy": "개인정보처리방침",
+      "terms": "이용약관",
+      "contact": "문의하기"
+    }
+  }
+}

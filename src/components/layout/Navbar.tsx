@@ -4,21 +4,41 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui';
 import { MobileNav } from './MobileNav';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { cn } from '@/lib/utils';
-
-const navItems = [
-  { href: '/about', label: '소개' },
-  { href: '/pinball', label: '핀볼게임' },
-  { href: '/roulette', label: '룰렛게임' },
-];
+import { isValidLocale, type Locale } from '@/lib/i18n/config';
 
 export function Navbar() {
   const pathname = usePathname();
 
+  // Extract locale from pathname (e.g., /ko/about → ko)
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const maybeLocale = pathSegments[0];
+  const locale = isValidLocale(maybeLocale) ? (maybeLocale as Locale) : 'en';
+
+  // Nav items with locale prefix
+  const navItems = [
+    { href: `/${locale}/about`, label: locale === 'ko' ? '소개' : 'About' },
+    {
+      href: `/${locale}/pinball`,
+      label: locale === 'ko' ? '핀볼게임' : 'Pinball',
+    },
+    {
+      href: `/${locale}/roulette`,
+      label: locale === 'ko' ? '룰렛게임' : 'Roulette',
+    },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60" style={{ borderBottomColor: 'var(--border)', backgroundColor: 'var(--header-bg)' }}>
+    <header
+      className="sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      style={{
+        borderBottomColor: 'var(--border)',
+        backgroundColor: 'var(--header-bg)',
+      }}
+    >
       <div className="flex h-16 items-center px-6">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href={`/${locale}`} className="flex items-center space-x-2">
           <span className="font-bold text-xl">Easy-Picky</span>
         </Link>
 
@@ -35,15 +55,17 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Desktop Log in Button */}
-        <div className="hidden md:flex items-center">
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center gap-2">
+          <LanguageSwitcher currentLocale={locale} />
           <Button variant="secondary" className="transition-colors">
-            Log in
+            {locale === 'ko' ? '로그인' : 'Log in'}
           </Button>
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden ml-auto">
+        <div className="md:hidden ml-auto flex items-center gap-2">
+          <LanguageSwitcher currentLocale={locale} />
           <MobileNav items={navItems} />
         </div>
       </div>

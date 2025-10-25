@@ -1,0 +1,32 @@
+{
+  "siteName": "Easy-Picky",
+  "siteDescription": "A blog about web development, programming, and game development.",
+  "buttons": {
+    "login": "Log in",
+    "logout": "Log out",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "confirm": "Confirm"
+  },
+  "loading": "Loading...",
+  "error": {
+    "title": "An error occurred",
+    "generic": "Something went wrong. Please try again.",
+    "notFound": "Page not found.",
+    "serverError": "Server error occurred."
+  },
+  "footer": {
+    "copyright": "© 2025 Easy-Picky. All rights reserved.",
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "contact": "Contact"
+    }
+  }
+}

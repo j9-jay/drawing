@@ -1,0 +1,83 @@
+{
+  "home": {
+    "title": "Easy-Picky",
+    "description": "A blog about web development, programming, and game development."
+  },
+  "about": {
+    "title": "About",
+    "description": "About Easy-Picky Blog",
+    "keywords": ["blog", "development", "Next.js", "React"]
+  },
+  "pinball": {
+    "title": "Pinball Game",
+    "description": "Play physics-based pinball game",
+    "keywords": ["pinball", "game", "physics engine", "Planck.js"],
+    "editor": {
+      "title": "Pinball Map Editor",
+      "description": "Create your own pinball maps"
+    },
+    "game": {
+      "controls": {
+        "title": "Game Controls & Settings",
+        "participants": "Participants (newline or comma separated, *number for weight, max 8 chars)",
+        "participantsPlaceholder": "John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown",
+        "start": "Start",
+        "reset": "Reset",
+        "mapSelection": "Map Selection",
+        "select": "Select",
+        "winnerMode": "Winner Selection",
+        "firstPlace": "1st Place",
+        "lastPlace": "Last Place",
+        "customRank": "Custom Rank",
+        "topNPlaces": "Top N Places",
+        "speed": "Speed",
+        "speedNormal": "Normal"
+      },
+      "leaderboard": {
+        "title": "Live Rankings"
+      },
+      "winner": {
+        "title": "🎉 Winner! 🎉",
+        "playAgain": "Play Again",
+        "playWithoutWinner": "Play Without Winner"
+      },
+      "mapModal": {
+        "title": "Map selection",
+        "sortByName": "Name (A-Z)",
+        "sortByNameDesc": "Name (Z-A)",
+        "sortByDate": "Created Date"
+      },
+      "fullscreen": "Full Screen"
+    }
+  },
+  "roulette": {
+    "title": "Roulette Game",
+    "description": "Random selection roulette game",
+    "keywords": ["roulette", "game", "random"],
+    "game": {
+      "settings": {
+        "title": "Roulette Settings",
+        "participants": "Participants (newline or comma separated, *number for weight, max 8 chars)",
+        "participantsPlaceholder": "John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown",
+        "defaultParticipants": "John Doe, Jane Smith, Bob Johnson, Alice Brown",
+        "shuffle": "🔀 Shuffle",
+        "sort": "↑aA Sort",
+        "speed": "Spin Speed",
+        "speedWeak": "Weak",
+        "speedNormal": "Normal",
+        "speedStrong": "Strong"
+      },
+      "winner": {
+        "title": "🎉 Winner! 🎉",
+        "playAgain": "Play Again",
+        "playWithoutWinner": "Play Without Winner"
+      },
+      "fullscreen": "Full Screen"
+    }
+  },
+  "components": {
+    "title": "Component Library",
+    "description": "UI component demos and usage",
+    "keywords": ["components", "UI", "React", "Tailwind"]
+  }
+}
