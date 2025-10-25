@@ -27,6 +27,7 @@ export function updateLeaderboard(marbles: Marble[], context: LeaderboardContext
   }));
 
   const leaderboardList = document.getElementById('leaderboard-list') as HTMLDivElement;
+  if (!leaderboardList) return context.lastFinishedCount;
   leaderboardList.innerHTML = '';
 
   leaderboardItems.forEach((item, index) => {
