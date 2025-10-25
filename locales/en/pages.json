@@ -72,7 +72,23 @@
         "playAgain": "Play Again",
         "playWithoutWinner": "Play Without Winner"
       },
-      "fullscreen": "Full Screen"
+      "fullscreen": "Full Screen",
+      "logic": {
+        "participantsCount": "participants",
+        "participantsMin": "⚠️ Min 2 required",
+        "shuffled": "Participants shuffled",
+        "sortAsc": "↑aA Sort",
+        "sortDesc": "↓aA Sort",
+        "sortAscTitle": "Sort participants (ascending)",
+        "sortDescTitle": "Sort participants (descending)",
+        "sortedAsc": "Sorted in ascending order",
+        "sortedDesc": "Sorted in descending order",
+        "alreadySpinning": "Already spinning",
+        "minParticipantsRequired": "Minimum 2 participants required",
+        "winnerNotFound": "Winner information not found",
+        "cannotRemoveWinner": "Cannot remove winner - insufficient participants (min 2 required)",
+        "winnerRemoved": "has been removed"
+      }
     }
   },
   "components": {

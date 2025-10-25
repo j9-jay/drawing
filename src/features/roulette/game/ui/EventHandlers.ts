@@ -17,7 +17,7 @@ function canStartSpin(game: RouletteGame): boolean {
   const state = game.getState();
 
   if (state === 'spinning' || state === 'decelerating') {
-    showToast('이미 회전 중입니다', 'info');
+    showToast(window.rouletteTranslations?.alreadySpinning || '이미 회전 중입니다', 'info');
     return false;
   }
 
@@ -29,7 +29,7 @@ function canStartSpin(game: RouletteGame): boolean {
  */
 function validateMinParticipants(participants: Participant[]): boolean {
   if (participants.length < 2) {
-    showToast('최소 2명의 참가자가 필요합니다', 'error');
+    showToast(window.rouletteTranslations?.minParticipantsRequired || '최소 2명의 참가자가 필요합니다', 'error');
     return false;
   }
 
@@ -102,7 +102,7 @@ function setupCanvasClickListener(game: RouletteGame): void {
  */
 function removeWinnerAndRestart(game: RouletteGame, winnerName: string): void {
   if (!winnerName) {
-    showToast('당첨자 정보를 찾을 수 없습니다', 'error');
+    showToast(window.rouletteTranslations?.winnerNotFound || '당첨자 정보를 찾을 수 없습니다', 'error');
     return;
   }
 
@@ -110,7 +110,7 @@ function removeWinnerAndRestart(game: RouletteGame, winnerName: string): void {
   const newParticipants = currentParticipants.filter(p => p.name !== winnerName);
 
   if (!validateMinParticipants(newParticipants)) {
-    showToast('참가자가 부족하여 당첨자를 제외할 수 없습니다 (최소 2명 필요)', 'error');
+    showToast(window.rouletteTranslations?.cannotRemoveWinner || '참가자가 부족하여 당첨자를 제외할 수 없습니다 (최소 2명 필요)', 'error');
     return;
   }
 
@@ -119,7 +119,8 @@ function removeWinnerAndRestart(game: RouletteGame, winnerName: string): void {
   // Don't start new spin, just return to idle state
   hideWinner();
 
-  showToast(`${winnerName}님이 제외되었습니다`, 'info');
+  const removedMessage = window.rouletteTranslations?.winnerRemoved || '님이 제외되었습니다';
+  showToast(`${winnerName}${removedMessage}`, 'info');
 }
 
 /**
@@ -316,7 +317,7 @@ function setupShuffleButton(game: RouletteGame): void {
 
     game.setParticipants(shuffled);
     updateTextareaFromParticipants(shuffled);
-    showToast('참가자 순서가 섞였습니다', 'info');
+    showToast(window.rouletteTranslations?.shuffled || '참가자 순서가 섞였습니다', 'info');
   });
 }
 
@@ -345,12 +346,20 @@ function setupSortButton(game: RouletteGame): void {
     sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
 
     // Update button text to show current direction
-    sortBtn.textContent = sortDirection === 'asc' ? '↑aA 정렬' : '↓aA 정렬';
-    sortBtn.title = sortDirection === 'asc' ? '참가자 정렬 (오름차순)' : '참가자 정렬 (내림차순)';
+    sortBtn.textContent = sortDirection === 'asc'
+      ? (window.rouletteTranslations?.sortAsc || '↑aA 정렬')
+      : (window.rouletteTranslations?.sortDesc || '↓aA 정렬');
+    sortBtn.title = sortDirection === 'asc'
+      ? (window.rouletteTranslations?.sortAscTitle || '참가자 정렬 (오름차순)')
+      : (window.rouletteTranslations?.sortDescTitle || '참가자 정렬 (내림차순)');
 
     game.setParticipants(sorted);
     updateTextareaFromParticipants(sorted);
-    showToast(`${sortDirection === 'asc' ? '오름' : '내림'}차순 정렬되었습니다`, 'info');
+
+    const toastMessage = sortDirection === 'asc'
+      ? (window.rouletteTranslations?.sortedAsc || '오름차순 정렬되었습니다')
+      : (window.rouletteTranslations?.sortedDesc || '내림차순 정렬되었습니다');
+    showToast(toastMessage, 'info');
   });
 }
 

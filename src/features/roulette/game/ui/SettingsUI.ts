@@ -61,9 +61,13 @@ export function updateParticipantsPreview(participants: Participant[]): void {
   // Update title with participant count
   const label = textarea.parentElement?.querySelector('label');
   if (label) {
-    const baseText = '참가자 (줄바꿈 또는 쉼표로 구분, *숫자로 가중치, 최대 8자)';
-    const countText = participants.length > 0 ? ` - ${participants.length}명` : '';
-    const validationText = participants.length < 2 && participants.length > 0 ? ' ⚠️ 최소 2명 필요' : '';
+    const baseText = window.rouletteTranslations?.participants || '참가자 (줄바꿈 또는 쉼표로 구분, *숫자로 가중치, 최대 8자)';
+    const countText = participants.length > 0
+      ? ` - ${participants.length}${window.rouletteTranslations?.participantsCount || '명'}`
+      : '';
+    const validationText = participants.length < 2 && participants.length > 0
+      ? ` ${window.rouletteTranslations?.participantsMin || '⚠️ 최소 2명 필요'}`
+      : '';
 
     label.textContent = baseText + countText + validationText;
   }

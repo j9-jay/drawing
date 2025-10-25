@@ -72,7 +72,23 @@
         "playAgain": "다시 시작",
         "playWithoutWinner": "당첨자 제외하고 시작"
       },
-      "fullscreen": "전체화면"
+      "fullscreen": "전체화면",
+      "logic": {
+        "participantsCount": "명",
+        "participantsMin": "⚠️ 최소 2명 필요",
+        "shuffled": "참가자 순서가 섞였습니다",
+        "sortAsc": "↑aA 정렬",
+        "sortDesc": "↓aA 정렬",
+        "sortAscTitle": "참가자 정렬 (오름차순)",
+        "sortDescTitle": "참가자 정렬 (내림차순)",
+        "sortedAsc": "오름차순 정렬되었습니다",
+        "sortedDesc": "내림차순 정렬되었습니다",
+        "alreadySpinning": "이미 회전 중입니다",
+        "minParticipantsRequired": "최소 2명의 참가자가 필요합니다",
+        "winnerNotFound": "당첨자 정보를 찾을 수 없습니다",
+        "cannotRemoveWinner": "참가자가 부족하여 당첨자를 제외할 수 없습니다 (최소 2명 필요)",
+        "winnerRemoved": "님이 제외되었습니다"
+      }
     }
   },
   "components": {

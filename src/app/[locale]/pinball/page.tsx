@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import '../../../features/pinball/game/game.css';
+import { useTranslations } from '@/lib/i18n/useTranslations';
 
 export default function PinballGamePage() {
+  const { t } = useTranslations('pages');
   const initialized = useRef(false);
   const appRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +60,7 @@ export default function PinballGamePage() {
 
         {/* Leaderboard */}
         <div id="leaderboard" className="leaderboard">
-          <h3>Live Rankings</h3>
+          <h3>{t('pinball.game.leaderboard.title')}</h3>
           <div id="leaderboard-list"></div>
         </div>
 
@@ -66,11 +68,11 @@ export default function PinballGamePage() {
         <div id="winner-display" className="hidden">
           <div id="fireworks-container"></div>
           <div id="winner-content">
-            <h1>🎉 Winner! 🎉</h1>
+            <h1>{t('pinball.game.winner.title')}</h1>
             <div id="winner-name"></div>
             <div id="winner-buttons">
-              <button id="play-again-btn" className="winner-btn">Play Again</button>
-              <button id="play-without-winner-btn" className="winner-btn secondary">Play Without Winner</button>
+              <button id="play-again-btn" className="winner-btn">{t('pinball.game.winner.playAgain')}</button>
+              <button id="play-without-winner-btn" className="winner-btn secondary">{t('pinball.game.winner.playWithoutWinner')}</button>
             </div>
           </div>
         </div>
@@ -79,25 +81,25 @@ export default function PinballGamePage() {
       {/* Settings Popup */}
       <div id="settings-popup" className="settings-popup">
         <div className="settings-header">
-          <h4>Game Controls & Settings</h4>
+          <h4>{t('pinball.game.controls.title')}</h4>
         </div>
         <div className="settings-content">
           <div className="settings-left">
             <div className="setting-group">
-              <label htmlFor="names-input">Participants (newline or comma separated, *number for weight, max 8 chars)</label>
+              <label htmlFor="names-input">{t('pinball.game.controls.participants')}</label>
               <textarea
                 id="names-input"
-                placeholder="John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown"
+                placeholder={t('pinball.game.controls.participantsPlaceholder')}
               ></textarea>
             </div>
             <div className="control-buttons">
-              <button id="start-btn" className="control-btn primary">Start</button>
-              <button id="reset-btn" className="control-btn">Reset</button>
+              <button id="start-btn" className="control-btn primary">{t('pinball.game.controls.start')}</button>
+              <button id="reset-btn" className="control-btn">{t('pinball.game.controls.reset')}</button>
             </div>
           </div>
           <div className="settings-right">
             <div className="setting-group">
-              <label htmlFor="map-select">Map Selection</label>
+              <label htmlFor="map-select">{t('pinball.game.controls.mapSelection')}</label>
               <div className="map-selection-group">
                 <input
                   type="text"
@@ -111,26 +113,26 @@ export default function PinballGamePage() {
                   className="map-select-button"
                   type="button"
                 >
-                  <span>🗺️</span> Select
+                  <span>🗺️</span> {t('pinball.game.controls.select')}
                 </button>
               </div>
             </div>
             <div className="setting-group">
-              <label htmlFor="winner-mode">Winner Selection</label>
+              <label htmlFor="winner-mode">{t('pinball.game.controls.winnerMode')}</label>
               <select id="winner-mode">
-                <option value="first">1st Place</option>
-                <option value="last">Last Place</option>
-                <option value="custom">Custom Rank</option>
-                <option value="topN">Top N Places</option>
+                <option value="first">{t('pinball.game.controls.firstPlace')}</option>
+                <option value="last">{t('pinball.game.controls.lastPlace')}</option>
+                <option value="custom">{t('pinball.game.controls.customRank')}</option>
+                <option value="topN">{t('pinball.game.controls.topNPlaces')}</option>
               </select>
               <input type="number" id="custom-rank" min="1" defaultValue="1" style={{display: 'none'}} />
               <input type="number" id="top-n-count" min="1" max="50" defaultValue="5" style={{display: 'none'}} placeholder="Number of winners (max 50)" />
             </div>
             <div className="setting-group">
-              <label htmlFor="speed-slider">Speed</label>
+              <label htmlFor="speed-slider">{t('pinball.game.controls.speed')}</label>
               <div className="speed-control">
                 <input type="range" id="speed-slider" min="0.1" max="0.5" step="0.1" defaultValue="0.3" />
-                <span id="speed-value">Normal</span>
+                <span id="speed-value">{t('pinball.game.controls.speedNormal')}</span>
               </div>
             </div>
           </div>
@@ -144,12 +146,12 @@ export default function PinballGamePage() {
       <div id="map-selection-modal" className="map-modal-overlay hidden">
         <div className="map-modal">
           <div className="modal-header">
-            <h2>Map selection</h2>
+            <h2>{t('pinball.game.mapModal.title')}</h2>
             <div className="modal-controls">
               <select id="map-sort-select" className="sort-select">
-                <option value="name">가나다순</option>
-                <option value="name-desc">가나다 역순</option>
-                <option value="date">생성일순</option>
+                <option value="name">{t('pinball.game.mapModal.sortByName')}</option>
+                <option value="name-desc">{t('pinball.game.mapModal.sortByNameDesc')}</option>
+                <option value="date">{t('pinball.game.mapModal.sortByDate')}</option>
               </select>
               <button className="modal-close-btn" id="map-modal-close">✕</button>
             </div>
@@ -168,7 +170,7 @@ export default function PinballGamePage() {
         title="Toggle fullscreen (or press ESC to exit)"
       >
         <span>⛶</span>
-        <span>Full Screen</span>
+        <span>{t('pinball.game.fullscreen')}</span>
       </button>
     </div>
   );
