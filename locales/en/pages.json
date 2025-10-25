@@ -6,7 +6,37 @@
   "about": {
     "title": "About",
     "description": "About Easy-Picky Blog",
-    "keywords": ["blog", "development", "Next.js", "React"]
+    "keywords": ["blog", "development", "Next.js", "React"],
+    "hero": {
+      "title": "About EasyPicky",
+      "subtitle": "Lightweight joy through your browser. A web game platform accessible to everyone with no installation or complexity required."
+    },
+    "content": {
+      "introduction": {
+        "title": "What is EasyPicky?",
+        "content": "EasyPicky is a browser-based web game platform embodying the philosophy of 'pick easily, play lightly.' Without complex installation processes or heavy programs, you can experience moments of joy anytime, anywhere with just a browser. We believe accessibility is the beginning of enjoyment.\n\nModern life flows quickly. Short breaks during lunch, commute times, brief pauses between meetings. EasyPicky was born for exactly these moments. No need to download heavy game clients or create accounts—games start with a single click.\n\nOur goal is simple: provide gaming experiences that anyone can access and enjoy. From students to office workers, from gaming novices to veterans, EasyPicky welcomes everyone. All you need is a browser.\n\nAll EasyPicky games are implemented with web technologies, providing identical experiences across PCs, tablets, and mobile devices. No need to worry about operating systems or device specifications. All you need is an internet connection and curiosity."
+      },
+      "philosophy": {
+        "title": "Creation Philosophy & Vision",
+        "content": "We focus on creating 'moments of fun.' Rather than flashy graphics or complex systems, we prioritize intuitive controls and clear feedback that allow players to quickly immerse themselves. Under the belief that games should be rest, not burden, we pursue designs that anyone can understand and enjoy within five minutes.\n\nAccessibility and creativity don't oppose each other. Rather, we believe purer fun emerges from constraints. While acknowledging browser platform limitations, we experiment with physics engines, random algorithms, user customization, and more. Lightness and depth can coexist.\n\nIn 2025, the gaming industry grows increasingly heavy and complex. Dozens of gigabytes, high-spec graphics cards, paid subscription models. Yet many people still want simple, immediate fun. EasyPicky bridges this gap. Browser games aren't relics of the past—they're future choices prioritizing accessibility and convenience.\n\nOur vision is 'joy that starts with one click.' A platform where anyone can equally enjoy games regardless of language, region, or device. A culture where players customize games and create their own fun. EasyPicky isn't just a game site—it's a community sharing lightweight joy."
+      },
+      "games": {
+        "title": "Featured Games",
+        "content": "Pinball recreates classic arcade nostalgia in your browser with physics-based gameplay. Control flippers to bounce the ball, hit bumpers and obstacles, and rack up scores in simple yet addictive fun. The custom map editor lets players design and share their own pinball maps, unleashing infinite creativity. The unpredictable movements and satisfying impacts created by the physics engine deliver experiences that never get old, no matter how many times you play.\n\nRoulette is a selection tool based on fair random algorithms. It makes small daily decisions fun—choosing lunch menus, drawing teams, deciding game orders. Freely customize participant names and colors, with rotation speed and result animations designed intuitively for anyone to use. Beyond simply picking results, it transforms moments of choice into events."
+      },
+      "team": {
+        "title": "Team & Project Culture",
+        "content": "EasyPicky is a project built by a small team. Not a large corporate organization, but developers and designers united by passion to 'create something fun.' We value ideas over roles, collaboration over hierarchy. Respecting each member's expertise—frontend developers, game designers, UX planners—we maintain a culture prioritizing player experience above all.\n\nOur philosophy: 'We create ideas, but players worldwide create the joy together.' Though small, our team listens to player feedback and improves quickly. While maintaining anonymity, we communicate transparently and constantly balance technical excellence with user convenience.\n\nWe don't make perfect games—we make games that keep improving. Through regular updates and new features, EasyPicky evolves as a living platform. Community opinions become our development roadmap, and each small suggestion becomes seeds for the next version."
+      },
+      "feedback": {
+        "title": "User Feedback & Recognition",
+        "content": "Since launch, EasyPicky has received positive responses from many users. Hearing stories like 'great that I can play instantly without installation,' 'perfect game for lunch breaks,' 'used roulette to decide team dinner menu'—knowing EasyPicky accompanies small moments in daily life brings us the most fulfillment. Especially with praise for customization features, a culture of creating and sharing beyond mere consumption is forming.\n\nTech communities are also noticing EasyPicky's approach. The physics engine implemented purely in browsers, responsive design, and optimized performance receive positive evaluations. User reviews often say 'lightweight but not flimsy,' 'simple but never boring'—precisely aligning with our direction. We'll continue listening to players' voices and providing better experiences."
+      },
+      "contact": {
+        "title": "Contact & Community",
+        "content": "More information about EasyPicky is available on our official website and blog. We regularly share new game updates, feature improvements, and development stories. Your opinions and suggestions are the driving force making EasyPicky a better platform.\n\nOpen your browser right now and experience EasyPicky. No installation or signup required. Lightweight joy starting with one click awaits you."
+      }
+    }
   },
   "pinball": {
     "title": "Pinball Game",

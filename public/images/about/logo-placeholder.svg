@@ -1,0 +1,7 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#f3f4f6"/>
+  <circle cx="200" cy="150" r="80" fill="#e5e7eb" stroke="#9ca3af" stroke-width="4"/>
+  <text x="200" y="260" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#374151" text-anchor="middle">EasyPicky</text>
+  <text x="200" y="290" font-family="Arial, sans-serif" font-size="16" fill="#6b7280" text-anchor="middle">Logo Placeholder</text>
+  <text x="200" y="320" font-family="Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">Replace with actual logo</text>
+</svg>
