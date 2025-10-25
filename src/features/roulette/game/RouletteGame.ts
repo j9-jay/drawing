@@ -58,7 +58,6 @@ export class RouletteGame {
   private init(): void {
     this.setupCanvas();
     this.loadSettings();
-    this.initializeDefaultParticipants();
     this.setupEventListeners();
     this.startGameLoop();
   }
@@ -77,7 +76,7 @@ export class RouletteGame {
 
   /**
    * Load saved settings from localStorage
-   * Restores participants if available
+   * Restores participants if available, otherwise sets default
    */
   private loadSettings(): void {
     const savedParticipants = loadParticipants();
@@ -85,20 +84,16 @@ export class RouletteGame {
     if (savedParticipants.length >= 2) {
       this.participants = savedParticipants;
       console.log(`Loaded ${savedParticipants.length} participants from storage`);
+    } else {
+      // No saved participants, use default
+      this.participants = [
+        { name: '홍길동', weight: 1 },
+        { name: '김철수', weight: 1 },
+        { name: '이영희', weight: 1 },
+        { name: '박민수', weight: 1 }
+      ];
+      console.log('Using default participants (no saved data)');
     }
-  }
-
-  /**
-   * Initialize default participants for testing
-   * 4 participants with equal weight
-   */
-  private initializeDefaultParticipants(): void {
-    this.participants = [
-      { name: '홍길동', weight: 1 },
-      { name: '김철수', weight: 1 },
-      { name: '이영희', weight: 1 },
-      { name: '박민수', weight: 1 }
-    ];
   }
 
   /**
