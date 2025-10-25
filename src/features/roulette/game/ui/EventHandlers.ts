@@ -9,6 +9,7 @@ import { getSelectedSpeed, updateParticipantsPreview } from './SettingsUI';
 import { hideWinner } from './WinnerDisplay';
 import { showToast } from './ToastManager';
 import { loadSpinSpeed, saveSpinSpeed } from '../storage/RouletteStorage';
+import { DEFAULT_PARTICIPANTS_TEXT } from '../constants/roulette';
 
 /**
  * Helper: Check if spin can be started
@@ -189,6 +190,18 @@ function setupParticipantInputListener(game: RouletteGame): void {
   }
 
   textarea.addEventListener('input', () => {
+    // Restore default participants immediately when textarea is emptied
+    const value = textarea.value.trim();
+
+    if (value.length === 0) {
+      textarea.value = DEFAULT_PARTICIPANTS_TEXT;
+      // Parse default participants to update preview and game
+      const defaultParticipants = parseParticipantsFromInput();
+      updateParticipantsPreview(defaultParticipants);
+      game.setParticipants(defaultParticipants);
+      return;
+    }
+
     const participants = parseParticipantsFromInput();
     updateParticipantsPreview(participants);
     // Update game immediately when participants change (요구사항 4)

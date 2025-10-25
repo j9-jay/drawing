@@ -36,3 +36,6 @@ export const POINTER_BORDER_COLOR = '#fff'; // White border for visibility
 export const MIN_PARTICIPANTS = 2;
 export const MAX_PARTICIPANTS = 20;
 export const DEFAULT_PARTICIPANT_COUNT = 2;
+
+// 기본 참가자 텍스트 (참가자를 모두 지웠을 때 복원용)
+export const DEFAULT_PARTICIPANTS_TEXT = 'John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown';
