@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Next.js 15.5.4 blog using App Router, React 19, TypeScript, Tailwind CSS 4.
+Next.js 15.5.4 project using App Router, React 19, TypeScript, Tailwind CSS 4.
 
 ## Development Commands
 

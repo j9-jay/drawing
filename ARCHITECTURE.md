@@ -1,13 +1,12 @@
 # ARCHITECTURE.md
 
-Next.js 15 App Router 블로그 + 게임 프로젝트 (핀볼, 룰렛)
+Next.js 15 App Router 게임 프로젝트 (핀볼, 룰렛)
 
 ## Stack
 
 **Core**: Next.js 15.5.4 (App Router), React 19, TypeScript 5, Tailwind CSS 4
 **State**: Zustand 5
 **Physics**: Planck.js 1.4
-**Content**: MDX (next-mdx-remote, gray-matter)
 **Utils**: lucide-react, clsx, class-variance-authority, tailwind-merge
 
 ## Project Structure
@@ -18,9 +17,6 @@ src/
 │   ├── layout.tsx    # Root: Navbar, ToastProvider
 │   ├── page.tsx      # Home
 │   ├── about/        # About 페이지
-│   ├── posts/        # 블로그 포스트
-│   │   ├── page.tsx           # 포스트 목록
-│   │   └── [slug]/page.tsx    # 포스트 상세
 │   ├── pinball/      # 핀볼 게임
 │   │   ├── page.tsx           # 게임 플레이
 │   │   └── editor/page.tsx    # 맵 에디터
@@ -45,36 +41,17 @@ src/
 │       └── shared/      # 공유 타입
 │
 ├── lib/             # 유틸리티
-│   ├── mdx.ts       # MDX 파싱
-│   ├── posts.ts     # 포스트 조회
 │   └── utils.ts     # 공통 유틸
 │
 ├── styles/
 │   └── theme.ts     # Linear Dark 테마
 │
-└── types/
-    └── post.ts      # 포스트 타입
+└── types/           # 타입 정의
 
-content/posts/       # MDX 블로그 포스트
 data/pinball/maps/   # 핀볼 맵 JSON
 ```
 
-## 1. 블로그 시스템
-
-**경로**: `/posts`, `/posts/[slug]`
-**파일**: `content/posts/*.mdx`
-
-### 흐름
-1. `lib/mdx.ts` - MDX 파싱 (gray-matter)
-2. `lib/posts.ts` - 포스트 조회 API
-3. `app/posts/page.tsx` - 목록 렌더링
-4. `app/posts/[slug]/page.tsx` - MDX 렌더링 (next-mdx-remote)
-
-### 타입
-- `Post`: slug, title, date, description, tags, content
-- `PostMeta`: Post에서 content 제외
-
-## 2. 핀볼 게임
+## 1. 핀볼 게임
 
 **경로**: `/pinball` (플레이), `/pinball/editor` (에디터)
 **물리**: Planck.js Box2D
@@ -152,7 +129,7 @@ features/pinball/
 }
 ```
 
-## 3. 룰렛 게임
+## 2. 룰렛 게임
 
 **경로**: `/roulette`
 **물리**: Canvas 2D + 커스텀 물리 엔진
@@ -355,7 +332,7 @@ STRONG: 25 rad/s  // ~4.0 RPS, 빠른 회전
 - ✅ 반응형 디자인: 모바일 최적화
 - ✅ 전체화면 모드
 
-## 4. 컴포넌트 시스템
+## 3. 컴포넌트 시스템
 
 **위치**: `src/components/`
 **Path alias**: `@/components/{ui,layout,game}`
@@ -379,7 +356,7 @@ Button, Input, Link, Card, Badge, Modal, Toast, Tabs, Skeleton, CodeBlock, Bread
 ### 데모
 `/components` - 전체 컴포넌트 API/예제
 
-## 5. 개발 패턴
+## 4. 개발 패턴
 
 ### 컴포넌트 우선순위
 1. `@/components/{ui,layout,game}` 기존 컴포넌트 사용
@@ -400,7 +377,7 @@ Button, Input, Link, Card, Badge, Modal, Toast, Tabs, Skeleton, CodeBlock, Bread
 ### 라우팅
 `next/link` 또는 `@/components/ui/Link`
 
-## 6. 빌드 설정
+## 5. 빌드 설정
 
 **TypeScript**: strict mode, `@/*` → `./src/*`
 **Turbopack**: dev/build 모두 활성화
@@ -414,26 +391,24 @@ npm start      # Production
 npm run lint   # ESLint
 ```
 
-## 7. 주요 경로 매핑
+## 6. 주요 경로 매핑
 
 | 경로 | 파일 | 설명 |
 |-----|------|------|
 | `/` | `app/page.tsx` | 홈 |
-| `/posts` | `app/posts/page.tsx` | 블로그 목록 |
-| `/posts/[slug]` | `app/posts/[slug]/page.tsx` | 포스트 상세 |
 | `/pinball` | `app/pinball/page.tsx` | 핀볼 게임 플레이 |
 | `/pinball/editor` | `app/pinball/editor/page.tsx` | 핀볼 맵 에디터 |
 | `/roulette` | `app/roulette/page.tsx` | 룰렛 게임 |
 | `/components` | `app/components/page.tsx` | 컴포넌트 데모 |
 | `/about` | `app/about/page.tsx` | About |
 
-## 8. 상태 관리
+## 7. 상태 관리
 
 **글로벌**: Zustand (핀볼 에디터)
 **로컬**: React useState/useReducer
 **서버 상태**: Next.js Server Components
 
-## 9. 파일 규칙
+## 8. 파일 규칙
 
 **Features** (`features/pinball/`, `features/roulette/`):
 - 최상위: Package-by-feature
@@ -447,7 +422,7 @@ npm run lint   # ESLint
 
 **함수**: camelCase, SRP 준수
 
-## 10. API 엔드포인트
+## 9. API 엔드포인트
 
 ### `/api/pinball/maps`
 - `GET`: 맵 목록/단일 조회
@@ -455,7 +430,7 @@ npm run lint   # ESLint
 - `PUT`: 맵 수정
 - `DELETE`: 맵 삭제
 
-## 11. 성능 최적화
+## 10. 성능 최적화
 
 **게임**:
 - 고정 60 FPS 루프

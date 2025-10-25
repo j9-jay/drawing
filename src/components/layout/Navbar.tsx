@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/about', label: '소개' },
-  { href: '/posts', label: '게시판' },
   { href: '/pinball', label: '핀볼게임' },
   { href: '/roulette', label: '룰렛게임' },
 ];
@@ -20,7 +19,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60" style={{ borderBottomColor: 'var(--border)', backgroundColor: 'var(--header-bg)' }}>
       <div className="flex h-16 items-center px-6">
         <Link href="/" className="flex items-center space-x-2">
-          <span className="font-bold text-xl">My Blog</span>
+          <span className="font-bold text-xl">Easy-Picky</span>
         </Link>
 
         {/* Desktop Navigation */}
