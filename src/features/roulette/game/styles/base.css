@@ -3,7 +3,7 @@
  * Layout, containers, and core elements
  */
 
-* {
+.roulette-page-container * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;

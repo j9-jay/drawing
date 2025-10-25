@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../../features/pinball/game/game.css';
 import { useTranslations } from '@/lib/i18n/useTranslations';
 
@@ -8,6 +8,24 @@ export default function PinballGamePage() {
   const { t } = useTranslations('pages');
   const initialized = useRef(false);
   const appRef = useRef<HTMLDivElement>(null);
+  const [contentData, setContentData] = useState<any>(null);
+
+  // Load translation data for content sections
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        const pathname = window.location.pathname;
+        const locale = pathname.split('/')[1] || 'en';
+        const data = await import(`@/../locales/${locale}/pages.json`);
+        setContentData(data.default?.pinball?.content || data.pinball?.content);
+      } catch (error) {
+        // Fallback to English
+        const data = await import(`@/../locales/en/pages.json`);
+        setContentData(data.default?.pinball?.content || data.pinball?.content);
+      }
+    };
+    loadContent();
+  }, []);
 
   useEffect(() => {
     if (initialized.current) return;
@@ -68,7 +86,7 @@ export default function PinballGamePage() {
         <div id="winner-display" className="hidden">
           <div id="fireworks-container"></div>
           <div id="winner-content">
-            <h1>{t('pinball.game.winner.title')}</h1>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>{t('pinball.game.winner.title')}</h2>
             <div id="winner-name"></div>
             <div id="winner-buttons">
               <button id="play-again-btn" className="winner-btn">{t('pinball.game.winner.playAgain')}</button>
@@ -172,6 +190,125 @@ export default function PinballGamePage() {
         <span>⛶</span>
         <span>{t('pinball.game.fullscreen')}</span>
       </button>
+
+      {/* Content Sections */}
+      <div className="pinball-content-sections" style={{ maxWidth: '1200px', margin: '4rem auto', padding: '0 2rem' }}>
+        {/* Main Heading */}
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '3rem', textAlign: 'center', color: '#06b6d4' }}>
+          {t('pinball.title')}
+        </h1>
+
+        {/* Introduction */}
+        <section style={{ marginBottom: '4rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#06b6d4' }}>{t('pinball.content.introduction.title')}</h2>
+          <p style={{ lineHeight: '1.8', whiteSpace: 'pre-line' }}>{t('pinball.content.introduction.content')}</p>
+        </section>
+
+        {/* How to Play */}
+        <section style={{ marginBottom: '4rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#06b6d4' }}>{t('pinball.content.howToPlay.title')}</h2>
+          <div
+            style={{ lineHeight: '1.8', whiteSpace: 'pre-line' }}
+            dangerouslySetInnerHTML={{
+              __html: t('pinball.content.howToPlay.content').replace(
+                /\*\*([^*]+)\*\*:/g,
+                '<strong style="color: #06b6d4; font-weight: 600;">$1</strong>:'
+              )
+            }}
+          />
+        </section>
+
+        {/* Visuals */}
+        <section style={{ marginBottom: '4rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#06b6d4' }}>{t('pinball.content.visuals.title')}</h2>
+          <p style={{ lineHeight: '1.8', whiteSpace: 'pre-line' }}>{t('pinball.content.visuals.content')}</p>
+        </section>
+
+        {/* BGM */}
+        {contentData?.bgm && (
+          <section style={{ marginBottom: '4rem' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#06b6d4' }}>{contentData.bgm.title}</h2>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {contentData.bgm.items?.map((item: any, index: number) => (
+                <li key={index} style={{ marginBottom: '1rem' }}>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#3b82f6', textDecoration: 'underline' }}
+                  >
+                    {item.title}
+                  </a>
+                  {' - '}
+                  <span>{item.description}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* FAQ */}
+        {contentData?.faq && (
+          <section style={{ marginBottom: '4rem' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#06b6d4' }}>{contentData.faq.title}</h2>
+            <div>
+              {contentData.faq.items?.map((item: any, index: number) => (
+                <div key={index} style={{ marginBottom: '2rem' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>
+                    {item.q}
+                  </h3>
+                  <p style={{ lineHeight: '1.8' }}>{item.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Internal Links */}
+        {contentData?.internalLinks && (
+          <section style={{ marginBottom: '4rem' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#06b6d4' }}>{contentData.internalLinks.title}</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center' }}>
+              {contentData.internalLinks.links?.map((link: any, index: number) => {
+                // 버튼 색상 결정
+                const buttonColors = [
+                  { bg: 'rgb(37, 99, 235)', hover: 'rgb(29, 78, 216)' }, // blue-600/700 - 룰렛
+                  { bg: 'rgb(147, 51, 234)', hover: 'rgb(126, 34, 206)' }, // purple-600/700 - About
+                  { bg: 'rgb(22, 163, 74)', hover: 'rgb(21, 128, 61)' }, // green-600/700 - 홈
+                ];
+                const colors = buttonColors[index] || buttonColors[0];
+
+                return (
+                  <div key={index} style={{ textAlign: 'center', width: '100%', maxWidth: '400px' }}>
+                    <a
+                      href={link.href}
+                      style={{
+                        display: 'inline-block',
+                        padding: '0.75rem 1.5rem',
+                        backgroundColor: colors.bg,
+                        color: 'white',
+                        borderRadius: '0.5rem',
+                        fontWeight: '500',
+                        fontSize: '1.125rem',
+                        textDecoration: 'none',
+                        transition: 'background-color 0.2s',
+                        width: '100%',
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hover}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.bg}
+                    >
+                      {link.text}
+                    </a>
+                    <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: 'rgb(156, 163, 175)' }}>
+                      {link.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   );
 }

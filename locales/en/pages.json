@@ -46,6 +46,90 @@
       "title": "Pinball Map Editor",
       "description": "Create your own pinball maps"
     },
+    "content": {
+      "introduction": {
+        "title": "Pinball Game Introduction",
+        "content": "The thrill of the ball bouncing, the scoreboard climbing. EasyPicky Pinball brings the nostalgia of classic arcade games to your browser with physics-based gameplay. Realistic movement powered by the Planck.js physics engine, a custom map editor to design your own layouts, and real-time leaderboards for competitive play. No installation, no account required. One click is all it takes.\n\nThe core of this game is 'unpredictable fun.' Even on the same map, the ball's trajectory changes every time, and the physics created by rotating obstacles and bumpers present a new challenge with each play. More than just a browser pinball game, it delivers the immersion and impact of a true physics engine game. Your strategy and timing determine your score.\n\nA 5-minute lunch break, a moment before a meeting, or a game night competing with friends. Pinball is ready whenever you are. The challenge for the highest score, creativity unleashed through custom maps, and the tension felt on the real-time leaderboard. Everything is possible with just a browser."
+      },
+      "howToPlay": {
+        "title": "How to Play",
+        "content": "**Enter Participants**: In the game control panel, enter participant names separated by line breaks or commas (,). Add `*number` to set weights, e.g., `John Doe, Jane Smith*3, Bob*2`. Names can be up to 8 characters long. Higher weights mean more balls for that participant, increasing their chances of winning.\n\n**Select Map**: Choose from various custom maps beyond the default. Click the map selection button (🗺️) to open the map modal, where you can sort maps by name (A-Z), reverse name (Z-A), or creation date. Click a map card to preview and load it. Each map has different obstacle layouts and difficulty levels—try them all!\n\n**Winner Selection Mode**: Decide who wins when the game ends. Choose from First Place (highest score), Last Place (lowest score), Custom Rank (3rd, 5th, etc.), or Top N Places (multiple winners at once). Great for raffles or team games.\n\n**Speed Control**: Adjust game speed with the slider. Set between 0.1 (slow) and 0.5 (fast) across 5 levels, with 0.3 (normal) as default. Slow speed suits strategic play, while fast speed delivers intense gameplay.\n\n**Start and Reset**: Press 'Start' to drop balls from the top of the map, one per participant. During the game, check current rankings on the real-time leaderboard. When all balls reach the goal, the winner is announced, and you can choose 'Play Again' or 'Play Without Winner.' The 'Reset' button returns the game to its initial state.\n\n**Leaderboard and Minimap**: The top-right displays real-time rankings, while the top-left shows a minimap of the entire map. The minimap highlights the current camera view and ball paths, so you never lose track of the action on large maps.\n\n**Fullscreen Mode**: Click the fullscreen button (⛶) in the bottom-right for an immersive game environment. Press ESC to exit fullscreen."
+      },
+      "visuals": {
+        "title": "Game Screen Layout",
+        "content": "EasyPicky Pinball's screen is intuitive yet information-rich. The central game canvas displays the physics engine's real-time ball movement, where rotating bars and obstacles create unpredictable trajectories. The impact of balls hitting bumpers and the satisfaction of reaching the goal are conveyed through clear visual feedback.\n\nThe top-right features a fixed real-time leaderboard showing participants' current scores and rankings. Color-coded names and scores update continuously during gameplay, instantly revealing who's in first place or who just made a comeback. The top-left minimap shows the entire map structure in miniature, highlighting the area currently in view. It's an essential UI element that helps you track ball positions even on complex maps.\n\nWhen the game ends, spectacular fireworks animations accompany the winner's name displayed prominently in the center. This visual presentation goes beyond simple result announcements, maximizing the celebration and sense of achievement. The winner screen offers two buttons: 'Play Again' and 'Play Without Winner,' allowing you to jump straight into the next round.",
+        "altTexts": [
+          "EasyPicky Pinball gameplay screen - multiple balls bouncing between rotating obstacles and bumpers on the central canvas",
+          "Pinball game real-time leaderboard - participant names and scores color-coded and updated in rankings displayed in top-right UI",
+          "Pinball game winner screen - winner's name prominently displayed in center with fireworks animation, 'Play Again' and 'Play Without Winner' buttons at bottom"
+        ]
+      },
+      "bgm": {
+        "title": "Recommended Background Music (BGM)",
+        "items": [
+          {
+            "title": "8-bit Arcade Medley",
+            "url": "https://www.youtube.com/watch?v=hSbjH5bxJWM",
+            "description": "8-bit medley capturing retro arcade vibes. Maximizes pinball nostalgia."
+          },
+          {
+            "title": "Synthwave Mix - Retro Gaming Vibes",
+            "url": "https://www.youtube.com/watch?v=4xDzrJKXOOY",
+            "description": "Synthwave-based mix. Provides both focus and rhythm simultaneously."
+          },
+          {
+            "title": "Chiptune Music Compilation",
+            "url": "https://www.youtube.com/watch?v=QeqFGJbO2Ic",
+            "description": "Chiptune music collection. Maintains play tension with light, upbeat atmosphere."
+          }
+        ]
+      },
+      "faq": {
+        "title": "Frequently Asked Questions (FAQ)",
+        "items": [
+          {
+            "q": "What's the game difficulty?",
+            "a": "Difficulty varies by map. The default map is beginner-friendly, while some custom maps offer high difficulty. Check obstacle placement through previews in the map selection modal before choosing."
+          },
+          {
+            "q": "Are scores saved?",
+            "a": "In the current version, scores persist per session. They reset on browser refresh, but during gameplay, you can continuously check real-time rankings on the leaderboard. Score recording features will be added in future updates."
+          },
+          {
+            "q": "Can I play on mobile?",
+            "a": "Yes, it works perfectly on mobile browsers. The responsive design ensures the same experience on smartphones and tablets. Use fullscreen mode for even more immersive play."
+          },
+          {
+            "q": "How do I create custom maps?",
+            "a": "Access the pinball map editor (/pinball/editor) to design your own maps. Freely place walls, rotating bars, holes, and goal points, then save and select them in the game. Get creative!"
+          },
+          {
+            "q": "How do weights work?",
+            "a": "Add `*number` after a participant's name to generate more balls for them. For example, `Alice*3` drops 3 times more balls for Alice, increasing her winning chances. Useful for raffles where you want to give certain people more opportunities."
+          }
+        ]
+      },
+      "internalLinks": {
+        "title": "Related Games & Pages",
+        "links": [
+          {
+            "text": "Roulette Game",
+            "href": "/roulette",
+            "description": "Random selection tool to make lunch menus or team draws fun and easy."
+          },
+          {
+            "text": "About Page",
+            "href": "/about",
+            "description": "Learn more about EasyPicky's philosophy and featured games."
+          },
+          {
+            "text": "Home",
+            "href": "/",
+            "description": "Return to the main page to explore other games."
+          }
+        ]
+      }
+    },
     "game": {
       "controls": {
         "title": "Game Controls & Settings",
@@ -84,6 +168,90 @@
     "title": "Roulette Game",
     "description": "Random selection roulette game",
     "keywords": ["roulette", "game", "random"],
+    "content": {
+      "introduction": {
+        "title": "Roulette Game Introduction",
+        "content": "What's for lunch today? How do we pick teams? Who goes first in the game? You don't need to struggle with small daily decisions anymore. EasyPicky Roulette is a fair random selection tool powered by unbiased algorithms, transforming simple draws into exciting events.\n\nCustomize participant names and colors freely, and adjust probabilities with weighted entries. Choose rotation speed from weak, normal, or strong, and watch stunning animations announce the results. No installation, no account required. With just a browser, you can turn the moment of choice into an event right now. Fair, intuitive, and most importantly, fun."
+      },
+      "howToPlay": {
+        "title": "How to Play",
+        "content": "**Enter Participants**: In the left settings panel, enter participant names into the textarea (#roulette-names-input). Separate names by line breaks or commas (,), and add `*number` to set weights. Example: `John Doe, Jane Smith*3, Bob*2`. Names can be up to 8 characters long. Higher weights increase that participant's roulette section size, boosting their winning probability.\n\n**Shuffle Button**: Click the '🔀 Shuffle' button above the participant list to randomly reorder all entries. A toast notification appears at the bottom of the screen to confirm the change.\n\n**Sort Button**: Click the '↑aA Sort' button to arrange participant names in ascending alphabetical order. Click again to toggle to descending order. After sorting, a toast notification displays the sort direction.\n\n**Speed Selection**: In the rotation speed section, choose from 'Weak', 'Normal', or 'Strong'. The default is 'Normal', easily changed via radio buttons. Your selection affects the roulette's spin duration and suspense level.\n\n**Start Roulette**: Once settings are ready, click the center canvas (#roulette-canvas) to spin the roulette. At least 2 participants are required; if insufficient, a toast notification will alert you. During the spin, colorful sections rotate rapidly while the top pointer indicates the final winner.\n\n**Winner Screen**: When the roulette stops, a fullscreen overlay appears with fireworks animation (#roulette-fireworks-container) and the winner's name displayed prominently. Two buttons appear: 'Play Again' and 'Play Without Winner', letting you choose how to proceed to the next round.\n\n**Remove Winner**: Click 'Play Without Winner' to automatically remove the previous winner from the participant list and start a new draw with the remaining people. Perfect for repeated draws.\n\n**Fullscreen Mode**: Click the fullscreen button (⛶) at the bottom of the screen to switch to an immersive gaming environment. Press ESC to exit fullscreen anytime."
+      },
+      "visuals": {
+        "title": "Game Screen Layout",
+        "content": "EasyPicky Roulette's interface is both intuitive and visually rich. The massive game canvas in the center features a spinning circular roulette, with participant sections displayed as colorful fan-shaped segments. A fixed arrow-shaped pointer at the top clearly shows which section is selected when the roulette stops.\n\nThe left settings panel is the brain of the game. At the top, the title 'Roulette Settings' is displayed, followed by the participant input field. Above the input area, shuffle and sort buttons are placed side by side, allowing quick manipulation of the participant list with a single click. Below that, speed selection radio buttons are vertically arranged, letting you intuitively choose your desired rotation speed.\n\nThe winner screen maximizes the celebratory moment. A fullscreen overlay darkens the background as fireworks animation bursts spectacularly above. In the center, the title '🎉 Winner! 🎉' appears alongside the winner's name in large text, with two buttons side by side at the bottom prompting the next action. Toast notifications at the bottom provide instant feedback for every user action, ensuring nothing is missed.",
+        "altTexts": [
+          "EasyPicky Roulette main screen - colorful circular roulette spinning in center, top pointer indicating winner, left panel showing participant input",
+          "Roulette settings panel - vertical layout with participant textarea, shuffle and sort buttons, speed selection radio buttons in left sidebar UI",
+          "Roulette winner screen - fullscreen overlay with fireworks animation, winner's name in large text, 'Play Again' and 'Play Without Winner' buttons at bottom"
+        ]
+      },
+      "bgm": {
+        "title": "Recommended Background Music (BGM)",
+        "items": [
+          {
+            "title": "Upbeat Pop Instrumental Mix",
+            "url": "https://www.youtube.com/watch?v=lTRiuFIWV54",
+            "description": "Bright and cheerful pop instrumental mix that amplifies the roulette's festive atmosphere."
+          },
+          {
+            "title": "EDM & Electronic Dance Music Mix",
+            "url": "https://www.youtube.com/watch?v=yMNOzyMam4g",
+            "description": "Energetic EDM and dance music collection that doubles the tension and explosive energy of the spinning roulette."
+          },
+          {
+            "title": "Funky Jazz Instrumental",
+            "url": "https://www.youtube.com/watch?v=2SFYRUhUOWM",
+            "description": "Funky jazz instrumental with sophisticated and upbeat vibes, perfect for stylish selection events."
+          }
+        ]
+      },
+      "faq": {
+        "title": "Frequently Asked Questions (FAQ)",
+        "items": [
+          {
+            "q": "How do I use weights?",
+            "a": "Add `*number` after a participant's name to increase their winning probability. For example, `Jane Smith*3` expands Jane's roulette section by 3x, making her more likely to win. This is useful for events or team selections where you want to give certain participants more chances."
+          },
+          {
+            "q": "Can I exclude the winner and draw again?",
+            "a": "Yes, absolutely. On the winner screen, click 'Play Without Winner' to automatically remove the previous winner from the participant list and start a new draw with the remaining people. Perfect for consecutive draws or order determination. Note: at least 2 participants are required."
+          },
+          {
+            "q": "Are the results truly random?",
+            "a": "Yes, completely random. EasyPicky Roulette uses a fair random algorithm. When no weights are set, all participants have equal winning probability. Results are unpredictable every time, and no manipulation is possible."
+          },
+          {
+            "q": "Does it work on mobile?",
+            "a": "Of course. EasyPicky Roulette features responsive design and works perfectly on all devices—PC, tablet, and smartphone. Tap the canvas on touchscreens to spin the roulette, and use fullscreen mode for enhanced immersion."
+          },
+          {
+            "q": "How are participant colors determined?",
+            "a": "Participant colors are automatically assigned, with each participant receiving a unique color. Colors are consistently applied to roulette sections and winner name displays, making it visually easy to distinguish who won."
+          }
+        ]
+      },
+      "internalLinks": {
+        "title": "Related Games & Pages",
+        "links": [
+          {
+            "text": "Pinball Game",
+            "href": "/pinball",
+            "description": "Compete for high scores with physics-based pinball and create custom maps."
+          },
+          {
+            "text": "About Page",
+            "href": "/about",
+            "description": "Learn more about EasyPicky's philosophy and featured games."
+          },
+          {
+            "text": "Home",
+            "href": "/",
+            "description": "Return to the main page and explore other games."
+          }
+        ]
+      }
+    },
     "game": {
       "settings": {
         "title": "Roulette Settings",
