@@ -37,6 +37,24 @@ class MapSelectionModalManager {
   private sortBy: 'name' | 'name-desc' | 'date' = 'name';
   private callbacks: MapSelectionCallbacks | null = null;
 
+  // Event handler references for proper cleanup
+  private openHandler = () => this.open();
+  private closeHandler = () => this.close();
+  private sortChangeHandler = (e: Event) => {
+    this.sortBy = (e.target as HTMLSelectElement).value as 'name' | 'name-desc' | 'date';
+    this.renderMaps();
+  };
+  private modalClickHandler = (e: Event) => {
+    if (e.target === this.modal) {
+      this.close();
+    }
+  };
+  private escKeyHandler = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && this.modal && !this.modal.classList.contains('hidden')) {
+      this.close();
+    }
+  };
+
   constructor() {
     this.initializeElements();
     this.setupEventListeners();
@@ -52,31 +70,28 @@ class MapSelectionModalManager {
   }
 
   private setupEventListeners(): void {
+    // Remove existing listeners first to prevent duplicates
+    this.selectBtn?.removeEventListener('click', this.openHandler);
+    this.closeBtn?.removeEventListener('click', this.closeHandler);
+    this.modal?.removeEventListener('click', this.modalClickHandler);
+    this.sortSelect?.removeEventListener('change', this.sortChangeHandler);
+    document.removeEventListener('keydown', this.escKeyHandler);
+
+    // Add event listeners
     // Open modal button
-    this.selectBtn?.addEventListener('click', () => this.open());
+    this.selectBtn?.addEventListener('click', this.openHandler);
 
     // Close button
-    this.closeBtn?.addEventListener('click', () => this.close());
+    this.closeBtn?.addEventListener('click', this.closeHandler);
 
     // Click outside to close
-    this.modal?.addEventListener('click', (e) => {
-      if (e.target === this.modal) {
-        this.close();
-      }
-    });
+    this.modal?.addEventListener('click', this.modalClickHandler);
 
     // Sort select
-    this.sortSelect?.addEventListener('change', (e) => {
-      this.sortBy = (e.target as HTMLSelectElement).value as 'name' | 'name-desc' | 'date';
-      this.renderMaps();
-    });
+    this.sortSelect?.addEventListener('change', this.sortChangeHandler);
 
     // ESC key to close
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.modal && !this.modal.classList.contains('hidden')) {
-        this.close();
-      }
-    });
+    document.addEventListener('keydown', this.escKeyHandler);
   }
 
   public async open(): Promise<void> {
@@ -239,6 +254,15 @@ class MapSelectionModalManager {
 
   public setCallbacks(callbacks: MapSelectionCallbacks): void {
     this.callbacks = callbacks;
+  }
+
+  /**
+   * Reinitialize DOM elements and event listeners
+   * Call this when React component remounts to ensure event listeners are properly attached
+   */
+  public reinitialize(): void {
+    this.initializeElements();
+    this.setupEventListeners();
   }
 
   public setCurrentMap(mapName: string): void {

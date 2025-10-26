@@ -152,6 +152,9 @@ export class PinballRoulette {
     this.setupEventListeners();
     loadFromStorage(this.settings);
 
+    // Reinitialize map selection modal to ensure event listeners are attached to current DOM elements
+    mapSelectionModal.reinitialize();
+
     // Initialize map selection modal
     mapSelectionModal.setCallbacks({
       onSelect: async (mapName: string) => {
