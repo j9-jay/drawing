@@ -1,5 +1,6 @@
 import {
   GameLoopContext,
+  GameLoopHandle,
   startGameLoop
 } from '../core/GameLoop';
 import {
@@ -20,7 +21,12 @@ export interface LoopBindings {
   onEndGame: () => void;
 }
 
-export function startLoopWithBindings(bindings: LoopBindings): GameLoopContext {
+export interface LoopResult {
+  context: GameLoopContext;
+  handle: GameLoopHandle;
+}
+
+export function startLoopWithBindings(bindings: LoopBindings): LoopResult {
   const context = buildLoopContext(bindings.createSnapshot());
 
   const callbacks = createLoopCallbacks({
@@ -36,6 +42,7 @@ export function startLoopWithBindings(bindings: LoopBindings): GameLoopContext {
     }
   });
 
-  startGameLoop(context, callbacks);
-  return context;
+  const handle = startGameLoop(context, callbacks);
+
+  return { context, handle };
 }

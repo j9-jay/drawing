@@ -65,6 +65,11 @@ export class SleepMonitor {
     });
     console.log(`모든 구슬 깨웠음: ${marbles.length}개`);
   }
+
+  reset(): void {
+    this.lastSleepCount = 0;
+    this.lastLogTime = 0;
+  }
 }
 
 export const sleepMonitor = new SleepMonitor();

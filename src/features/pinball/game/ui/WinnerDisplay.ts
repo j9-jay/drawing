@@ -6,14 +6,20 @@ import { Marble, GameSettings } from '../../shared/types';
 import { generateColor } from '../utils/ColorUtils';
 import { showToast } from './ToastManager';
 
+// Store timeout IDs for cleanup
+let fireworkTimeouts: number[] = [];
+
 /**
  * Create fireworks animation effect
  */
 export function createFireworks(): void {
+  // Clear any existing timeouts
+  clearFireworksTimeouts();
+
   const container = document.getElementById('fireworks-container') as HTMLDivElement;
 
   for (let i = 0; i < 20; i++) {
-    setTimeout(() => {
+    const outerTimeoutId = window.setTimeout(() => {
       const firework = document.createElement('div');
       firework.className = 'firework';
       firework.style.left = Math.random() * 100 + '%';
@@ -22,13 +28,25 @@ export function createFireworks(): void {
 
       container.appendChild(firework);
 
-      setTimeout(() => {
+      const innerTimeoutId = window.setTimeout(() => {
         if (container.contains(firework)) {
           container.removeChild(firework);
         }
       }, 1000);
+
+      fireworkTimeouts.push(innerTimeoutId);
     }, i * 100);
+
+    fireworkTimeouts.push(outerTimeoutId);
   }
+}
+
+/**
+ * Clear all firework timeouts
+ */
+export function clearFireworksTimeouts(): void {
+  fireworkTimeouts.forEach(id => clearTimeout(id));
+  fireworkTimeouts = [];
 }
 
 /**

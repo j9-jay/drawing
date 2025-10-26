@@ -13,7 +13,8 @@ import {
   EventHandlerCallbacks
 } from './events/EventHandlers';
 import {
-  GameLoopContext
+  GameLoopContext,
+  GameLoopHandle
 } from './core/GameLoop';
 import {
   LoopSnapshot,
@@ -25,7 +26,7 @@ import { setupSettingsPopup } from './ui/SettingsUI';
 import { CameraConfig } from './camera/CameraManager';
 import { CameraBindingSnapshot, cameraStateFromConfig, ensureCameraConfig } from './camera/CameraBindings';
 import { clearMarbles } from './physics/PhysicsHelpers';
-import { setupContactListener } from './physics/ContactHandler';
+import { setupContactListener, removeContactListener } from './physics/ContactHandler';
 import { getWinners } from './entities/MarbleManager';
 import {
   DEFAULT_CAMERA_ZOOM
@@ -71,7 +72,12 @@ import {
   showWinnerToast,
   updateSpeedUI
 } from './ui/GameUiController';
+import { clearFireworksTimeouts } from './ui/WinnerDisplay';
 import { mapSelectionModal } from './ui/MapSelectionModal';
+import { fpsMonitor } from './utils/FPSMonitor';
+import { adaptiveQuality } from './utils/AdaptiveQuality';
+import { sleepMonitor } from './utils/SleepMonitor';
+import { aggressiveSleep } from './utils/AggressiveSleep';
 
 export class PinballRoulette {
   private canvas: HTMLCanvasElement;
@@ -108,6 +114,7 @@ export class PinballRoulette {
   private controlState: GameControlState;
   private cameraConfig: CameraConfig | null = null;
   private gameLoopContext: GameLoopContext | null = null;
+  private gameLoopHandle: GameLoopHandle | null = null;
   private readonly fixedTimeStep = FIXED_TIME_STEP;
   private canvasResizeHandle?: CanvasResizeHandle;
   private isResetting: boolean = false;
@@ -456,7 +463,7 @@ export class PinballRoulette {
       (config) => { this.cameraConfig = config; }
     );
 
-    this.gameLoopContext = startLoopWithBindings({
+    const result = startLoopWithBindings({
       createSnapshot: () => this.createLoopSnapshot(cameraAdapter),
       applyState: (update) => this.applyLoopState(update, cameraAdapter),
       onRenderComplete: () => this.renderMinimap(),
@@ -465,6 +472,9 @@ export class PinballRoulette {
         /* handled externally */
       }
     });
+
+    this.gameLoopContext = result.context;
+    this.gameLoopHandle = result.handle;
   }
 
   private createLoopSnapshot(cameraAdapter: ReturnType<typeof createCameraStateAdapter>): LoopSnapshot {
@@ -665,5 +675,62 @@ export class PinballRoulette {
       this.timeScale = savedTimeScale;
       updateSpeedUI(savedTimeScale);
     }
+  }
+
+  /**
+   * Cleanup all resources to prevent memory leaks
+   * Call this when the game component is unmounted
+   */
+  public destroy(): void {
+    // Stop game loop
+    if (this.gameLoopHandle) {
+      this.gameLoopHandle.stop();
+      this.gameLoopHandle = null;
+    }
+
+    // Abort any pending map loads
+    if (this.loadMapAbortController) {
+      this.loadMapAbortController.abort();
+      this.loadMapAbortController = undefined;
+    }
+
+    // Dispose canvas resizer
+    if (this.canvasResizeHandle) {
+      this.canvasResizeHandle.dispose();
+      this.canvasResizeHandle = undefined;
+    }
+
+    // Remove contact listener from world
+    removeContactListener(this.world);
+
+    // Clear fireworks timeouts
+    clearFireworksTimeouts();
+
+    // Clear all bodies from world
+    let body = this.world.getBodyList();
+    while (body) {
+      const next = body.getNext();
+      this.world.destroyBody(body);
+      body = next;
+    }
+
+    // Clear marbles array
+    this.marbles = [];
+
+    // Clear game world entities
+    this.gameWorld = new GameWorld();
+
+    // Reset singleton monitors (they'll be reused by next instance)
+    fpsMonitor.reset();
+    adaptiveQuality.reset();
+    sleepMonitor.reset();
+    aggressiveSleep.reset();
+
+    // Clear references
+    this.gameLoopContext = null;
+    this.cameraConfig = null;
+    this.currentMap = null;
+
+    console.log('PinballGame destroyed - all resources cleaned up');
   }
 }

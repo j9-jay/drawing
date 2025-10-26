@@ -54,11 +54,19 @@ function handleBubbleContact(userDataA: any, userDataB: any): void {
   }
 }
 
+// Store contact handler to allow cleanup
+let contactHandler: ((contact: any) => void) | null = null;
+
 /**
  * Setup contact listener for world
  */
 export function setupContactListener(world: World): void {
-  world.on('begin-contact', (contact: any) => {
+  // Remove previous listener if exists
+  if (contactHandler) {
+    world.off('begin-contact', contactHandler);
+  }
+
+  contactHandler = (contact: any) => {
     const fixtureA = contact.getFixtureA();
     const fixtureB = contact.getFixtureB();
     const userDataA = fixtureA.getUserData();
@@ -68,5 +76,17 @@ export function setupContactListener(world: World): void {
     handleBounceCircleContact(userDataA, userDataB);
     handleJumpPadContact(userDataA, userDataB, fixtureA, fixtureB);
     handleBubbleContact(userDataA, userDataB);
-  });
+  };
+
+  world.on('begin-contact', contactHandler);
+}
+
+/**
+ * Remove contact listener from world
+ */
+export function removeContactListener(world: World): void {
+  if (contactHandler) {
+    world.off('begin-contact', contactHandler);
+    contactHandler = null;
+  }
 }

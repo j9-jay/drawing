@@ -43,16 +43,35 @@ export interface GameLoopCallbacks {
   onContextUpdated(context: GameLoopContext): void;
 }
 
+export interface GameLoopHandle {
+  stop: () => void;
+}
+
 export function startGameLoop(
   context: GameLoopContext,
   callbacks: GameLoopCallbacks
-): void {
+): GameLoopHandle {
+  let rafId: number | null = null;
+  let stopped = false;
+
   const loop = () => {
+    if (stopped) return;
+
     gameLoop(context, callbacks);
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   };
 
-  requestAnimationFrame(loop);
+  rafId = requestAnimationFrame(loop);
+
+  return {
+    stop: () => {
+      stopped = true;
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }
+  };
 }
 
 function gameLoop(

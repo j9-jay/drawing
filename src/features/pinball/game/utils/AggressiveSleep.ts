@@ -124,6 +124,10 @@ export class AggressiveSleep {
 
     return emergencyCount;
   }
+
+  reset(): void {
+    // No state to reset in this class
+  }
 }
 
 export const aggressiveSleep = new AggressiveSleep();

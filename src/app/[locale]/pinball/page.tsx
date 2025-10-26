@@ -42,11 +42,13 @@ export default function PinballGamePage() {
     if (initialized.current) return;
     initialized.current = true;
 
+    let game: any = null;
+
     // Dynamic import to ensure client-side only execution
     import('@/features/pinball/game/PinballGame').then(async ({ PinballRoulette }) => {
       try {
         // Initialize the game
-        const game = new PinballRoulette();
+        game = new PinballRoulette();
 
         // Export game instance for debugging
         (window as any).game = game;
@@ -54,6 +56,18 @@ export default function PinballGamePage() {
         console.error('Failed to initialize pinball game:', error);
       }
     });
+
+    // Cleanup function to prevent memory leaks
+    return () => {
+      if (game && typeof game.destroy === 'function') {
+        game.destroy();
+        game = null;
+      }
+      // Clear window reference
+      if ((window as any).game) {
+        delete (window as any).game;
+      }
+    };
   }, []);
 
   const handleFullScreen = () => {
