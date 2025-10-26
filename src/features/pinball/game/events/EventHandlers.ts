@@ -53,11 +53,19 @@ export function setupEventListeners(
   setupSettingsEvents(context, callbacks);
 }
 
+// Store keyboard event handler to allow cleanup
+let documentKeyDownHandler: ((e: KeyboardEvent) => void) | null = null;
+
 /**
  * Setup keyboard events
  */
 function setupKeyboardEvents(): void {
-  document.addEventListener('keydown', (e) => {
+  // Remove previous listener if exists
+  if (documentKeyDownHandler) {
+    document.removeEventListener('keydown', documentKeyDownHandler);
+  }
+
+  documentKeyDownHandler = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       const settingsPopup = document.getElementById('settings-popup') as HTMLDivElement;
       const winnerDisplay = document.getElementById('winner-display') as HTMLDivElement;
@@ -78,14 +86,44 @@ function setupKeyboardEvents(): void {
         performanceMonitor.classList.toggle('hidden');
       }
     }
-  });
+  };
+
+  document.addEventListener('keydown', documentKeyDownHandler);
 }
+
+// Store mouse event handlers to allow cleanup
+let canvasWheelHandler: ((e: WheelEvent) => void) | null = null;
+let canvasMouseDownHandler: ((e: MouseEvent) => void) | null = null;
+let windowMouseMoveHandler: ((e: MouseEvent) => void) | null = null;
+let windowMouseUpHandler: ((e: MouseEvent) => void) | null = null;
+
+// Pan state (shared across handler re-registrations)
+let isPanning = false;
+let panStartX = 0;
+let panStartY = 0;
+let panStartCameraX = 0;
+let panStartCameraY = 0;
 
 /**
  * Setup mouse events
  */
 function setupMouseEvents(context: EventHandlerContext): void {
-  context.canvas.addEventListener('wheel', (e) => {
+  // Remove previous listeners if exist
+  if (context.canvas && canvasWheelHandler) {
+    context.canvas.removeEventListener('wheel', canvasWheelHandler);
+  }
+  if (context.canvas && canvasMouseDownHandler) {
+    context.canvas.removeEventListener('mousedown', canvasMouseDownHandler);
+  }
+  if (windowMouseMoveHandler) {
+    window.removeEventListener('mousemove', windowMouseMoveHandler);
+  }
+  if (windowMouseUpHandler) {
+    window.removeEventListener('mouseup', windowMouseUpHandler);
+  }
+
+  // Wheel event for zoom
+  canvasWheelHandler = (e: WheelEvent) => {
     e.preventDefault();
     const delta = e.deltaY > 0 ? -CAMERA_ZOOM_SPEED : CAMERA_ZOOM_SPEED;
 
@@ -107,16 +145,12 @@ function setupMouseEvents(context: EventHandlerContext): void {
     // Adjust camera to keep mouse position stable
     context.targetCameraX = (mouseX / newZoom) - worldX;
     context.targetCameraY = (mouseY / newZoom) - worldY;
-  });
+  };
+
+  context.canvas.addEventListener('wheel', canvasWheelHandler);
 
   // Pan with middle mouse button
-  let isPanning = false;
-  let panStartX = 0;
-  let panStartY = 0;
-  let panStartCameraX = 0;
-  let panStartCameraY = 0;
-
-  context.canvas.addEventListener('mousedown', (e) => {
+  canvasMouseDownHandler = (e: MouseEvent) => {
     if (e.button === 1) { // Middle mouse button
       e.preventDefault();
       isPanning = true;
@@ -126,24 +160,36 @@ function setupMouseEvents(context: EventHandlerContext): void {
       panStartCameraY = context.targetCameraY;
       context.canvas.style.cursor = 'grabbing';
     }
-  });
+  };
 
-  window.addEventListener('mousemove', (e) => {
+  context.canvas.addEventListener('mousedown', canvasMouseDownHandler);
+
+  windowMouseMoveHandler = (e: MouseEvent) => {
     if (isPanning) {
       const deltaX = e.clientX - panStartX;
       const deltaY = e.clientY - panStartY;
       context.targetCameraX = panStartCameraX + deltaX / context.targetZoom;
       context.targetCameraY = panStartCameraY + deltaY / context.targetZoom;
     }
-  });
+  };
 
-  window.addEventListener('mouseup', (e) => {
+  window.addEventListener('mousemove', windowMouseMoveHandler);
+
+  windowMouseUpHandler = (e: MouseEvent) => {
     if (e.button === 1 && isPanning) {
       isPanning = false;
       context.canvas.style.cursor = 'default';
     }
-  });
+  };
+
+  window.addEventListener('mouseup', windowMouseUpHandler);
 }
+
+// Store event handlers to allow cleanup
+let speedSliderHandler: ((event: Event) => void) | null = null;
+let startBtnHandler: (() => void) | null = null;
+let resetBtnHandler: (() => void) | null = null;
+let namesInputHandler: (() => void) | null = null;
 
 /**
  * Setup control button events
@@ -154,19 +200,35 @@ function setupControlEvents(
 ): void {
   // Start/Stop button
   const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
-  startBtn?.addEventListener('click', () => {
+
+  // Remove previous listener if exists
+  if (startBtn && startBtnHandler) {
+    startBtn.removeEventListener('click', startBtnHandler);
+  }
+
+  startBtnHandler = () => {
     if (context.gameState === 'idle') {
       callbacks.startGame();
     } else {
       callbacks.stopGame();
     }
-  });
+  };
+
+  startBtn?.addEventListener('click', startBtnHandler);
 
   // Reset button
   const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
-  resetBtn?.addEventListener('click', () => {
+
+  // Remove previous listener if exists
+  if (resetBtn && resetBtnHandler) {
+    resetBtn.removeEventListener('click', resetBtnHandler);
+  }
+
+  resetBtnHandler = () => {
     callbacks.resetGame();
-  });
+  };
+
+  resetBtn?.addEventListener('click', resetBtnHandler);
 
   // Speed slider
   const speedSlider = document.getElementById('speed-slider') as HTMLInputElement;
@@ -179,9 +241,14 @@ function setupControlEvents(
     updateSpeedUI(initialValue);
   }
 
+  // Remove previous listener if exists
+  if (speedSlider && speedSliderHandler) {
+    speedSlider.removeEventListener('input', speedSliderHandler);
+  }
+
   // 슬라이더 이벤트 리스너는 초기화 완료 후 추가 (초기화 중 자동 발생 방지)
   setTimeout(() => {
-    speedSlider?.addEventListener('input', () => {
+    speedSliderHandler = () => {
       const rawValue = parseFloat(speedSlider.value);
       const value = Math.max(TIME_SCALE_MIN, Math.min(TIME_SCALE_MAX, rawValue));
       context.timeScale = value;
@@ -190,7 +257,9 @@ function setupControlEvents(
       updateSpeedUI(value);
       // 설정 변경 콜백 호출
       callbacks.onSettingsChange();
-    });
+    };
+
+    speedSlider?.addEventListener('input', speedSliderHandler);
   }, 100);
 
   // Map selector - now handled by MapSelectionModal
@@ -198,10 +267,28 @@ function setupControlEvents(
 
   // Names input - real-time participant parsing
   const namesInput = document.getElementById('names-input') as HTMLTextAreaElement;
-  namesInput?.addEventListener('input', () => {
+
+  // Remove previous listener if exists
+  if (namesInput && namesInputHandler) {
+    namesInput.removeEventListener('input', namesInputHandler);
+  }
+
+  namesInputHandler = () => {
     callbacks.parseParticipants(false);
-  });
+  };
+
+  namesInput?.addEventListener('input', namesInputHandler);
 }
+
+// Store settings event handlers to allow cleanup
+let settingsBtnHandler: (() => void) | null = null;
+let closeSettingsBtnHandler: (() => void) | null = null;
+let winnerModeSelectHandler: (() => void) | null = null;
+let customRankInputHandler: (() => void) | null = null;
+let topNInputHandler: (() => void) | null = null;
+let saveSettingsBtnHandler: (() => void) | null = null;
+let loadSettingsBtnHandler: (() => void) | null = null;
+let editorBtnHandler: (() => void) | null = null;
 
 /**
  * Setup settings events
@@ -213,19 +300,38 @@ function setupSettingsEvents(
   // Settings toggle
   const settingsBtn = document.getElementById('settings-btn') as HTMLButtonElement;
   const settingsPopup = document.getElementById('settings-popup') as HTMLDivElement;
-  settingsBtn?.addEventListener('click', () => {
+
+  if (settingsBtn && settingsBtnHandler) {
+    settingsBtn.removeEventListener('click', settingsBtnHandler);
+  }
+
+  settingsBtnHandler = () => {
     settingsPopup.classList.toggle('hidden');
-  });
+  };
+
+  settingsBtn?.addEventListener('click', settingsBtnHandler);
 
   // Close settings
   const closeSettingsBtn = document.getElementById('close-settings-btn') as HTMLButtonElement;
-  closeSettingsBtn?.addEventListener('click', () => {
+
+  if (closeSettingsBtn && closeSettingsBtnHandler) {
+    closeSettingsBtn.removeEventListener('click', closeSettingsBtnHandler);
+  }
+
+  closeSettingsBtnHandler = () => {
     settingsPopup.classList.add('hidden');
-  });
+  };
+
+  closeSettingsBtn?.addEventListener('click', closeSettingsBtnHandler);
 
   // Winner mode select
   const winnerModeSelect = document.getElementById('winner-mode') as HTMLSelectElement;
-  winnerModeSelect?.addEventListener('change', () => {
+
+  if (winnerModeSelect && winnerModeSelectHandler) {
+    winnerModeSelect.removeEventListener('change', winnerModeSelectHandler);
+  }
+
+  winnerModeSelectHandler = () => {
     const mode = winnerModeSelect.value as WinnerMode;
     context.settings.winnerMode = mode;
 
@@ -237,39 +343,76 @@ function setupSettingsEvents(
     if (topNInput) topNInput.style.display = mode === 'topN' ? 'block' : 'none';
 
     callbacks.onSettingsChange();
-  });
+  };
+
+  winnerModeSelect?.addEventListener('change', winnerModeSelectHandler);
 
   // Custom rank input
   const customRankInput = document.getElementById('custom-rank') as HTMLInputElement;
-  customRankInput?.addEventListener('input', () => {
+
+  if (customRankInput && customRankInputHandler) {
+    customRankInput.removeEventListener('input', customRankInputHandler);
+  }
+
+  customRankInputHandler = () => {
     context.settings.customRank = parseInt(customRankInput.value) || 1;
     callbacks.onSettingsChange();
-  });
+  };
+
+  customRankInput?.addEventListener('input', customRankInputHandler);
 
   // Top N input
   const topNInput = document.getElementById('top-n-count') as HTMLInputElement;
-  topNInput?.addEventListener('input', () => {
+
+  if (topNInput && topNInputHandler) {
+    topNInput.removeEventListener('input', topNInputHandler);
+  }
+
+  topNInputHandler = () => {
     context.settings.topNCount = parseInt(topNInput.value) || 3;
     callbacks.onSettingsChange();
-  });
+  };
+
+  topNInput?.addEventListener('input', topNInputHandler);
 
   // Save/Load settings buttons
   const saveSettingsBtn = document.getElementById('save-settings-btn') as HTMLButtonElement;
-  saveSettingsBtn?.addEventListener('click', () => {
+
+  if (saveSettingsBtn && saveSettingsBtnHandler) {
+    saveSettingsBtn.removeEventListener('click', saveSettingsBtnHandler);
+  }
+
+  saveSettingsBtnHandler = () => {
     saveSettings(context.settings);
-  });
+  };
+
+  saveSettingsBtn?.addEventListener('click', saveSettingsBtnHandler);
 
   const loadSettingsBtn = document.getElementById('load-settings-btn') as HTMLButtonElement;
-  loadSettingsBtn?.addEventListener('click', () => {
+
+  if (loadSettingsBtn && loadSettingsBtnHandler) {
+    loadSettingsBtn.removeEventListener('click', loadSettingsBtnHandler);
+  }
+
+  loadSettingsBtnHandler = () => {
     loadSettings(context.settings, callbacks.onSettingsChange);
-  });
+  };
+
+  loadSettingsBtn?.addEventListener('click', loadSettingsBtnHandler);
 
   // Editor button
   const editorBtn = document.getElementById('editor-btn') as HTMLButtonElement;
-  editorBtn?.addEventListener('click', () => {
+
+  if (editorBtn && editorBtnHandler) {
+    editorBtn.removeEventListener('click', editorBtnHandler);
+  }
+
+  editorBtnHandler = () => {
     const modal = document.getElementById('editorModal') as HTMLDivElement;
     if (modal) modal.style.display = 'block';
-  });
+  };
+
+  editorBtn?.addEventListener('click', editorBtnHandler);
 }
 
 /**

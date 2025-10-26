@@ -89,7 +89,7 @@ export const LOW_VELOCITY_ITERATIONS = 4;
 export const LOW_POSITION_ITERATIONS = 2;
 
 // Sleep 시스템 설정 (공격적 튜닝)
-export const SLEEP_LINEAR_TOLERANCE = 0.1; // m/s 미만시 잠들기 시작 (더 관대하게)
-export const SLEEP_ANGULAR_TOLERANCE = 0.1; // rad/s 미만시 잠들기 시작 (더 관대하게)
-export const SLEEP_TIME_UNTIL_SLEEP = 0.5; // 0.5초 정지시 잠들기 (더 빠르게)
-export const SLEEP_MIN_ENERGY = 0.01; // 최소 에너지 임계값 (더 높게)
+export const SLEEP_LINEAR_TOLERANCE = 0.3; // m/s 미만시 잠들기 시작 (더 관대하게)
+export const SLEEP_ANGULAR_TOLERANCE = 0.3; // rad/s 미만시 잠들기 시작 (더 관대하게)
+export const SLEEP_TIME_UNTIL_SLEEP = 0.8; // 0.5초 정지시 잠들기 (더 빠르게)
+export const SLEEP_MIN_ENERGY = 0.05; // 최소 에너지 임계값 (더 높게)

@@ -214,8 +214,13 @@ export class PinballRoulette {
         await this.loadEditorMap(mapName);
       },
       parseParticipants: (verbose: boolean) => {
-        this.participants = initializeParticipants(verbose);
-        this.settings.participants = this.participants;
+        if (this.gameState === 'idle') {
+          this.participants = initializeParticipants(verbose);
+          this.settings.participants = this.participants;
+          clearMarbles(this.marbles, this.world);
+          this.marbles = refreshPreviewMarbles(this.participants, this.currentMap, this.canvas.width);
+          this.saveToSessionStorage();
+        }
         return this.participants.length > 0;
       },
       onSettingsChange: () => {
@@ -234,17 +239,8 @@ export class PinballRoulette {
 
     // Map selector now handled by MapSelectionModal
 
-    // Real-time participant updates
-    const namesInput = document.getElementById('names-input') as HTMLTextAreaElement;
-    namesInput?.addEventListener('input', () => {
-      if (this.gameState === 'idle') {
-        this.participants = initializeParticipants(true);
-        this.settings.participants = this.participants;
-        clearMarbles(this.marbles, this.world);
-        this.marbles = refreshPreviewMarbles(this.participants, this.currentMap, this.canvas.width);
-        this.saveToSessionStorage();
-      }
-    });
+    // Real-time participant updates - handled by EventHandlers.ts namesInputHandler
+    // The logic is passed through callbacks.parseParticipants
 
     // Winner display buttons (initial setup)
     this.attachWinnerButtons();

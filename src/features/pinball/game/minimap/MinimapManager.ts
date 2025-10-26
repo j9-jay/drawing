@@ -297,6 +297,10 @@ export function renderMinimapStructure(
   });
 }
 
+// Store minimap event handlers to allow cleanup
+let minimapMouseMoveHandler: ((e: MouseEvent) => void) | null = null;
+let minimapMouseLeaveHandler: (() => void) | null = null;
+
 /**
  * Setup minimap events
  */
@@ -308,7 +312,15 @@ export function setupMinimapEvents(
   restoreCamera: () => void,
   setMinimapHover: MinimapHoverSetter
 ): void {
-  minimapCanvas.addEventListener('mousemove', (e) => {
+  // Remove previous listeners if exist
+  if (minimapMouseMoveHandler) {
+    minimapCanvas.removeEventListener('mousemove', minimapMouseMoveHandler);
+  }
+  if (minimapMouseLeaveHandler) {
+    minimapCanvas.removeEventListener('mouseleave', minimapMouseLeaveHandler);
+  }
+
+  minimapMouseMoveHandler = (e: MouseEvent) => {
     const rect = minimapCanvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
@@ -358,14 +370,18 @@ export function setupMinimapEvents(
     );
 
     updateTargetCamera(targetCameraX, targetCameraY);
-  });
+  };
 
-  minimapCanvas.addEventListener('mouseleave', () => {
+  minimapCanvas.addEventListener('mousemove', minimapMouseMoveHandler);
+
+  minimapMouseLeaveHandler = () => {
     setMinimapHover(false);
     // When not in game, restore original camera position
     // When in game, do nothing to let updateCameraTracking resume 1st place tracking
     if (getGameState() !== 'running') {
       restoreCamera();
     }
-  });
+  };
+
+  minimapCanvas.addEventListener('mouseleave', minimapMouseLeaveHandler);
 }
