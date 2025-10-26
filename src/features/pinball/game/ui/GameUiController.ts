@@ -8,16 +8,16 @@ export function attachWinnerButtonListeners(
 ): void {
   const playAgainBtn = document.getElementById('play-again-btn');
   if (playAgainBtn) {
-    playAgainBtn.replaceWith(playAgainBtn.cloneNode(true));
-    const newBtn = document.getElementById('play-again-btn');
-    newBtn?.addEventListener('click', onPlayAgain);
+    // Remove cloneNode to preserve React component reference
+    // Use { once: true } to prevent duplicate listeners
+    playAgainBtn.addEventListener('click', onPlayAgain, { once: true });
   }
 
   const playWithoutWinnerBtn = document.getElementById('play-without-winner-btn');
   if (playWithoutWinnerBtn) {
-    playWithoutWinnerBtn.replaceWith(playWithoutWinnerBtn.cloneNode(true));
-    const newBtn = document.getElementById('play-without-winner-btn');
-    newBtn?.addEventListener('click', onPlayWithoutWinner);
+    // Remove cloneNode to preserve React component reference
+    // Use { once: true } to prevent duplicate listeners
+    playWithoutWinnerBtn.addEventListener('click', onPlayWithoutWinner, { once: true });
   }
 }
 

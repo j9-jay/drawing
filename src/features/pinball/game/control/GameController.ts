@@ -98,7 +98,7 @@ export function startGame(
   cameraConfig.currentCameraY = cameraConfig.targetCameraY;
 
   const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
-  startBtn.textContent = 'Stop';
+  startBtn.textContent = (window as any).pinballTranslations?.stop || 'Stop';
 
   const winnerDisplay = document.getElementById('winner-display') as HTMLDivElement;
   winnerDisplay.classList.add('hidden');
@@ -106,7 +106,7 @@ export function startGame(
   const settingsPopup = document.getElementById('settings-popup') as HTMLDivElement;
   settingsPopup.classList.add('hidden');
 
-  showToast('Game Started!', 'success');
+  showToast((window as any).pinballTranslations?.gameStarted || 'Game Started!', 'success');
 
   return newMarbles;
 }
@@ -154,9 +154,9 @@ export function stopGame(
   cameraConfig.originalCameraY = stopCameraY;
 
   const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
-  startBtn.textContent = 'Start';
+  startBtn.textContent = (window as any).pinballTranslations?.start || 'Start';
 
-  showToast('Game Stopped', 'error');
+  showToast((window as any).pinballTranslations?.gameStopped || 'Game Stopped', 'error');
 }
 
 /**
@@ -212,7 +212,7 @@ export function resetGame(
   cameraConfig.originalCameraY = resetCameraY;
 
   const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
-  startBtn.textContent = 'Start';
+  startBtn.textContent = (window as any).pinballTranslations?.start || 'Start';
 
   // 리셋 후 설정 팝업 표시
   const settingsPopup = document.getElementById('settings-popup') as HTMLDivElement;
@@ -223,7 +223,7 @@ export function resetGame(
   const winnerDisplay = document.getElementById('winner-display') as HTMLDivElement;
   winnerDisplay.classList.add('hidden');
 
-  showToast('Game Reset', 'success');
+  showToast((window as any).pinballTranslations?.gameReset || 'Game Reset', 'success');
 }
 
 /**
@@ -237,7 +237,7 @@ export function endGame(
   state.gameState = 'idle';
 
   const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
-  startBtn.textContent = 'Start';
+  startBtn.textContent = (window as any).pinballTranslations?.start || 'Start';
 
   const winnerDisplay = document.getElementById('winner-display') as HTMLDivElement;
   if (winnerDisplay.classList.contains('hidden')) {
@@ -305,7 +305,7 @@ export function checkWinnerCondition(
     }
     showWinner(winner);
     const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
-    startBtn.textContent = 'Stop';
+    startBtn.textContent = (window as any).pinballTranslations?.stop || 'Stop';
     enableSettingsPopupOnClick(state.gameState);
   }
 }

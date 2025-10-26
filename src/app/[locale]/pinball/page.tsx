@@ -27,6 +27,17 @@ export default function PinballGamePage() {
     loadContent();
   }, []);
 
+  // Inject translations into window for game logic to use
+  useEffect(() => {
+    (window as any).pinballTranslations = {
+      start: t('pinball.game.controls.start'),
+      stop: t('pinball.game.controls.stop'),
+      gameStarted: t('pinball.game.messages.started'),
+      gameStopped: t('pinball.game.messages.stopped'),
+      gameReset: t('pinball.game.messages.reset')
+    };
+  }, [t]);
+
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;

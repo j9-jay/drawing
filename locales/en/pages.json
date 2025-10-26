@@ -136,6 +136,7 @@
         "participants": "Participants (newline or comma separated, *number for weight, max 8 chars)",
         "participantsPlaceholder": "John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown",
         "start": "Start",
+        "stop": "Stop",
         "reset": "Reset",
         "mapSelection": "Map Selection",
         "select": "Select",
@@ -146,6 +147,11 @@
         "topNPlaces": "Top N Places",
         "speed": "Speed",
         "speedNormal": "Normal"
+      },
+      "messages": {
+        "started": "Game Started!",
+        "stopped": "Game Stopped",
+        "reset": "Game Reset"
       },
       "leaderboard": {
         "title": "Live Rankings"

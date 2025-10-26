@@ -136,6 +136,7 @@
         "participants": "참가자 (줄바꿈 또는 쉼표로 구분, *숫자로 가중치, 최대 8자)",
         "participantsPlaceholder": "John Doe, Jane Smith*3, Bob Johnson*2, Alice Brown",
         "start": "시작",
+        "stop": "중지",
         "reset": "리셋",
         "mapSelection": "맵 선택",
         "select": "선택",
@@ -146,6 +147,11 @@
         "topNPlaces": "상위 N명",
         "speed": "속도",
         "speedNormal": "보통"
+      },
+      "messages": {
+        "started": "게임 시작!",
+        "stopped": "게임 중지",
+        "reset": "게임 리셋"
       },
       "leaderboard": {
         "title": "실시간 순위"
