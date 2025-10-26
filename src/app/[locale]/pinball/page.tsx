@@ -6,7 +6,7 @@ import { useTranslations } from '@/lib/i18n/useTranslations';
 
 export default function PinballGamePage() {
   const { t } = useTranslations('pages');
-  const initialized = useRef(false);
+  const gameRef = useRef<any>(null);
   const appRef = useRef<HTMLDivElement>(null);
   const [contentData, setContentData] = useState<any>(null);
 
@@ -39,16 +39,21 @@ export default function PinballGamePage() {
   }, [t]);
 
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    let game: any = null;
+    // Flag to prevent race condition between cleanup and async import
+    let cancelled = false;
 
     // Dynamic import to ensure client-side only execution
     import('@/features/pinball/game/PinballGame').then(async ({ PinballRoulette }) => {
+      // If component unmounted before import completes, don't initialize
+      if (cancelled) {
+        console.log('Game initialization cancelled - component unmounted');
+        return;
+      }
+
       try {
         // Initialize the game
-        game = new PinballRoulette();
+        const game = new PinballRoulette();
+        gameRef.current = game;
 
         // Export game instance for debugging
         (window as any).game = game;
@@ -59,10 +64,14 @@ export default function PinballGamePage() {
 
     // Cleanup function to prevent memory leaks
     return () => {
-      if (game && typeof game.destroy === 'function') {
-        game.destroy();
-        game = null;
+      cancelled = true;
+
+      // Destroy game instance if it exists
+      if (gameRef.current && typeof gameRef.current.destroy === 'function') {
+        gameRef.current.destroy();
+        gameRef.current = null;
       }
+
       // Clear window reference
       if ((window as any).game) {
         delete (window as any).game;
