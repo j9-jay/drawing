@@ -5,7 +5,7 @@ import '../../../features/pinball/game/game.css';
 import { useTranslations } from '@/lib/i18n/useTranslations';
 
 export default function PinballGamePage() {
-  const { t } = useTranslations('pages');
+  const { t, isLoading } = useTranslations('pages');
   const gameRef = useRef<any>(null);
   const appRef = useRef<HTMLDivElement>(null);
   const [contentData, setContentData] = useState<any>(null);
@@ -29,6 +29,9 @@ export default function PinballGamePage() {
 
   // Inject translations into window for game logic to use
   useEffect(() => {
+    // Wait for translations to load before setting window.pinballTranslations
+    if (isLoading) return;
+
     (window as any).pinballTranslations = {
       start: t('pinball.game.controls.start'),
       stop: t('pinball.game.controls.stop'),
@@ -42,7 +45,7 @@ export default function PinballGamePage() {
       speedFast: t('pinball.game.controls.speedFast'),
       speedVeryFast: t('pinball.game.controls.speedVeryFast')
     };
-  }, [t]);
+  }, [t, isLoading]);
 
   useEffect(() => {
     // Flag to prevent race condition between cleanup and async import
@@ -190,7 +193,7 @@ export default function PinballGamePage() {
               <label htmlFor="speed-slider">{t('pinball.game.controls.speed')}</label>
               <div className="speed-control">
                 <input type="range" id="speed-slider" min="0.1" max="0.5" step="0.1" defaultValue="0.3" />
-                <span id="speed-value"></span>
+                <span id="speed-value">{t('pinball.game.controls.speedNormal')}</span>
               </div>
             </div>
           </div>
