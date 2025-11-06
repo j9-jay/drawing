@@ -146,7 +146,11 @@
         "customRank": "커스텀 순위",
         "topNPlaces": "상위 N명",
         "speed": "속도",
-        "speedNormal": "보통"
+        "speedVerySlow": "매우 느림",
+        "speedSlow": "느림",
+        "speedNormal": "보통",
+        "speedFast": "빠름",
+        "speedVeryFast": "매우 빠름"
       },
       "messages": {
         "started": "게임 시작!",

@@ -34,7 +34,13 @@ export default function PinballGamePage() {
       stop: t('pinball.game.controls.stop'),
       gameStarted: t('pinball.game.messages.started'),
       gameStopped: t('pinball.game.messages.stopped'),
-      gameReset: t('pinball.game.messages.reset')
+      gameReset: t('pinball.game.messages.reset'),
+      // Speed labels for i18n support
+      speedVerySlow: t('pinball.game.controls.speedVerySlow'),
+      speedSlow: t('pinball.game.controls.speedSlow'),
+      speedNormal: t('pinball.game.controls.speedNormal'),
+      speedFast: t('pinball.game.controls.speedFast'),
+      speedVeryFast: t('pinball.game.controls.speedVeryFast')
     };
   }, [t]);
 
@@ -184,7 +190,7 @@ export default function PinballGamePage() {
               <label htmlFor="speed-slider">{t('pinball.game.controls.speed')}</label>
               <div className="speed-control">
                 <input type="range" id="speed-slider" min="0.1" max="0.5" step="0.1" defaultValue="0.3" />
-                <span id="speed-value">{t('pinball.game.controls.speedNormal')}</span>
+                <span id="speed-value"></span>
               </div>
             </div>
           </div>

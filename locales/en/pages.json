@@ -146,7 +146,11 @@
         "customRank": "Custom Rank",
         "topNPlaces": "Top N Places",
         "speed": "Speed",
-        "speedNormal": "Normal"
+        "speedVerySlow": "Very Slow",
+        "speedSlow": "Slow",
+        "speedNormal": "Normal",
+        "speedFast": "Fast",
+        "speedVeryFast": "Very Fast"
       },
       "messages": {
         "started": "Game Started!",

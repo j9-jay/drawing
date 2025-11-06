@@ -47,6 +47,8 @@ export function updateSpeedUI(clampedValue: number): void {
 
   const speedValue = document.getElementById('speed-value') as HTMLSpanElement | null;
   if (speedValue) {
-    speedValue.textContent = formatSpeedLabel(clampedValue);
+    const translationKey = formatSpeedLabel(clampedValue);
+    const translations = (window as any).pinballTranslations;
+    speedValue.textContent = translations?.[translationKey] || translationKey;
   }
 }

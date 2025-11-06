@@ -34,6 +34,7 @@ export interface GameSettings {
   winnerMode: WinnerMode;
   customRank: number;
   topNCount: number;
+  timeScale?: number;
 }
 
 export interface Toast {

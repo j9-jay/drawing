@@ -666,14 +666,6 @@ export class PinballRoulette {
       if (topNInput) {
         topNInput.value = savedSettings.topNCount.toString();
       }
-
-      const savedTimeScale = Math.max(
-        TIME_SCALE_MIN,
-        Math.min(TIME_SCALE_MAX, (savedSettings as any).timeScale ?? this.userTimeScale)
-      );
-      this.userTimeScale = savedTimeScale;
-      this.timeScale = savedTimeScale;
-      updateSpeedUI(savedTimeScale);
     }
   }
 
