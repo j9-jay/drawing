@@ -100,6 +100,14 @@ export default function PinballGamePage() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="pinball-page-container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#94a3b8' }}>Loading translations...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="pinball-page-container">
       <div id="app" ref={appRef}>

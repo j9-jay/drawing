@@ -7,13 +7,15 @@ import '../../../features/roulette/game/styles/animations.css';
 import { useTranslations } from '@/lib/i18n/useTranslations';
 
 export default function RoulettePage() {
-  const { t } = useTranslations('pages');
+  const { t, isLoading } = useTranslations('pages');
   const initialized = useRef(false);
   const appRef = useRef<HTMLDivElement>(null);
   const [contentData, setContentData] = useState<any>(null);
 
   // Inject translations into window for game logic to use
   useEffect(() => {
+    if (isLoading) return;
+
     window.rouletteTranslations = {
       participants: t('roulette.game.settings.participants'),
       participantsCount: t('roulette.game.logic.participantsCount'),
@@ -31,7 +33,7 @@ export default function RoulettePage() {
       cannotRemoveWinner: t('roulette.game.logic.cannotRemoveWinner'),
       winnerRemoved: t('roulette.game.logic.winnerRemoved'),
     };
-  }, [t]);
+  }, [t, isLoading]);
 
   // Load translation data for content sections
   useEffect(() => {
@@ -76,6 +78,14 @@ export default function RoulettePage() {
       document.exitFullscreen();
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="roulette-page-container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#94a3b8' }}>Loading translations...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="roulette-page-container">

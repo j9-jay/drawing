@@ -7,11 +7,11 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Navbar } from '@/components/layout/Navbar';
-import { ToastProvider } from '@/components/ui';
 import { JsonLd } from '@/components/seo';
 import { type Locale, isValidLocale, SUPPORTED_LOCALES } from '@/lib/i18n/config';
 import { generatePageMetadata, generateWebPageSchema } from '@/lib/i18n/metadata';
 import { loadTranslations, createTranslator } from '@/lib/i18n/translations';
+import { Providers } from './providers';
 import { notFound } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -82,16 +82,22 @@ export default async function LocaleLayout({
     description: t('siteDescription'),
   });
 
+  // 페이지 번역을 서버에서 미리 로드하여 캐시에 저장
+  const pagesTranslations = await loadTranslations(locale as Locale, 'pages');
+  const initialCache = {
+    [`${locale}:pages`]: pagesTranslations
+  };
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
         <JsonLd data={webPageSchema} />
       </head>
       <body className={inter.className}>
-        <ToastProvider>
+        <Providers initialCache={initialCache}>
           <Navbar />
           <main className="min-h-screen">{children}</main>
-        </ToastProvider>
+        </Providers>
       </body>
     </html>
   );
