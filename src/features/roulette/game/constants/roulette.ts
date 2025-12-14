@@ -3,7 +3,8 @@
  */
 
 // 휠 크기
-export const WHEEL_RADIUS = 300;           // 룰렛 반지름 (px)
+export const WHEEL_RADIUS = 300;           // 기본 룰렛 반지름 (px) - 동적 스케일 기준값
+export const WHEEL_RADIUS_VIEWPORT_RATIO = 0.48; // 캔버스 짧은 변 대비 실제 반지름 비율 (0~0.5)
 export const CENTER_CIRCLE_RADIUS = 30;    // 중앙 원 반지름
 export const WHEEL_BORDER_WIDTH = 5;       // 테두리 두께
 

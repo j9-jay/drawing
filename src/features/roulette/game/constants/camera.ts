@@ -24,4 +24,4 @@ export const CAMERA_SHAKE_INTENSITY = 8;   // px
 export const CAMERA_SHAKE_FREQUENCY = 20;  // Hz
 
 // 줌 시작 임계값 (속도 기준)
-export const ZOOM_START_VELOCITY = 1.0;    // rad/s 이하일 때 줌 시작
+export const ZOOM_START_VELOCITY = 2.0;    // rad/s 이하일 때 줌 시작
