@@ -8,6 +8,7 @@
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { isValidLocale, getFallbackLocale, type Locale } from './config';
+import { useTranslationsCache } from './TranslationsProvider';
 
 type TranslationKeys = Record<string, string | TranslationKeys>;
 
@@ -38,6 +39,7 @@ function getNestedValue(
  */
 export function useTranslations(namespace: string = 'pages') {
   const pathname = usePathname();
+  const { getCache, setCache } = useTranslationsCache();
   const [translations, setTranslations] = useState<TranslationKeys>({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,13 +50,25 @@ export function useTranslations(namespace: string = 'pages') {
 
   useEffect(() => {
     async function loadTranslations() {
+      // 먼저 캐시 확인
+      const cached = getCache(locale, namespace);
+      if (cached) {
+        setTranslations(cached);
+        setIsLoading(false);
+        return;
+      }
+
+      // 캐시에 없으면 로드
       setIsLoading(true);
       try {
         // 동적 import로 번역 파일 로드
         const data = await import(
           `@/../locales/${locale}/${namespace}.json`
         );
-        setTranslations(data.default || data);
+        const translationsData = data.default || data;
+        setTranslations(translationsData);
+        // 캐시에 저장
+        setCache(locale, namespace, translationsData);
       } catch (error) {
         // fallback locale 시도
         const fallbackLocale = getFallbackLocale(locale);
@@ -63,7 +77,9 @@ export function useTranslations(namespace: string = 'pages') {
             const fallbackData = await import(
               `@/../locales/${fallbackLocale}/${namespace}.json`
             );
-            setTranslations(fallbackData.default || fallbackData);
+            const translationsData = fallbackData.default || fallbackData;
+            setTranslations(translationsData);
+            setCache(locale, namespace, translationsData);
           } catch {
             console.warn(
               `Translation file not found: ${locale}/${namespace}.json and fallback failed`
@@ -80,7 +96,7 @@ export function useTranslations(namespace: string = 'pages') {
     }
 
     loadTranslations();
-  }, [locale, namespace]);
+  }, [locale, namespace, getCache, setCache]);
 
   /**
    * 번역 함수
