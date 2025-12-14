@@ -198,7 +198,6 @@ export class RouletteRenderer {
       this.ctx.fill();
     });
 
-    // Draw outer border with glowing effect
     drawGlowingCircle(
       this.ctx,
       centerX,
