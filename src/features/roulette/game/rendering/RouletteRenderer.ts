@@ -7,6 +7,7 @@ import { Participant, CameraState } from '../../shared/types/roulette';
 import { generateColor } from '../../shared/utils/colorUtils';
 import {
   WHEEL_RADIUS,
+  WHEEL_RADIUS_VIEWPORT_RATIO,
   WHEEL_BORDER_WIDTH,
   WHEEL_GLOW_COLOR,
   POINTER_SIZE,
@@ -23,15 +24,110 @@ import {
 import { ZOOM_OFFSET_RATIO } from '../constants/camera';
 import { drawGlowingCircle } from './RenderHelpers';
 
+interface SectorInfo {
+  participant: Participant;
+  startAngle: number;
+  endAngle: number;
+  centerAngle: number;
+  sectorAngle: number;
+  color: string;
+}
+
 /**
  * RouletteRenderer class
  * Handles all Canvas 2D rendering for the roulette wheel
  */
 export class RouletteRenderer {
   private ctx: CanvasRenderingContext2D;
+  private currentRadius: number = WHEEL_RADIUS;
+  private scaleFactor: number = 1;
+  private lastFontRadius: number = WHEEL_RADIUS;
+  private participantCacheKey: string = '';
+  private sectorCache: SectorInfo[] = [];
+  private fontSizeCache: Map<string, number> = new Map();
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
+  }
+
+  private updateWheelDimensions(canvasWidth: number, canvasHeight: number): void {
+    const minDimension = Math.min(canvasWidth, canvasHeight);
+    const dynamicRadius = Math.max(0, minDimension * WHEEL_RADIUS_VIEWPORT_RATIO);
+
+    if (dynamicRadius > 0) {
+      this.currentRadius = dynamicRadius;
+      this.scaleFactor = this.currentRadius / WHEEL_RADIUS;
+    } else {
+      this.currentRadius = WHEEL_RADIUS;
+      this.scaleFactor = 1;
+    }
+
+    if (Math.abs(this.currentRadius - this.lastFontRadius) > 0.5) {
+      this.fontSizeCache.clear();
+      this.lastFontRadius = this.currentRadius;
+    }
+  }
+
+  private getScaledValue(value: number): number {
+    return value * this.scaleFactor;
+  }
+
+  private updateSectorCache(participants: Participant[]): void {
+    if (participants.length === 0) {
+      if (this.sectorCache.length > 0) {
+        this.sectorCache = [];
+        this.participantCacheKey = '';
+        this.fontSizeCache.clear();
+      }
+      return;
+    }
+
+    const key = participants.map((p) => `${p.name}:${p.weight}`).join('|');
+    if (key === this.participantCacheKey) {
+      return;
+    }
+
+    this.participantCacheKey = key;
+    this.fontSizeCache.clear();
+
+    const totalWeight = participants.reduce((sum, participant) => sum + participant.weight, 0);
+    const fullCircle = Math.PI * 2;
+    let accumulatedWeight = 0;
+
+    this.sectorCache = participants.map((participant, index) => {
+      const startRatio = totalWeight > 0 ? accumulatedWeight / totalWeight : 0;
+      const endRatio = totalWeight > 0 ? (accumulatedWeight + participant.weight) / totalWeight : 0;
+      const startAngle = fullCircle * startRatio;
+      const endAngle = fullCircle * endRatio;
+      const centerAngle = fullCircle * ((startRatio + endRatio) / 2);
+      const sectorAngle = Math.max(0, endAngle - startAngle);
+      accumulatedWeight += participant.weight;
+
+      return {
+        participant,
+        startAngle,
+        endAngle,
+        centerAngle,
+        sectorAngle,
+        color: generateColor(index)
+      };
+    });
+  }
+
+  private getFontSizeCacheKey(name: string, sectorAngle: number): string {
+    return `${name}:${sectorAngle.toFixed(6)}:${Math.round(this.currentRadius)}`;
+  }
+
+  private getFontSize(name: string, sectorAngle: number): number {
+    const cacheKey = this.getFontSizeCacheKey(name, sectorAngle);
+    const cached = this.fontSizeCache.get(cacheKey);
+    if (cached !== undefined) {
+      return cached;
+    }
+
+    const computed = this.calculateFontSize(name, sectorAngle);
+    this.fontSizeCache.set(cacheKey, computed);
+    return computed;
   }
 
   /**
@@ -52,6 +148,9 @@ export class RouletteRenderer {
     // Clear canvas
     this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
+    this.updateWheelDimensions(canvasWidth, canvasHeight);
+    this.updateSectorCache(participants);
+
     // Calculate center with camera shake
     const centerX = canvasWidth / 2 + cameraState.shakeOffset.x;
     const centerY = canvasHeight / 2 + cameraState.shakeOffset.y;
@@ -60,19 +159,19 @@ export class RouletteRenderer {
     this.ctx.save();
 
     // Zoom center point: offset towards 3 o'clock (right side)
-    const zoomCenterX = centerX + WHEEL_RADIUS * ZOOM_OFFSET_RATIO;
+    const zoomCenterX = centerX + this.currentRadius * ZOOM_OFFSET_RATIO;
     const zoomCenterY = centerY;
 
     this.ctx.translate(zoomCenterX, zoomCenterY);
     this.ctx.scale(cameraState.zoom, cameraState.zoom);
     this.ctx.translate(-zoomCenterX, -zoomCenterY);
 
-    if (participants.length === 0) {
+    if (participants.length === 0 || this.sectorCache.length === 0) {
       this.renderEmptyWheel(centerX, centerY);
     } else {
-      this.renderWheel(participants, currentAngle, centerX, centerY);
+      this.renderWheel(currentAngle, centerX, centerY);
       // Render pointer with current sector color
-      const pointerColor = this.getCurrentSectorColor(participants, currentAngle);
+      const pointerColor = this.getCurrentSectorColor(currentAngle);
       this.renderPointer(centerX, centerY, pointerColor);
     }
 
@@ -83,57 +182,36 @@ export class RouletteRenderer {
    * Render the roulette wheel with sectors (weighted)
    */
   private renderWheel(
-    participants: Participant[],
     currentAngle: number,
     centerX: number,
     centerY: number
   ): void {
-    // Calculate total weight
-    const totalWeight = participants.reduce((sum, p) => sum + p.weight, 0);
-    const fullCircle = Math.PI * 2;
+    this.sectorCache.forEach((sector) => {
+      const startAngle = sector.startAngle + currentAngle;
+      const endAngle = startAngle + sector.sectorAngle;
 
-    // Draw weighted sectors
-    // Use accumulated weight to avoid floating-point precision errors
-    let accumulatedWeight = 0;
-    participants.forEach((participant, index) => {
-      // Calculate sector boundaries based on accumulated weight
-      const startRatio = accumulatedWeight / totalWeight;
-      const endRatio = (accumulatedWeight + participant.weight) / totalWeight;
-
-      const startAngle = fullCircle * startRatio + currentAngle;
-      const endAngle = fullCircle * endRatio + currentAngle;
-
-      // Draw sector (without border)
       this.ctx.beginPath();
       this.ctx.moveTo(centerX, centerY);
-      this.ctx.arc(centerX, centerY, WHEEL_RADIUS, startAngle, endAngle);
+      this.ctx.arc(centerX, centerY, this.currentRadius, startAngle, endAngle);
       this.ctx.closePath();
-      this.ctx.fillStyle = generateColor(index);
+      this.ctx.fillStyle = sector.color;
       this.ctx.fill();
-
-      accumulatedWeight += participant.weight;
     });
 
-    // Draw outer border with glowing effect (cyan like pinball edges)
-    drawGlowingCircle(this.ctx, centerX, centerY, WHEEL_RADIUS, WHEEL_GLOW_COLOR, WHEEL_BORDER_WIDTH);
+    // Draw outer border with glowing effect
+    drawGlowingCircle(
+      this.ctx,
+      centerX,
+      centerY,
+      this.currentRadius,
+      WHEEL_GLOW_COLOR,
+      Math.max(1, this.getScaledValue(WHEEL_BORDER_WIDTH))
+    );
 
-    // Draw participant names with dynamic font size
-    // Use accumulated weight to avoid floating-point precision errors
-    accumulatedWeight = 0;
-    participants.forEach((participant) => {
-      const startRatio = accumulatedWeight / totalWeight;
-      const endRatio = (accumulatedWeight + participant.weight) / totalWeight;
-      const sectorAngle = fullCircle * (endRatio - startRatio);
-
-      // Calculate appropriate font size for this sector and text
-      const fontSize = this.calculateFontSize(participant.name, sectorAngle);
-
-      // Text at center of sector
-      const centerRatio = (startRatio + endRatio) / 2;
-      const centerAngle = fullCircle * centerRatio + currentAngle;
-      this.renderText(participant.name, centerAngle, centerX, centerY, fontSize);
-
-      accumulatedWeight += participant.weight;
+    this.sectorCache.forEach((sector) => {
+      const fontSize = this.getFontSize(sector.participant.name, sector.sectorAngle);
+      const centerAngle = sector.centerAngle + currentAngle;
+      this.renderText(sector.participant.name, centerAngle, centerX, centerY, fontSize);
     });
   }
 
@@ -144,7 +222,7 @@ export class RouletteRenderer {
    * @returns Calculated font size in pixels
    */
   public calculateFontSizeForSector(name: string, sectorAngle: number): number {
-    return this.calculateFontSize(name, sectorAngle);
+    return this.getFontSize(name, sectorAngle);
   }
 
   /**
@@ -158,8 +236,8 @@ export class RouletteRenderer {
    */
   private calculateFontSize(name: string, sectorAngle: number): number {
     // Calculate available space for text
-    const textRadius = WHEEL_RADIUS * SECTOR_TEXT_RADIUS_RATIO;
-    const minRadius = WHEEL_RADIUS * SECTOR_TEXT_MIN_RADIUS_RATIO;
+    const textRadius = this.currentRadius * SECTOR_TEXT_RADIUS_RATIO;
+    const minRadius = this.currentRadius * SECTOR_TEXT_MIN_RADIUS_RATIO;
     const halfAngle = sectorAngle / 2;
 
     // Constraint 1: Text height (vertical in rotated coordinate)
@@ -173,7 +251,7 @@ export class RouletteRenderer {
     // Constraint 2: Text width (horizontal in rotated coordinate)
     // Text is right-aligned at textRadius, grows inward
     // Must not pass center protection zone (SECTOR_TEXT_MIN_RADIUS_RATIO)
-    const maxTextWidth = WHEEL_RADIUS * (SECTOR_TEXT_RADIUS_RATIO - SECTOR_TEXT_MIN_RADIUS_RATIO);
+    const maxTextWidth = this.currentRadius * (SECTOR_TEXT_RADIUS_RATIO - SECTOR_TEXT_MIN_RADIUS_RATIO);
 
     // Initial guess
     const initialGuess = Math.min(
@@ -217,7 +295,7 @@ export class RouletteRenderer {
     centerY: number,
     fontSize: number
   ): void {
-    const textRadius = WHEEL_RADIUS * SECTOR_TEXT_RADIUS_RATIO;
+    const textRadius = this.currentRadius * SECTOR_TEXT_RADIUS_RATIO;
     const x = centerX + Math.cos(angle) * textRadius;
     const y = centerY + Math.sin(angle) * textRadius;
 
@@ -244,40 +322,20 @@ export class RouletteRenderer {
    * Wheel rotates by currentAngle, so we need to check which sector is at pointer position
    * Now supports weighted sectors
    */
-  private getCurrentSectorColor(participants: Participant[], currentAngle: number): string {
-    if (participants.length === 0) return POINTER_COLOR;
+  private getCurrentSectorColor(currentAngle: number): string {
+    if (this.sectorCache.length === 0) return POINTER_COLOR;
 
-    // Pointer is at 0 radians (3 o'clock)
-    // Wheel has rotated by currentAngle
-    // To find which sector is at the pointer, we need to check which sector
-    // is at relative position -currentAngle (or 2π - currentAngle)
     const fullCircle = Math.PI * 2;
     const relativeAngle = (fullCircle - currentAngle % fullCircle) % fullCircle;
-
-    // Calculate total weight
-    const totalWeight = participants.reduce((sum, p) => sum + p.weight, 0);
-
-    // Small epsilon for floating-point comparison
     const EPSILON = 1e-10;
 
-    // Find which weighted sector the pointer is in
-    let accumulatedWeight = 0;
-    for (let i = 0; i < participants.length; i++) {
-      const startRatio = accumulatedWeight / totalWeight;
-      const endRatio = (accumulatedWeight + participants[i].weight) / totalWeight;
-
-      const startAngle = fullCircle * startRatio;
-      const endAngle = fullCircle * endRatio;
-
-      if (relativeAngle >= startAngle - EPSILON && relativeAngle < endAngle + EPSILON) {
-        return generateColor(i);
+    for (const sector of this.sectorCache) {
+      if (relativeAngle >= sector.startAngle - EPSILON && relativeAngle < sector.endAngle + EPSILON) {
+        return sector.color;
       }
-
-      accumulatedWeight += participants[i].weight;
     }
 
-    // Fallback to last sector (should not reach here)
-    return generateColor(participants.length - 1);
+    return this.sectorCache[this.sectorCache.length - 1].color;
   }
 
   /**
@@ -285,11 +343,11 @@ export class RouletteRenderer {
    * Points inward towards the wheel center
    */
   private renderPointer(centerX: number, centerY: number, color: string): void {
-    const pointerLength = POINTER_SIZE;
-    const pointerWidth = 12; // Width at the base
+    const pointerLength = this.getScaledValue(POINTER_SIZE);
+    const pointerWidth = Math.max(8, this.getScaledValue(12));
 
     // Position pointer outside the wheel at 3 o'clock
-    const pointerX = centerX + WHEEL_RADIUS + POINTER_OFFSET;
+    const pointerX = centerX + this.currentRadius + this.getScaledValue(POINTER_OFFSET);
     const pointerY = centerY;
 
     this.ctx.save();
@@ -306,7 +364,7 @@ export class RouletteRenderer {
     this.ctx.fill();
 
     this.ctx.strokeStyle = POINTER_BORDER_COLOR;
-    this.ctx.lineWidth = 2;
+    this.ctx.lineWidth = Math.max(1, this.getScaledValue(2));
     this.ctx.stroke();
 
     this.ctx.restore();
@@ -318,11 +376,11 @@ export class RouletteRenderer {
   private renderEmptyWheel(centerX: number, centerY: number): void {
     // Draw empty circle
     this.ctx.beginPath();
-    this.ctx.arc(centerX, centerY, WHEEL_RADIUS, 0, Math.PI * 2);
+    this.ctx.arc(centerX, centerY, this.currentRadius, 0, Math.PI * 2);
     this.ctx.fillStyle = EMPTY_WHEEL_FILL_COLOR;
     this.ctx.fill();
     this.ctx.strokeStyle = EMPTY_WHEEL_BORDER_COLOR;
-    this.ctx.lineWidth = WHEEL_BORDER_WIDTH;
+    this.ctx.lineWidth = Math.max(1, this.getScaledValue(WHEEL_BORDER_WIDTH));
     this.ctx.stroke();
 
     // Draw placeholder text
